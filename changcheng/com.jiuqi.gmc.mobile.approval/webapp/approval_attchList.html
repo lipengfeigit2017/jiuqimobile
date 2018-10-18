@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>附件列表</title>
+    <script src="js/mui.min.js"></script>
+    <script src="js/myapp_common.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+		initData();
+	});
+	function initData() {
+		var billdataid = GetQueryString("billdataid");
+		var billdefineid = GetQueryString("billdefineid");
+		$.ajax({
+            type: "GET",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            url: ipandport+"/flow_info_app?action=attachmentlist",
+            data: "billDataID="+billdataid+"&billDefineID="+billdefineid,
+            success: function (billInfo) {
+            	if(eval(billInfo).length){
+	            	var maininfostr = "";
+	        		maininfostr += "<ul class='mui-table-view' style='margin-top:64px' id='attachmentList'>";
+	        		var width = document.body.scrollWidth;
+	        		$.each(billInfo, function (index, item) {
+	        			var url = ipandport+item.attachmentUrl+"&width="+width;
+	        			maininfostr += "<li class='mui-table-view-cell'> ";
+	        			maininfostr += "<a class='mui-navigate' style='color:#007aff;font-size:14px' href='approval_attachment.html?url="+url+"'>"+item.attachmentName+"</a>";
+	        		});
+	        		maininfostr += "</ul>";
+	        		$("body").append(maininfostr);
+            	}else{
+            		var maininfostr = "";
+	        		maininfostr += "<ul class='nonecontent' style='margin-top:64px;text-align: center;-webkit-padding-start: 0px;'>单据无附件可供查看。</ul>";
+            		$("body").append(maininfostr);
+            	}
+            }
+        });
+		$(".mui-loading").remove();
+    };
+    </script>
+</head>
+
+<body>
+	<div class="mui-loading" style="position: absolute;z-index: 999;left: 50%;top: 50%;margin-left: -12px;margin-top: -82px;">
+        <div class="mui-spinner">
+        </div>
+    </div>      
+    <header class="mui-bar mui-bar-nav calendarHeader changeblue">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left arrowleft" href="javascript:history.go(-1)" style="top:10px"></a>
+        <h1 class="mui-title" style="top:10px">附件列表</h1>
+    </header>
+		
+</body>

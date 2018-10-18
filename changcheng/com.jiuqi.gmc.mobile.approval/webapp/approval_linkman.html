@@ -1,0 +1,210 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>联系人</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/main.css" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/myapp_common.js"></script>
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<style type="text/css">
+			.mui-table-view-cell::after{left:0}
+		</style>
+		<script type="text/javascript" charset="utf-8">
+		$(document).ready(function() {
+			initData();
+		});
+		function initData() {
+			var persions;
+			var jsonArray = window.sessionStorage.getItem("selectUsers");
+			var billdataid = GetQueryString("billdataid");
+			var billdefineid = GetQueryString("billdefineid");
+			var workitemid = GetQueryString("workitemid");
+			var flowType = GetQueryString("flowType");
+			var fApprovalDefine = GetQueryString("fApprovalDefine");
+			var addSign = GetQueryString("addSign");
+			var title = escape(GetQueryString("title"));
+			var signWorkflow = escape(GetQueryString("signWorkflow"));
+			var checked = GetQueryString("checked");
+			var showCheckedBox = sessionStorage.getItem("showCheckedBox");
+			var isDefault;
+			if('false' == checked){
+	            window.sessionStorage.setItem("selectUsers","");
+            }
+			$.ajax({
+	            type: "GET",
+	            dataType: "json",
+	            contentType: "application/x-www-form-urlencoded; charset=GBK",
+	            url: ipandport+"/flow_info_app?action=roles",
+	            data: "username=jq"+"&checked="+checked,
+	            beforeSend: function () {
+	            },
+	            success: function (roles) {
+	            	persions = roles;
+            	 	$.each(roles,function (index, role) {
+            	 		isDefault = role.isDefault;
+            	 		var persion = "";
+            	 		persion += " <ul class='mui-table-view mui-table-view-striped mui-table-view-condensed contactsmanul'><li class='mui-table-view-cell mui-table-view-cell2 contactsmanli1'><div class='mui-table'><div class='mui-table-cell mui-col-xs-10'>";
+            	 		persion += " <h4 class='mui-ellipsis'>"+role.department+"</h4></div></div></li>";
+            	 		$.each(role.user, function (index,user) {
+            	 			persion += " <li class='mui-table-view-cell'> <label ><div class='mui-table'><div class='mui-table-cell mui-col-xs-10'>";
+            	 			if(jsonArray != null && jsonArray.indexOf(user.userguid) > -1) {
+            	 				if(signWorkflow == "true" && showCheckedBox == "false"){
+            	 					persion += " <h4 class='mui-ellipsis'>"+user.username+"</h4><p class='mui-h6 mui-ellipsis'>员工代码："+user.usercode+"</p>";
+            	 					persion += " <div class='picright1'><input checked='true' id='"+user.userguid+"' username='"+user.username+"' class='inputcheckbox' type='checkbox'/><i></i></div></div></div></label></li>";
+            	 				}else{
+            	 					persion += " <h4 class='mui-ellipsis' style='opacity:0.4;'>"+user.username+"</h4><p class='mui-h6 mui-ellipsis'>员工代码："+user.usercode+"</p>";
+            	 					persion += " <div class='picright1'><input id='"+user.userguid+"' username='"+user.username+"' class='inputcheckbox' type='checkbox' disabled/><i></i></div></div></div></label></li>";	
+            	 					//赋空值，防止向同一个人发加签待办 
+            	 					//window.sessionStorage.setItem("selectUsers","");
+            	 				}
+            	 			} else {
+            	 				persion += " <h4 class='mui-ellipsis'>"+user.username+"</h4><p class='mui-h6 mui-ellipsis'>员工代码："+user.usercode+"</p>";
+            	 				persion += " <div class='picright1'><input id='"+user.userguid+"' username='"+user.username+"' class='inputcheckbox' type='checkbox'/><i></i></div></div></div></label></li>";
+            	 			}
+                        });
+            	 		persion += " </ul><p class='letters'></p>";
+            	 		$("#contentdiv").append(persion);
+                 	});
+	            	$(".mui-loading").remove();
+	            	if(signWorkflow == "true") {
+			        	$('input[type=checkbox]').click(function(){
+			        		var lastId = $(this).attr("id");
+			        		$("input[type='checkbox']:checked").each(function () {
+			        			if ($(this).attr("id") != lastId) {
+				        			//$(this).removeAttr("checked");
+				        		}
+				            });
+						});
+			        }
+	            }
+	        });
+			$("#search").bind("input",function () {
+	            var content = $("#search").val();
+	            if (content == "") {
+	            	$("#contentdiv").children().remove();
+	            	$.each(persions,function (index, role) {
+            	 		var persion = "";
+            	 		persion += " <ul class='mui-table-view mui-table-view-striped mui-table-view-condensed contactsmanul'><li class='mui-table-view-cell mui-table-view-cell2 contactsmanli1'><div class='mui-table'><div class='mui-table-cell mui-col-xs-10'>";
+            	 		persion += " <h4 class='mui-ellipsis'>"+role.department+"</h4></div></div></li>";
+            	 		$.each(role.user, function (index,user) {
+            	 			persion += " <li class='mui-table-view-cell'> <label ><div class='mui-table'><div class='mui-table-cell mui-col-xs-10'>";
+            	 			if(jsonArray.indexOf(user.userguid) > -1) {
+            	 				if(signWorkflow == "true" && showCheckedBox == "false"){	
+            	 					persion += " <h4 class='mui-ellipsis'>"+user.username+"</h4><p class='mui-h6 mui-ellipsis'>员工代码："+user.usercode+"</p>";
+            	 					persion += " <div class='picright1'><input checked='true' id='"+user.userguid+"' username='"+user.username+"' class='inputcheckbox' type='checkbox'/><i></i></div></div></div></label></li>";
+            	 				}else{
+            	 					persion += " <h4 class='mui-ellipsis' style='opacity:0.4;'>"+user.username+"</h4><p class='mui-h6 mui-ellipsis'>员工代码："+user.usercode+"</p>";
+            	 					persion += " <div class='picright1'><input id='"+user.userguid+"' username='"+user.username+"' class='inputcheckbox' type='checkbox' disabled/><i></i></div></div></div></label></li>";	
+            	 				}
+            	 			} else {
+            	 				persion += " <h4 class='mui-ellipsis'>"+user.username+"</h4><p class='mui-h6 mui-ellipsis'>员工代码："+user.usercode+"</p>";
+            	 				persion += " <div class='picright1'><input id='"+user.userguid+"' username='"+user.username+"' class='inputcheckbox' type='checkbox'/><i></i></div></div></div></label></li>";
+            	 			}
+                        });
+            	 		persion += " </ul><p class='letters'></p>";
+            	 		$("#contentdiv").append(persion);
+                 	});
+                 	if(signWorkflow == "true") {
+			        	$('input[type=checkbox]').click(function(){
+			        		var lastId = $(this).attr("id");
+			        		$("input[type='checkbox']:checked").each(function () {
+			        			if ($(this).attr("id") != lastId) {
+				        			$(this).removeAttr("checked");
+				        		}
+				            });
+						});
+			        }
+	            } else {
+	            	$("#contentdiv").children().remove();
+	            	$.each(persions,function (index, role) {
+            	 		var persion = "";
+            	 		var flag = 0;
+            	 		persion += " <ul class='mui-table-view mui-table-view-striped mui-table-view-condensed contactsmanul'><li class='mui-table-view-cell mui-table-view-cell2 contactsmanli1'><div class='mui-table'><div class='mui-table-cell mui-col-xs-10'>";
+            	 		persion += " <h4 class='mui-ellipsis'>"+role.department+"</h4></div></div></li>";
+            	 		$.each(role.user, function (index,user) {
+            	 			if(user.username.indexOf(content) > -1) {
+            	 				flag = 1;
+            	 				persion += " <li class='mui-table-view-cell'> <label ><div class='mui-table'><div class='mui-table-cell mui-col-xs-10'>";
+            	 				if(jsonArray.indexOf(user.userguid) > -1) {
+                	 				if(signWorkflow == "true" && showCheckedBox == "false"){ 	
+                	 					persion += " <h4 class='mui-ellipsis'>"+user.username+"</h4><p class='mui-h6 mui-ellipsis'>员工代码："+user.usercode+"</p>";
+                	 					persion += " <div class='picright1'><input checked='true' id='"+user.userguid+"' username='"+user.username+"' class='inputcheckbox' type='checkbox'/><i></i></div></div></div></label></li>";	
+                	 				}else{
+                	 					persion += " <h4 class='mui-ellipsis' style='opacity:0.4;'>"+user.username+"</h4><p class='mui-h6 mui-ellipsis'>员工代码："+user.usercode+"</p>";
+                	 					persion += " <div class='picright1'><input id='"+user.userguid+"' username='"+user.username+"' class='inputcheckbox' type='checkbox' disabled/><i></i></div></div></div></label></li>";
+                	 				}
+                	 			} else {
+                	 				persion += " <h4 class='mui-ellipsis'>"+user.username+"</h4><p class='mui-h6 mui-ellipsis'>员工代码："+user.usercode+"</p>";
+                	 				persion += " <div class='picright1'><input id='"+user.userguid+"' username='"+user.username+"' class='inputcheckbox' type='checkbox'/><i></i></div></div></div></label></li>";
+                	 			}
+            	 			}
+                        });
+            	 		persion += " </ul><p class='letters'></p>";
+            	 		if(flag == 0) {
+            	 			persion = "";
+            	 		}
+            	 		$("#contentdiv").append(persion);
+                 	});
+                 	if(signWorkflow == "true") {
+			        	$('input[type=checkbox]').click(function(){
+			        		var lastId = $(this).attr("id");
+			        		$("input[type='checkbox']:checked").each(function () {
+			        			if ($(this).attr("id") != lastId) {
+				        			//$(this).removeAttr("checked");
+				        		}
+				            });
+						});
+			        }
+	            }
+	        });
+			$("#ok").on("click",function() {
+	            var jsonArray = "";
+	            if('true' == checked){
+		            jsonArray = window.sessionStorage.getItem("selectUsers");
+		            if(jsonArray == null || jsonArray == ""){
+		            	jsonArray = "";
+		            }
+	            }
+	            var selectArray = "";
+	            $("input[type='checkbox']:checked").each(function () {
+	                if(jsonArray.indexOf($(this).attr("id")) == -1)
+	                	selectArray += $(this).attr("id")+"_"+$(this).attr("username")+";";
+	            });
+	            if(selectArray == "" || selectArray == ";") {
+	                mui.toast("请至少选择一个用户！");
+	                return;
+	            }
+	            jsonArray = jsonArray+selectArray;
+	            window.sessionStorage.setItem("selectUsers",jsonArray.substr(0,jsonArray.length-1));
+	            window.location = "approval.html?billdataid="+billdataid+"&billdefineid="+billdefineid+"&workitemid="+workitemid+"&flowType="+flowType+"&fApprovalDefine="+fApprovalDefine+"&title="+title+"&addSign="+addSign;
+	            
+			});
+		};
+		</script>
+	</head>
+
+	<body>
+		<div class="mui-loading" style="position: absolute;z-index: 999;left: 50%;top: 50%;margin-left: -12px;margin-top: -82px;">
+	        <div class="mui-spinner">
+	        </div>
+	    </div>      
+		<header id="header" class="mui-bar mui-bar-transparent changeblue fontsizesmall">
+			<a class="mui-action-back mui-icon mui-pull-left cancel cancelqx" style="top: 10px;margin-left:8px;">取消</a>
+			<h1 class="mui-title titlechange" style="color: #fff;top: 10px">联系人</h1>
+			<a class="mui-icon mui-pull-right cancel" id="ok" style="top: 8px;margin-right:10px;">确定</a>
+		</header>
+		<article class="contactsman">
+			<div class="mui-input-row mui-input-row1 mui-search magnifier1" style="display: block;">
+    			<input id="search" type="search" class="mui-input-clear clearbg" placeholder="搜索">
+			</div>
+			<div id='contentdiv'>
+			
+			</div>
+		</article>
+	</body>
+</html>

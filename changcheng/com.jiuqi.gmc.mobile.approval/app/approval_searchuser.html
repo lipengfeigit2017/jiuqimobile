@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' />
+    <script src="js/myapp_common.js"></script>
+    <link rel="stylesheet" href="css/commonBlue.css" />
+    <script src="js/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="css/sweetalert.css" />
+    <title></title>
+</head>
+<style>
+    .rightmemu {padding:0}
+    #searchdiv {width: 100%;text-align: center;background:#CAC9CF;height:42px;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+    #search {width: 92%;margin-top: 6px;height: 20px;padding-left: 5px;z-index: 999;
+        border: 1px solid gainsboro;border-radius: 7px;font-size: 16px;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+    .expandheader1 {
+        background:#F2F2F2;height: 40px;line-height: 40px;padding-left: 10px;
+        border: 1px solid gainsboro;margin-top: 5px;width: 98%;-webkit-tap-highlight-color:rgba(0,0,0,0);}
+    #users {width: 98%;margin-top: 5px;margin: auto}
+    label {padding-left: 10px;width: 98%}
+    ul {margin: 0;padding: 0}
+    li {border-bottom: 1px solid gainsboro;list-style: none;height: 40px;line-height: 40px;padding-left: 20px}
+
+    .message {color: red;padding-top:10px;padding-left:10px}
+</style>
+<script>
+    $(document).ready(function () {
+        initLayOut();
+        if(getMobileType() == "phone") {
+            $("#content").css({"margin-top":"100px"});
+        }
+        if(getMobileType() == "pad") {
+            $("#searchdiv").css({"position":"fixed","top":"40px"});
+            $("#content").css({"margin-top":"45px"});
+        }
+        initUsers();
+        searchAction();
+        $("#back").click(function () {
+            window.location = "approval_adduser.html";
+        });
+        $("#ok").click(function () {
+            var jsonArray = window.sessionStorage.getItem("userselected");
+            if(jsonArray == null) jsonArray = "";
+            else jsonArray += ";";
+            $("input[name='usercheckbox']:checked").each(function () {
+                if(jsonArray.indexOf($(this).attr("id")) == -1)
+                    jsonArray += $(this).attr("id")+"_"+$(this).attr("username")+";";
+            });
+            if(jsonArray == "") {
+                swal("请至少选择一个用户!");
+                return;
+            }
+            window.sessionStorage.setItem("userselected",jsonArray.substr(0,jsonArray.length-1));
+            window.location = "approval_adduser.html";
+        });
+        //window.parent.orient();
+    })
+    var rolesForSearch;
+    function initUsers() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=GBK",
+            url: ipandport+"/flow_info_app?action=roles",
+            data: "username=jq",
+            cache:false,
+            beforeSend: function () {
+                $("#loading").append("<image src='image/loading.gif'></image>");
+            },
+            success: function (roles) {
+                rolesForSearch = roles;
+                initGrid(roles);
+                $("#loading").remove();
+            }
+        });
+    }
+    function initGrid(roles) {
+        $("#roles").html("");
+        $.each(roles,function (index, role) {
+            $("#roles").append("<div class='expandheader1'>"+role.department+"</div>");
+            var str = "<div class='users'><ul class='table2'>";
+            $.each(role.user, function (index,user) {
+                str += "<li style='-webkit-tap-highlight-color:rgba(0,0,0,0)'><input type='checkbox' name='usercheckbox' id='"+user.userguid+"' username='"+user.username+"' ><label for='"+user.userguid+"'>"+user.username+"</label></li>";
+            })
+            str += "</ul></div>";
+            $("#roles").append(str);
+        });
+        $(".expandheader1").click(function () {
+            if($(this).next("div").css("display") == "none") {
+                $(this).next("div").css({"display":"inline"});
+                $(this).children("image").css({"background":"url('image/minus.jpg')"});
+            } else {
+                $(this).next("div").css({"display":"none"});
+                $(this).children("image").css({"background":"url('image/plus.jpg')"});
+            }
+        });
+    }
+    /*循环查找用户并列示*/
+    function searchAction() {
+        $("#search").bind("input",function () {
+            var content = $("#search").val();
+            /*字符返回true*/
+//            if(/^[\x00-\xff]/.test(content)) {
+//                return;
+//            }
+            if (content == "") {
+                initUsers();
+                return;
+            } else {
+                var str = "<div class='users'><ul class='table2'>";
+                var userstr = "";
+                $.each(rolesForSearch, function (index,role) {
+                    $.each(role.user, function (index,user) {
+                        if (user.username.indexOf(content) > -1) {
+                            userstr += "<li><input type='checkbox' name='usercheckbox' id='"+user.userguid+"' username='"+user.username+"'>";
+                            userstr += "<label for='"+user.userguid+"'>"+user.username+"&nbsp;&nbsp;["+user.dptname+"]</label></li>";
+                        }
+                    })
+                })
+                if(userstr == "") userstr = "<li>查询结果为空!</li>";
+                str += userstr + "</ul></div>";
+                $("#roles").html(str);
+            }
+        })
+    }
+</script>
+<body>
+    <div class="page">
+        <div id="loading"></div>
+        <div class="header_menu">
+            <div class="leftmemu" id="back">
+                <i class="icon icon-back"></i>
+                <span class="backtext">返回</span>
+            </div>
+            <div class="rightmemu" id="ok">
+                <span class="backtext">确定</span>
+            </div>
+            <div id="searchdiv"><input type="text" id="search" placeholder="请输入用户名..."></div>
+        </div>
+
+        <div id="content" >
+            <div id="roles">
+
+
+            </div>
+        </div>
+        <div class="footer"></div>
+    </div>
+</body>
+</html>

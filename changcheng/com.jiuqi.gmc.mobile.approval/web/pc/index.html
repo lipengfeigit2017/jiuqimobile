@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <meta charset="GBK">
+	<link rel="stylesheet" href="jquery/jquery.mobile-1.4.5.min.css">
+	<script src="jquery/jquery-2.1.4.min.js"></script>
+	<script src="jquery/jquery.mobile-1.4.5.min.js"></script>
+  <title>Document</title>
+
+  <style>
+	#pageone {height:92%}
+  .ui-grid-a,.ui-grid-b {height:100%;padding:0}
+  .div-block-a {background-color: lightgray;height:90%;width:29.9%;float:left}
+  .div-block-b {background-color: lightgray;height:90%;width:70%;float:right}
+	#category {
+		border:0;
+		border-right:1px solid lightgray;
+	}
+	#approval_list {border:0}
+</style>
+<script>
+	
+</script>
+ </head>
+ <body>
+	<div data-role="page" id="pageone" data-position="fixed">
+	  <div data-role="header">
+		<h1>代办审批</h1>
+	  </div>
+
+	  <div data-role="content" class="ui-grid-a">
+
+		   <div class="ui-grid-b">
+			 <div class="div-block-a">
+				<iframe src="approval_category.html" id="category" style="width:100%;height:100%"></iframe>
+			 </div>
+			 <div class="div-block-b">
+				<iframe src="approval_list.html" id="approval_list" style="width:100%;height:100%;"></iframe>
+			 </div>
+		   </div>
+
+
+	  </div>
+
+	  <div data-role="footer" data-position="fixed">
+		<h1>北京久其软件股份有限公司</h1>
+	  </div>
+	</div> 
+ </body>
+</html>

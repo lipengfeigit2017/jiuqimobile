@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' />
+    <script src="js/myapp_common.js"></script>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="css/commonBlue.css" />
+    <link rel="stylesheet" href="css/sweetalert.css" />
+    <title></title>
+</head>
+<style>
+    .inituser {color:#999999;}
+</style>
+<script>
+    $(document).ready(function () {
+        initLayOut();
+        initUser();
+
+        $("#back").click(function () {
+            window.sessionStorage.removeItem("userselected");
+            window.location = "approval_info_sso.html";
+        });
+        $("#add").click(function () {
+            window.location = "approval_searchuser.html"
+        });
+        $("#ok").click(function () {
+            var users = "";
+            $.each($(".user"), function (index, item) {
+                users += $(this).attr("userguid")+";";
+            });
+            if(users == "") {
+                swal("请选择加签用户!");
+                return;
+            }
+            var jsonstr = users.substr(0,users.length-1);
+            var billguid = sessionStorage.getItem("billguid");
+            var guids = billguid.split("_");
+            var textcontent = $("#textarea").val().replace(/\n/g,"<br/>");
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded; charset=GBK",
+                url: ipandport+"/flow_action_app?action=adduser",
+                data:"approvaluser="+jsonstr+"&approvalsuggest="+textcontent+"&billDataID="+guids[0]+"&billDefineID="+guids[1]+"&workitemid="+guids[2]+"&businessObjectType="+guids[4],
+                cache:false,
+                beforeSend: function () {
+                swal({
+		                title: "",
+		                text: "正在执行中,请稍候...",
+		                type: "warning",
+		                showCancelButton: false,
+		                showConfirmButton:false,
+		                closeOnConfirm: false
+		              }
+		            );
+                },
+                success: function (msg) {
+                    if(msg.responsecode == "1") {
+                        swal({
+                            title:"执行成功",
+                            type : "success"},function() {
+                                window.sessionStorage.removeItem("userselected");
+                                window.location = "approval_info_sso.html";
+                                //window.location = "approval_item.html?listguid="+sessionStorage.getItem("listguid");
+                        });
+                    } else {
+                        swal("执行失败！", "", "error");
+                    }
+                }
+            });
+        });
+        $("#cancel").click(function () {
+            window.sessionStorage.removeItem("userselected");
+            window.location = "approval_info_sso.html";
+        });
+    })
+    function initUser() {
+        var billguid = sessionStorage.getItem("billguid");
+        var guids = billguid.split("_");
+        var origin_users = "";
+        var usersflag = "";
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=GBK",
+            url: ipandport + "/flow_info_app?action=addapprovalusers",
+            data:"billDataID="+guids[0]+"&billDefineID="+guids[1]+"&workitemid="+guids[2]+"&businessObjectType="+guids[4],
+            cache:false,
+            success: function (userlist) {
+            	origin_users += "<div style='margin-bottom:10px;'>";
+                $.each(userlist.users, function (index,user) {
+                    origin_users += "<span class='inituser' userguid='"+user.userguid+"' username='"+user.username+"'>"+user.username+"&nbsp;</span>";
+                });
+                origin_users += "</div>";
+                $("#userarea").append(origin_users);
+
+                var userstr = sessionStorage.getItem("userselected");
+                if(userstr == null) return;
+                var users = new Array();
+                users = userstr.split(";");
+                var str = "";
+                str += "<div>";
+                for(var i = 0; i < users.length; i ++) {
+                    var user = new Array();
+                    user = users[i].split("_");
+                    if(origin_users.indexOf(user[0]) > -1) continue;
+                    str += "<span class='user' userguid='"+user[0]+"' username='"+user[1]+"'><span>"+user[1]+"</span><i class='deleImg'></i></span>&nbsp;&nbsp";
+                }
+                str += "</div>";
+                $("#userarea").append(str);
+
+                $(".user").click(function() {
+                	var str = "";
+                    $(".user").attr("tempid","");
+                    $(this).attr("tempid","flag");
+		            $.each($(".user"), function (index, item) {
+		                if($(this).attr("tempid") == "flag") {
+		                    $(this).remove();
+		                } else {
+		                    str += $(this).attr("userguid")+"_"+$(this).attr("username")+";";
+		                }
+		            })
+		            sessionStorage.setItem("userselected",str);
+                });
+            }
+        });
+    }
+
+</script>
+<body>
+    <div class="page">
+       
+        <div class="header_menu" style="position:fixd">
+            <div class="leftmemu" id="back">
+                <i class="icon icon-back"></i>
+                <span class="backtext">返回</span>
+            </div>
+            <div class="rightmemu" style="margin-top: 6px;">
+                <image src="image/down.png" id="add">
+            </div>
+        </div>
+        <div id="content">
+        	<form name="myform" id="myform" action="/flow_action_app?action=adduser" target="hiddenframe" method="post">
+	            <input type="hidden" name="approvaluser" id="userguid">
+	            <input type="hidden" name="billDataID" id="billDataID">
+	            <input type="hidden" name="billDefineID" id="billDefineID">
+	            <br>
+	            <div style="width:92%;margin-left: 4%;margin-right: 4%;margin-top: 10px;">
+		            <fieldset id="userarea" class="userarea">
+		            <legend>当前审批人：</legend>
+		
+		            </fieldset>
+	            </div>
+	            <br>
+	            <br>
+			 	<div style='width:92%; margin-left:4%; margin-right:4%'>
+					<textarea class='textarea' id='textarea' name='approvalsuggest' style='margin-top:15px' rows='10' placeholder='请输入意见...'></textarea>
+			 	</div>
+			 	<div class='buttonArea'>
+				 	<input class='agreeBtn' type='button' id="ok" value='确定'>
+				 	<input class='rejectBtn' type='button' id="cancel" value='取消'>
+			 	</div>
+	        	<div id="blank"></div>
+	    		<iframe name="hiddenframe" style="display:none"></iframe>
+            </form>
+         </div>
+       <div class="footer"></div>
+    </div>
+</body>
+</html>

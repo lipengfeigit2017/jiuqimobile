@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title> </title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/main.css" />
+		<script src="js/myapp_common.js"></script>
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<style type="text/css">
+			.mui-popup-text{
+				max-height: 200px;
+    			overflow: auto;
+			}
+		</style>
+		
+	</head>
+
+	<body>
+		<div class="mui-loading" style="position: absolute;z-index: 999;left: 50%;top: 50%;margin-left: -12px;margin-top: -82px;">
+	        <div class="mui-spinner">
+	        </div>
+	    </div>      
+		<header id="header" class="mui-bar mui-bar-transparent changeblue">
+			<a class="mui-icon-bank mui-icon mui-icon-left-nav mui-pull-left" href="approval_list.html" style="top:10px"></a>
+			<h1 class="mui-title titlechange" style="top:10px"></h1>
+		</header>
+		<article class="mobiletext payapplylist">
+			<!-- <div class="mui-input-row mui-input-row1 mui-search magnifier1 mui-input-row1">
+    			<input type="search" class="mui-input-clear clearbg" placeholder="搜索">
+			</div> -->
+			<div class="payapplylistall">
+				<div class="payapplylisttitle">
+					
+				</div>
+			</div>
+		</article>
+		<div class="mui-popup mui-popup-in" style="display: none;"><div class="mui-popup-inner">
+		<div class="mui-popup-title">提示</div>
+		<div class="mui-popup-text">
+		</div>
+		</div>
+			<div class="mui-popup-buttons"><span class="mui-popup-button mui-popup-button-bold">确定</span>
+			</div>
+		</div>
+		<div class="mui-backdrop" style="opacity:1"></div>
+		<script src="js/mui.min.js"></script>
+		<script>
+			mui.init();
+			mui('.mui-popup-text').scroll();
+		</script>
+		<script type="text/javascript">
+			var selectAll = 0;
+			$(document).ready(function() {
+				initData();
+			})
+			function initData() {
+				var fApprovalDefine = GetQueryString("fApprovalDefine");
+				var todoNum = GetQueryString("todoNum");
+				var flowType = GetQueryString("flowType");
+				var title = GetQueryString("title");
+				var user = escape(GetQueryString("user"));
+				if(flowType == null && todoNum == null) {
+					flowType = 1;
+				} else if(flowType == null){
+					flowType = 0;
+				} 
+				$.ajax({
+		            type : "GET",
+		            dataType : "json",
+		            cache:false,
+		            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		            url : ipandport+"/flow_info_app?action=flowitem",
+		            data : "user="+user+"&id="+fApprovalDefine+"&flowtype="+flowType,
+		            success : function(returnObject) {
+		                var flowItems = returnObject.resultlist;
+		                var batchapproveaction = returnObject.batchapproveaction;
+		                var sum = returnObject.sum;
+		                if(flowType == 0) {
+							$("h1").html("未处理");
+							$(".payapplylisttitle").append("<a class='listtitleL'>总数<span class='mui-badge mui-badge-success listtitleLsp' >"+sum+"</span></a><a class='listtitleR'>全选</a>");
+							//响应审批任务任务列表是否配置批量同意按钮
+							if(batchapproveaction==1){
+								$("body").append("<footer class='payapplylistfooter'> <footer class='payapplylistfooter'> <button type='button' class='mui-btn' id='confirmBtn'>审批</button> </footer>");
+							}else{
+								
+							}
+						} else {
+							$("h1").html("已处理");
+							$(".payapplylisttitle").append("<a class='listtitleL'>总数<span class='mui-badge mui-badge-success listtitleLsp'>"+sum+"</span></a>");
+						}
+		                initList(flowItems,fApprovalDefine,title,flowType);
+		                $(".mui-loading").css("display","none");
+		                $(".mui-backdrop").css("display","none");
+		            	$(".listtitleR").on("click",function() {
+		            		if(selectAll == 0) {
+		            			selectAll = 1;
+		            			$("[name='checkboxname']").prop("checked",'true');
+		            		} else {
+		            			selectAll = 0;
+		            			$("[name='checkboxname']").removeAttr("checked");;
+		            		}
+						});
+						$("#confirmBtn").on("click",function() {
+							var btnArray = ['取消', '确定'];
+							mui.confirm('确定执行批量审批操作吗？', '提交', btnArray, function(e) {
+								if (e.index == 0) {
+									
+								} else {
+									var flowguids = "";
+						            $("input[name='checkboxname']:checked").each(function () {
+						                var billdataid = $(this).attr("billdataid");
+						                var billdefineid = $(this).attr("billdefineid");
+						                var workitemid = $(this).attr("workitemid");
+						                flowguids += billdataid+"_"+billdefineid+"_"+workitemid+";";
+						            });
+						            if(flowguids=="") {
+						            	mui.toast("请至少选择一条记录！");
+						            	return;
+						            }
+						            $.ajax({
+			                            type : "GET",
+			                            dataType : "json",
+			                            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+			                            url : ipandport+"/flow_action_app?action=batchagree",
+			                            data : "flowguids="+flowguids,
+			                            beforeSend: function () {
+			                            	$(".mui-backdrop").css("display","block");
+			                            	$(".mui-loading").css("display","block");
+			                            },
+			                            success : function(msg) {
+			                            	$(".mui-backdrop").css("display","none");
+			                            	$(".mui-loading").css("display","none");
+			                                if(msg.responsecode == "1") {
+			                                	/* mui.alert("执行成功"); */
+			                                	window.location.reload();
+			                                } else {
+			                                    $(".mui-popup-text").append(msg.responsemessage);
+			                                    $(".mui-popup-in").css("display","block");
+			                                    $(".mui-backdrop").css("display","block");
+			                                    
+			                        			$(".mui-popup-buttons").on("click",function() {
+			                        				window.location.reload();
+			                        			});
+			                                }
+			                            }
+			                        });
+								}
+							},'div');
+						});
+		            }
+		        });
+			}
+			//加载个数 
+			var flowItemCurrentIndex = 0;
+		    function initList(flowItems,fApprovalDefine,title,flowType) {
+		    	var templength = flowItems.length - flowItemCurrentIndex;
+		    	if(templength > 10) templength = 10;
+		    	$(".more").remove();
+		    	for(var i = 0; i < templength; i ++) {
+		    		var flowItem = flowItems[flowItemCurrentIndex];
+		    		var str = "";
+		    		var list = flowItem.item.property;
+	                str += "<a href='#' class='payapplylistcontent' billdataid="+flowItem.item.billDataID+" billdefineid="+flowItem.item.billDefineID+" workitemid="+flowItem.item.workitemid+" fApprovalDefine="+fApprovalDefine+" title="+title+">";
+	                $.each(list, function (num, listItem) {
+	                	str += "<div class='ifo'>"+listItem.title+": <span>"+listItem.value+"</span></div>";
+	                })
+	                str += "<label><div class='picright'><input type='checkbox' name='checkboxname' id=radio"+flowItemCurrentIndex+" billdataid="+flowItem.item.billDataID+" billdefineid="+flowItem.item.billDefineID+" workitemid="+flowItem.item.workitemid+"><i></i></div></label></a>";
+	                $(".payapplylistall").append(str);	
+	                flowItemCurrentIndex ++;
+		    	}
+/* 		        $(".payapplylistall").append("<p class='loadfinishe'>加载完成</p>"); */
+		        
+		        if(flowItemCurrentIndex < flowItems.length) {
+		            $(".payapplylistall").append("<div class='more'><p class='loadfinishe'>点击查看更多...</p></div>");
+		            $(".more").bind("click",function () {
+		                initList(flowItems,fApprovalDefine,title,flowType);
+		            });
+		        } else {
+		            $(".payapplylistall").append("<div class='more'><p class='loadfinishe'>加载完成</p></div>");
+		        }
+		        
+            	$(".ifo").on("click",function() {
+            		var billdataid = $(this).parent().attr("billdataid");
+            		var billdefineid = $(this).parent().attr("billdefineid");
+            		var workitemid = $(this).parent().attr("workitemid");
+            		var fApprovalDefine = $(this).parent().attr("fApprovalDefine");
+            		var title1 = escape($(this).parent().attr("title"));
+            		window.location = "approval_details.html?billdataid="+billdataid+"&billdefineid="+billdefineid+"&workitemid="+workitemid+"&flowType="+flowType+"&fApprovalDefine="+fApprovalDefine+"&title="+title1;
+            	});
+		    };
+			window.addEventListener("swipedown",function(){
+				$(".mui-input-row").css("display","block");
+			});
+			window.addEventListener("swipeup",function(){
+				$(".mui-input-row").css("display","none");
+			});
+			window.addEventListener("swipedown",function(){
+				$(".mui-input-row").css("display","block");
+			});
+		</script>
+	</body>
+</html>

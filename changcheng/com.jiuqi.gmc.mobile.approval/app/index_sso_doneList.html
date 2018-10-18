@@ -1,0 +1,249 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+-->
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width,initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' />
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/myapp_common.js"></script>
+    <script src="js/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="css/sweetalert.css" />
+    <link rel="stylesheet" href="css/commonBlue.css" />
+    <title></title>
+</head>
+<style>
+    .todotype {color: #fff;padding-left:20px;height: 40px;line-height: 40px;display: inline-block;font-size: 18px}
+    .rightmemu {float: right;padding-top: 5px}
+    .refresh {margin-right: 10px;vertical-align:middle;width: 28px}
+    .search {margin-right: 10px;vertical-align:middle;width: 28px;}
+
+    #searchdiv {width: 98%;text-align: center;display: none;z-index: 9;position: relative;top: 0px}
+    #searchtext {width: 99%;margin-top: 1px;height: 30px;border: 1px solid skyblue;border-radius: 5px;z-index: 9;font-size: 16px}
+    .submenu {
+        display: none;
+        background: white;
+        width: 200px;
+        position: absolute;
+        top:0px;
+        border: 2px solid gainsboro;
+        z-index: 99;
+    }
+    .submenu ul {
+        margin: 0;
+        padding: 0;
+    }
+    .submenu li {
+        list-style: none;
+        height: 50px;
+        line-height: 50px;
+        padding-left: 20px;
+        border-bottom: 1px solid gainsboro;
+    }
+    .floatspan {width: 100px;background: lightcoral;z-index: -111;position:absolute;right:0px;border: 1px solid;text-align: center}
+    ul {list-style: none;margin:0;padding: 0;}
+    .flowitem {
+        background:white;
+        border-bottom:1px solid gainsboro;
+        color:#222222;
+        display:block;
+        font-size:17px;
+        padding:12px 0px 10px 20px;
+    }
+    .num  {float: right;color: red;padding-right: 30px;}
+
+</style>
+<script>
+    $(document).ready(function() {
+        initLayOut();
+        var flowtype = 1;
+        sessionStorage.setItem("flowtype",flowtype);
+        getListItems(flowtype);
+        if(getMobileType() == "phone") {
+            $(".submenu").css({"position":"fixed","display":"none","top":"90px"});
+            if(sessionStorage.getItem("sso") == 1) {
+                $(".submenu").css({"display":"none","top":"40px"});
+                $(".search").css({"display":"none"});
+            }
+            $("#searchdiv").css({"position":"fixed","top":"91px"});
+        }
+        $("body").click(function (e) {
+            if(e.target.className == "todotype") return;
+            $(".submenu").css({"display":"none"});
+        });
+        initMenu();
+        window.parent.orient();
+    })
+    var flowtype = 0;
+    function initMenu() {
+        $(".todotype").click(function () {
+            if($(".submenu").css("display") == "none") {
+                $(".submenu").css({"display":"block"});
+            } else {
+                $(".submenu").css({"display":"none"});
+            }
+        });
+        <!--
+        $(".refresh").click(function () {
+            window.location.reload();
+        });
+        -->
+        $(".search").click(function () {
+            if($("#searchdiv").css("display") == "none") {
+                $("#searchtext").val("");
+                $("#searchdiv").css({"display":"block"});
+                if(getMobileType() == "phone") {
+                    if(sessionStorage.getItem("sso") == null) {
+                        $("#content").css({"margin-top":"125px"});
+                    } else {
+                        $("#content").css({"margin-top":"75px"});
+                    }
+                }
+                if(getMobileType() == "pad") {
+                    //$("#searchdiv").css({"z-index":"999"});
+                }
+            } else {
+                $("#searchdiv").css({"display":"none"});
+                if(sessionStorage.getItem("sso") == null) {
+                    $("#content").css({"margin-top":"90px"});
+                } else {
+                    $("#content").css({"margin-top":"40px"});
+                }
+                initlist(resultList);
+            }
+        });
+        $("#searchtext").bind("input",function () {
+            var text = $("#searchtext").val();
+            if(text == "") {
+                initlist(resultList);
+            } else {
+                var str = "";
+                $("#content").html("");
+                $.each(resultList, function (index, item) {
+                    if(item.title.indexOf(text) > -1)
+                        str += "<li><div class='flowitem' id='" + item.id + "'>" + item.title + "<span class='num'>" + item.num + "</span></div></li>";
+                })
+                if(str == "") str = "查询结果为空!";
+                $("#content").append("<ul><li>"+str+"</li></ul>");
+                addAction();
+            }
+        });
+        <!--
+        $("#todo").click(function () {
+            $(".todotype").html("我的待办<image src='image/xiala.gif'>");
+            $(".submenu").css({"display":"none"});
+            sessionStorage.setItem("flowtype","0");
+            window.location.reload();
+        });
+        $("#done").click(function () {
+            $(".todotype").html("我的已办<image src='image/xiala.gif'>");
+            $(".submenu").css({"display":"none"});
+            sessionStorage.setItem("flowtype","1");
+            window.location.reload();
+        });
+        -->
+    }
+    function getListItems(flowtype) {
+        $.ajax ({
+            type: "GET",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            url: ipandport+"/flow_info_app?action=flowlist",
+            data: "flowtype="+flowtype,
+            cache:false,
+            beforeSend: function () {
+                $("#loading").append("<image src='image/loading.gif'></image>");
+            },
+            success: function (listitems) {
+                resultList = listitems.resultlist;
+                initlist(resultList);
+                $("#loading").remove();
+            }
+        });
+    }
+    var currentguid = "";
+    var currentTr;
+    var resultList;
+    function initlist(items) {
+        $("#content").html("");
+        var str = "<ul>";
+        $.each(items, function (index, item) {
+            if (item.num > 0) {
+                str += "<li><div class='flowitem' id='" + item.id + "'>" + item.title + "<span class='num'>"+item.num+"</span></div></li>";
+                //str += "<div class='floatspan'>同意</div>";
+            }
+        })
+     	if(str == "<ul>"){
+	    	str = "";
+	    	str += "<br><div class='more' style='text-align:center'><input type='button' id='morebutton' class='button white bigrounded' value='没有可查看的已办' style='background:#3199e8;color:#fff;font-size:1.0em;font-weight:bold;-webkit-appearance: none;'></div>";
+        } 
+        str += "</ul>";
+        $("#content").append(str);
+        addAction();
+    }
+    function addAction() {
+        $(".flowitem").click(function() {
+            $(".flowitem").css({"background":"white"});
+            $(this).css({"background":"lightyellow"});
+            var listguid = $(this).attr("id");
+            currentguid = listguid;
+            currentTr = $(this);
+            sessionStorage.setItem("listguid",listguid);
+            if(getMobileType() == "phone") {
+                window.location = "approval_item.html?listguid=" + listguid;
+            } else {
+                $("#approval_item",window.parent.document).attr("src","approval_item.html?listguid=" + listguid);
+            }
+            return false;
+        });
+        if(getMobileType() == "pad") {
+            $("#content ul").children(":first").find("div").click();
+        }
+    }
+
+    function refreshList() {
+        $.ajax ({
+            type: "GET",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            url: ipandport+"/flow_info_app?action=flowcount",
+            data: "id="+currentguid,
+            cache:false,
+            success: function (msg) {
+                try{
+                    currentTr.find("span").html(msg.resultlist[0].num);
+                    currentTr.click();
+                } catch(e){
+
+                }
+            }
+        });
+    }
+
+</script>
+<body>
+<div class="page">
+    <div id="loading"></div>
+    <!-- <div class="submenu"> 
+        <ul>
+            <li id="done">我的已办</li>
+        </ul>
+     </div> -->
+    <div class="header_menu">
+        <!--<image src="image/sub.png"></image>-->
+        <span class="todotype">我的已办</span>
+        <div class="rightmemu">
+           <!-- <span class="refresh"><image src="image/refresh.png"></image></span> -->
+            <span class="search"><image src="image/search.png"></image></span>
+        </div>
+    </div>
+    <div id="searchdiv"><input type="text" id="searchtext"></div>
+    <div id="content">
+
+    </div>
+    <div class="footer"></div>
+</div>
+</body>
+</html>

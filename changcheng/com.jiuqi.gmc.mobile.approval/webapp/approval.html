@@ -1,0 +1,327 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>审批</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/main.css" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/myapp_common.js"></script>
+		<script src="js/jquery-2.1.4.min.js"></script>		
+		<script type="text/javascript" charset="utf-8">
+		$(document).ready(function() {
+			var canAddSign = "";
+			var signWorkflow = "";
+			var finalApproval = "";
+			initData();
+		});
+		function initData() {
+			//初始化复选框 
+			var FO031 = sessionStorage.getItem("FO031");
+			if(FO031 == "false"){
+				document.getElementById("checkbox").checked = false;
+			}else{
+				document.getElementById("checkbox").checked = true;
+			}
+			var showCheckedBox = sessionStorage.getItem("showCheckedBox");
+			if(showCheckedBox == "false"){
+				$(".model-1").css("display","none");
+				$(".addsign").css("padding-top","20px");
+			}
+			if(sessionStorage.getItem("checked") == "true"){
+				document.getElementById("checkbox").checked = true;
+				$("input[type='checkbox']").attr("onclick","return false");
+			}
+			if(sessionStorage.getItem("checked") == "false"){
+				document.getElementById("checkbox").checked = false;
+				$("input[type='checkbox']").attr("onclick","return false");
+			}
+			var selectUsers = sessionStorage.getItem("selectUsers");
+			var billdataid = GetQueryString("billdataid");
+			var billdefineid = GetQueryString("billdefineid");
+			var workitemid = GetQueryString("workitemid");
+			var flowType = GetQueryString("flowType");
+			var fApprovalDefine = GetQueryString("fApprovalDefine");
+			//加签待办
+			if(fApprovalDefine == "00000000000000000000000000000000"){
+				$("#agree").html("完成");
+				$("#reject").attr("disabled","disabled");
+				$("#reject").attr("style","opacity:0.2;background: #3aa5ff;color: #e2f2ff");
+			}
+			var title = escape(GetQueryString("title"));
+			var addsign = GetQueryString("addSign");
+			$("#back").attr("href","approval_details.html?billdataid="+billdataid+"&billdefineid="+billdefineid+"&workitemid="+workitemid+"&flowType="+flowType+"&fApprovalDefine="+fApprovalDefine+"&title="+title);
+			$.ajax({
+				type: "GET",
+				dataType: "json",
+				contentType: "application/x-www-form-urlencoded; charset=GBK",
+				url: ipandport + "/flow_info_app?action=addapprovalusers",
+				data:"billDataID="+billdataid+"&billDefineID="+billdefineid+"&workitemid="+workitemid+"&selectUsers="+selectUsers,
+				cache:false,
+				success: function (userlist) {
+					canAddSign = userlist.canAddSign;
+					signWorkflow = userlist.signWorkflow;
+					finalApproval = userlist.finalApproval;
+					if (addsign == "1") {
+						$("#addsign").css("display","block");					
+					}
+					var selectedUsers = "";
+					$.each(userlist.users, function (index,user) {
+						selectedUsers += "<span class='user deletespan' style='opacity:0.4;' userguid='"+user.userguid+"' username='"+user.username+"'>"+user.username+"<i class='deleImg'></i>,</span>";
+	                });
+					if(selectUsers != null) {
+						var users = new Array();
+		                users = selectUsers.split(";");
+		                if(signWorkflow == "true" && showCheckedBox == "false" && FO031 != "false"){		                	
+		                    for(var i = 0; i < users.length; i ++) {
+			                    var user = new Array();
+			                    user = users[i].split("_");
+			                    if(user[1] != undefined)
+			                    	selectedUsers += "<span class='user deletespan' userguid='"+user[0]+"' username='"+user[1]+"'>"+user[1]+"<i class='deleImg'></i>,</span>";
+			                    sessionStorage.setItem("selectUsers",users[users.length - 1]);	
+			                }
+		                }else{
+		                	if(document.getElementsByName('checkbox')[1].checked){
+			                    for(var i = 0; i < users.length; i ++) {
+				                    var user = new Array();
+				                    user = users[i].split("_");
+				                    if(user[1] != undefined)
+				                    	selectedUsers += "<span class='user deletespan' userguid='"+user[0]+"' username='"+user[1]+"'>"+user[1]+"<i class='deleImg'></i>,</span>";
+				                    sessionStorage.setItem("selectUsers",users[users.length - 1]);	
+				                }		                		
+		                	}else{
+			                	for(var i = 0; i < users.length; i ++) {
+				                    var user = new Array();
+				                    user = users[i].split("_");
+				                    if(user[1] != undefined)
+				                    	selectedUsers += "<span class='user deletespan' userguid='"+user[0]+"' username='"+user[1]+"'>"+user[1]+"<i class='deleImg'></i>,</span>";
+				                }
+		                	}
+		                }
+					}
+					if(selectedUsers != ""){
+						$(".addsign").css("display","block");
+						$(".textareahigh").css("margin-top","10px");
+					}
+					$(".addsign").append(selectedUsers);	
+					//已选加签人存到sessionStorage中 
+					var userStr = "";
+			        $.each($(".user"), function (index, item) {
+			        	userStr += $(this).attr("userguid")+"_"+$(this).attr("username")+";";
+			        })
+			        sessionStorage.setItem("selectUsers",userStr);
+					$(".deletespan").on("click",function() {
+						var curruser= $(this);
+						if(document.getElementsByName('checkbox')[1].checked){
+							$(this).remove();
+							var str = "";
+				            $.each($(".deletespan"), function (index, item) {
+				            	str += $(this).attr("userguid")+"_"+$(this).attr("username")+";";
+				            })
+				            sessionStorage.setItem("selectUsers",str);
+				            $.each($(".user"), function (index, item) {
+				            	str += $(this).attr("userguid")+"_"+$(this).attr("username")+";";
+				            })
+				            if(str == ""){
+				            	$(".addsign").css("display","none");
+				            	$(".textareahigh").css("margin-top","20px");
+				            }
+						}else{
+							$(".mui-loading").css("display","block");
+							//同意前加签生效时删除加签人操作
+							$.ajax({
+							    type: "GET",
+							    dataType: "json",
+							    contentType: "application/x-www-form-urlencoded; charset=GBK",
+							    url: ipandport+"/flow_action_app",
+							    data: "action=deleteapprove&billDataID="+billdataid+"&billDefineID="+billdefineid+"&workitemid="+workitemid+"&user="+$(this).attr("userguid"),
+							    cache:false,
+								success: function (msg) {
+								    if(msg.responsecode == "1") {
+								    	$(".mui-loading").css("display","none");
+								    	curruser.remove();
+								    	var str = "";
+							            $.each($(".deletespan"), function (index, item) {
+							            	str += $(this).attr("userguid")+"_"+$(this).attr("username")+";";
+							            })
+							            sessionStorage.setItem("selectUsers",str);
+							            $.each($(".user"), function (index, item) {
+							            	str += $(this).attr("userguid")+"_"+$(this).attr("username")+";";
+							            })
+							            if(str == ""){
+							            	$(".addsign").css("display","none");
+							            	$(".textareahigh").css("margin-top","20px");
+							            }
+								    } 
+								    if(msg.responsecode == "0"){
+								    	$(".mui-loading").css("display","none");
+								    	mui.toast(msg.responsemessage);
+								    }
+								}
+							});
+						}
+					});
+					$(".mui-loading").css("display","none");
+				}
+			});
+			$("#addsign").on("click",function() {
+				sessionStorage.setItem("checked",document.getElementsByName('checkbox')[1].checked);
+				var checked = document.getElementsByName('checkbox')[1].checked;
+				window.location = "approval_linkman.html?fApprovalDefine="+fApprovalDefine+"&flowType="+flowType+"&title="+title+"&billdataid="+billdataid+"&billdefineid="+billdefineid+"&workitemid="+workitemid+"&signWorkflow="+signWorkflow+"&checked="+checked;
+			});
+			$("#agree").on("click",function() {
+				var textarea = document.getElementById("textarea");
+				textarea.focus();
+				var btnArray = ['取消', '确定'];
+				mui.confirm('确定执行审批操作吗？', '提交', btnArray, function(e) {
+					if (e.index == 0) {
+						
+					} else {
+						var text = $("#textarea").val();
+						doAddAction(text, "agree", billdataid, billdefineid, workitemid, flowType, fApprovalDefine, title);
+					}
+				},'div');
+			});
+    		$("#reject").on("click",function() {
+				var textarea = document.getElementById("textarea");
+				textarea.focus();
+				var btnArray = ['取消', '确定'];
+				mui.confirm('确定执行驳回操作吗？', '提交', btnArray, function(e) {
+					if (e.index == 0) {
+						
+					} else {
+						var text = $("#textarea").val();
+						if(text == "") {
+							mui.toast("驳回意见必填！");
+						} else {
+							doAddAction(text, "reject", billdataid, billdefineid, workitemid, flowType, fApprovalDefine, title);
+						}
+					}
+				},'div');
+			});
+		}
+		function doAddAction(text, type, billdataid, billdefineid, workitemid, flowType, fApprovalDefine, title) {
+			var checked = document.getElementsByName('checkbox')[1].checked; 
+			$(".mui-popup-backdrop").css("display","block");
+			$("#progressbar").css("display","block");
+			$(".mui-loading").css("display","block");
+			var users = "";
+            $.each($(".user"), function (index, item) {
+                users += $(this).attr("userguid")+";";
+            });
+            var jsonstr = users.substr(0,users.length-1);
+            var isNormal = "false";
+            if (((users == "" && canAddSign == "true" && finalApproval == "false")) || signWorkflow == "false") {
+            	isNormal = "true";
+            }
+           	$.ajax({
+			    type: "GET",
+			    dataType: "json",
+			    contentType: "application/x-www-form-urlencoded; charset=GBK",
+			    url: ipandport+"/flow_action_app",
+			    data: "checked="+checked+"&approvaluser="+jsonstr+"&approvalsuggest="+text+"&action="+type+"&billDataID="+billdataid+"&billDefineID="+billdefineid+"&workitemid="+workitemid+"&isNormal="+isNormal+"&fApprovalDefine="+fApprovalDefine,
+			    cache:false,
+				success: function (msg) {
+				    if(msg.responsecode == "1") {
+				    	sessionStorage.setItem("selectUsers","");
+				    	$("#progressbar").css("display","none");
+				    	$(".mui-popup-backdrop").css("display","none");
+				    	$(".mui-loading").css("display","none");
+				    	window.location = "approval_listitems.html?flowType="+flowType+"&fApprovalDefine="+fApprovalDefine+"&title="+title;
+				    }
+				    if(msg.responsecode == "0"){
+				    	$(".mui-loading").css("display","none");
+				    	sessionStorage.setItem("selectUsers","");
+				    	$("#progressbar").css("display","none");
+				    	$(".mui-popup-backdrop").css("display","none");					    	
+				    	mui.toast(msg.responsemessage);
+				    }
+				    //柔性提示一下 
+				    if(msg.responsecode == "2"){
+				    	var btnArray = ['否', '是'];
+				    	var param = '同意';
+				    	if(type == "reject"){
+				    		param = '驳回';
+				    	}
+						mui.confirm('选择的加签人尚未签署意见，是否现在'+param+'？', '提示信息', btnArray, function(e) {
+							if (e.index == 0) {
+								$(".mui-loading").css("display","none");
+							} else {
+								var text = $("#textarea").val();
+								doAgreeOrRejectAction(text, "soft"+type, billdataid, billdefineid, workitemid, flowType, fApprovalDefine, title);							
+							}
+						},'div');
+				    }
+				}
+			});
+        };				    
+		function doAgreeOrRejectAction(text, type, billdataid, billdefineid, workitemid, flowType, fApprovalDefine, title) {
+		$.ajax({
+		    type: "GET",
+		    dataType: "json",
+		    contentType: "application/x-www-form-urlencoded; charset=GBK",
+		    url: ipandport+"/flow_action_app",
+		    data: "approvalsuggest="+text+"&action="+type+"&billDataID="+billdataid+"&billDefineID="+billdefineid+"&workitemid="+workitemid,
+		    cache:false,
+			success: function (msg) {
+			    if(msg.responsecode == "1") {
+			    	sessionStorage.setItem("selectUsers","");
+			    	$("#progressbar").css("display","none");
+			    	$(".mui-popup-backdrop").css("display","none");
+			    	$(".mui-loading").css("display","none");
+			    	
+				    window.location = "approval_listitems.html?flowType="+flowType+"&fApprovalDefine="+fApprovalDefine+"&title="+title;
+			    	
+			    } 
+			    if(msg.responsecode == "0"){
+			    	$(".mui-loading").css("display","none");
+			    	sessionStorage.setItem("selectUsers","");
+			    	$("#progressbar").css("display","none");
+			    	$(".mui-popup-backdrop").css("display","none");
+			    	mui.toast(msg.responsemessage);
+			    }
+			}
+		});
+	};		    
+				   
+		</script>
+	</head>
+
+	<body>
+		<div class="mui-loading" style="position: absolute;z-index: 999;left: 50%;top: 50%;margin-left: -12px;margin-top: -82px;">
+	        <div class="mui-spinner">
+	        </div>
+	    </div>      
+		<header id="header" class="mui-bar mui-bar-transparent changeblue headerchange2">
+			<a class="mui-icon mui-icon-left-nav mui-pull-left arrowleft" id="back" style="top:10px"></a>
+			<h1 class="mui-title titlechange" style="top:10px">审批</h1>
+			<a class="mui-icon mui-pull-right arrowleft" id="addsign" style="margin-right:8px;display:none;padding-top:24px;font-size:16px">加签</a>
+		</header>
+		<article class="approve">
+		<div class="mui-input-row mui-checkbox mui-left">
+				<input name="checkbox" value="Item 1" type="checkbox">
+				</div>
+		<section class="model-1" style="margin-left:20px;font-size:15px;margin-top:15px;">同意后加签生效：
+			  <div class="checkbox">
+			    <input type="checkbox" name="checkbox" id="checkbox"/>
+			    <label></label>
+			  </div>
+		</section>
+				
+			<div class="addsign" style ="display:none;">已选加签人员：</div>
+			<div class="mui-input-row textareahigh" style="margin: 20px 20px 10px 20px;display: block;">
+				<textarea id="textarea" rows="5" placeholder="请输入审批意见..."></textarea>
+			</div>
+			<div class="approveall">
+				<div class="approve1">
+					<button type="button" class="mui-btn approve1a1" id="agree" style="background: #3aa5ff;color: #e2f2ff">同意</button>
+					<button type="button" class="mui-btn approve1a2" id="reject" style="background: #3aa5ff;color: #e2f2ff">驳回</button>
+				</div>
+			</div>
+		</article>
+	</body>
+</html>

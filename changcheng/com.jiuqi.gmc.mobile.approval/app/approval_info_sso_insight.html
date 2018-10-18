@@ -1,0 +1,183 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+-->
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' />
+    <meta name="format-detection" content="telephone=no">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/myapp_common.js"></script>
+    <link rel="stylesheet" href="css/commonBlue.css" />
+    <title></title>
+</head>
+<style>
+    #adduser,#route,#showimage{display: none;margin-right: 10px}
+    //#adduser_li,#adduser_route,#adduser_desc,#trans_route,#showimage_li {display: none}
+    #imgarea {width: 23px;height: 23px;float: left;padding-left: 2px;padding-right: 5px;}
+</style>
+<script>
+    $(document).ready(function () {
+        initLayOut();
+        initData();
+        //用户变化屏幕方向时调用
+        $(window).bind( 'orientationchange', function(e){
+            window.parent.orient();
+        });
+    })
+    /*初始化数据*/
+    function initData() {
+        //var billguid = getParam("insight_billguid");
+        var inbillguid = sessionStorage.getItem("insight_billguid");
+        var guids = inbillguid.split("_");
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            url: ipandport+"/insight_bill",
+            data: "billDataID="+guids[0]+"&billDefineID="+guids[1],
+            beforeSend: function () {
+                $("#loading").append("<image src='image/loading.gif'></image>");
+            },
+            success: function (billInfo) {
+            	$("#loading").remove();
+            	$("#navigationTitle").text(billInfo.navigationTitle);
+            	initInfo(billInfo);
+            	initbuttons();
+            }
+        });
+    }
+    function initbuttons() {
+    	$("#back").click(function () {
+        	//window.location = "approval_info_sso.html";
+        	window.history.back(-1);
+        });
+    	/*审批记录*/
+        $("#approval_route").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            //$(this).css({"background":"lightskyblue"});
+            window.location = "approval_route.html?action=route&billType=insightbill";
+        });
+    }
+    function initInfo(billInfo) {
+        var num = 0;
+        var billinfotitle = "<div><h1 class='billtitle'>"+billInfo.maintitle+"</h1></div>";
+        $("#content").append(billinfotitle);
+        var maininfostr = "<div class='expanddiv'><div class='expandheader'><span class='expandmsg'>基本信息</span><span class='expandimg'><i class='upImg'></i></span></div>";
+       	maininfostr += "<div class='info'>";
+        maininfostr += "<div ><table class='commonTable' style=''>";
+        $.each(billInfo.maininfo, function (index, maininfoitem) {
+          if(maininfoitem.title=="null" || maininfoitem.title=="#title"){
+              	maininfostr += "</table></div>";
+        		maininfostr += "</div></div>";
+        		$("#content").append(maininfostr);
+        		maininfostr = "";
+        		if(maininfoitem.title=="#title")
+        			maininfostr +="<div class='expanddiv'><div class='expandheader'><span class='expandmsg'>"+maininfoitem.value+"</span><span class='expandimg'><i class='upImg'></i></image></span></div>"; 
+        		maininfostr += "<div>";
+        		maininfostr += "<div class='info'>";
+			    maininfostr += "<div ><table class='commonTable'>";
+      	  } else if(maininfoitem.attachmentName != null && maininfoitem.attachmentName != undefined && maininfoitem.attachmentName != "") {
+      	  		num = num + 1;
+			    if(num == 1) {
+			    	maininfostr += "<tr><th rowspan='"+maininfoitem.attachmentSize+"' class='leftAttachmentTd'>附件</th>"
+			    }
+      	  		maininfostr += "<td class='rightAttachmentTd' url='"+maininfoitem.attachmentUrl+"'><table><tr><td><img id='imgarea' src='"+maininfoitem.attachmentIcon+"'/></td><td><u>"+maininfoitem.attachmentName+"</u></td></tr></table></td></tr>";
+      	  } else if(maininfoitem.title != undefined) {
+      	  		maininfostr += "<tr><td class='leftTd'>"+maininfoitem.title+"</td><td class='rightTd'>"+maininfoitem.value+"</td></tr>";
+      	  }
+        });
+       	maininfostr += "</table></div>";
+        maininfostr += "</div></div>";
+        $("#content").append(maininfostr);
+        var subinfostr = "";
+        $.each(billInfo.subinfos, function (index, sinfo) {
+            if(sinfo.subinfo.length > 0) {
+                subinfostr += "<div class='expanddiv'><div class='expandheader'><span class='expandmsg'>"+sinfo.subinfotitle+"</span><span class='expandimg'><i class='upImg'></i></span></div>";
+                subinfostr += "<div class='info'>";
+                var infostr = "";
+                $.each(sinfo.subinfo, function (index, subinfoitem) {
+                    infostr += "<div ><table class='commonTable'>";
+                    $.each(subinfoitem.item, function (index, item) {
+                    	if(item.title=="null" || item.title=="#title"){
+                    		infostr += "</table></div>";
+			        		infostr += "</div></div>";
+			        		subinfostr += infostr;
+			        		$("#content").append(subinfostr);
+			        		infostr = "";
+			        		subinfostr = "";
+			        		if(item.title=="#title")
+			        			infostr += "<div class='expanddiv'><div class='expandheader'><span class='expandmsg'>"+item.value+"</span><span class='expandimg'><i class='upImg'></i></span></div>"
+			        		infostr += "<div>";
+			        		infostr += "<div class='info'>";
+						    infostr += "<div ><table class='commonTable' style=''>";
+                    	}else{
+                            infostr += "<tr><td class='leftTd'>"+item.title+"</td><td class='rightTd'>"+item.value+"</td></tr>";
+                    	}
+                    });
+                    infostr += "</table></div>";
+                });
+                if(infostr == "<div class='item'><ul class='table2'></ul></div>")
+                    infostr = "<div class='item'><ul class='table2'><li>该子表无记录！</li></ul></div>";
+                subinfostr += infostr;
+                subinfostr += "</div></div>";
+            }
+        });
+        $("#content").append(subinfostr);
+        $("#content").append("<div id='blank'> </div>");
+        $("td.rightAttachmentTd").click(function () {
+            var url = ipandport+$(this).attr("url");
+            sessionStorage.setItem("attachment_url",url);
+            var sUserAgent = navigator.userAgent.toLowerCase();
+            var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+            var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+            $(this).css({"color":"#551A8B"});
+            window.location = url + "&width=" + document.body.scrollWidth;
+        });
+        hideAndShow();
+    }
+    /*为子单据添加隐藏显示操作*/
+    function hideAndShow() {
+        $(".expandheader").click(function () {
+            if($(this).next("div").css("display") == "none") {
+                $(this).next("div").css({"display":""});
+                $(this).parent("div").nextUntil("div.expanddiv").css({"display":""});
+                $(this).children("span").find("i").attr("class","upImg");
+            } else {
+                $(this).next("div").css({"display":"none"});
+                $(this).parent("div").nextUntil("div.expanddiv").css({"display":"none"});
+                $(this).children("span").find("i").attr("class","downImg");
+            }
+        });
+    }
+</script>
+<body>
+<div class="page">
+    <div id="loading"></div>
+    <div class="header_menu" style="position:fixd">
+        <div class="leftmemu" id="back">
+            <i class="icon icon-back"></i>
+            <span class="backtext">返回</span>
+        </div>
+        <div class="headerName" id='header'>
+        	<span class="backtext" id="navigationTitle" style='margin-left:30px;width:100px'></span>
+        </div>
+    </div>
+    <div id="content">
+    	<div class='tab'>
+    		<div class="tabList">
+    			<span id="approval_info_sso"  class="tabcur">详情</span>
+				<span id="approval_route">轨迹</span>
+				<div style="clear:both"></div>
+			</div>
+    	</div>
+    </div>
+    <div id="signSuggest">
+    
+    </div>
+   <div class="footer"></div>
+</div>
+</body>
+</html>

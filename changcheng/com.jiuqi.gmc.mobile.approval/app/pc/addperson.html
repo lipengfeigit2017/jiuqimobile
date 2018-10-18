@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+ <head>
+	<link rel="stylesheet" href="jquery/jquery.mobile-1.4.5.min.css">
+	<script src="jquery/jquery-2.1.4.min.js"></script>
+	<script src="jquery/jquery.mobile-1.4.5.min.js"></script>
+  <title>Document</title>
+ </head>
+ <style>
+	#pageone {width:100%}
+	textarea.ui-input-text{min-height:70px;}
+	#div_content {margin:0;padding:0;height:50%}
+ </style>
+ <body>
+   <div data-role="page" id="pageone">
+    <div data-role="header"  data-position="fixed">
+    <a href="message.html" data-ajax="false" data-role="button" data-icon="back">返回</a>
+    <h1>加签</h1>
+	 <a href="selectperson.html" data-ajax="false" data-role="button" data-icon="plus">添加</a>
+  </div>
+  <div data-role="content" id="div_content">
+    <ul data-role="listview" data-inset="true">
+      <li data-icon="delete"><a href="javascript:showList()">韩登科  北京分公司</a><a href="#">删除</a></li>
+      <li data-icon="delete"><a href="javascript:showList()">韩登科  北京分公司信息部</a><a href="#">删除</a></li>
+      <li data-icon="delete"><a href="javascript:showList()">韩登科  北京分公司财务部</a><a href="#">删除</a></li>
+    </ul>
+  </div>
+  				<div data-role="fieldcontain" id="div_textarea">
+					<textarea name="textarea" id="textarea" rows="3" value="请输入加签说明..."></textarea>
+					<a href="message.html" data-role="button" data-ajax="false">确定</a>       
+					<a href="message.html" data-role="button" data-ajax="false">取消</a>   
+				</div>
+</div>
+ </body>
+</html>
