@@ -1,0 +1,593 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+-->
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' />
+    <meta name="format-detection" content="telephone=no">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/myapp_common.js"></script>
+    <script src="js/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="css/commonBlue.css" />
+    <link rel="stylesheet" href="css/sweetalert.css" />
+    <title></title>
+</head>
+<style>
+    #adduser,#route,#showimage{display: none;margin-right: 10px}
+    //#adduser_li,#adduser_route,#adduser_desc,#trans_route,#showimage_li {display: none}
+    #imgarea {width: 23px;height: 23px;float: left;padding-left: 2px;padding-right: 5px;}
+    #textdiv {padding-left: 10px;}
+</style>
+<script>
+    $(document).ready(function () {
+        initLayOut();
+        if(getMobileType() == "phone") {
+            $("#logout").click(function () {
+                logout("注销成功");
+            });
+            if(sessionStorage.getItem("sso") == 1) {
+                $(".welcome").css("margin-top","0");
+                $(".submenu").css("top","40px");
+                $(".billtitle").css("margin-top","15px");
+                if(sessionStorage.getItem("returnUrl") == "111") {
+                    $("#back").css({"display":"none"});
+                    $("#header").css({"margin-left":"60px"})
+                } 
+            }
+        }
+        $("body").click(function (e) {
+            if(e.target.id == "otherimg") return;
+            $(".submenu").css({"display":"none"});
+        });
+        initData();
+        //用户变化屏幕方向时调用
+        $(window).bind( 'orientationchange', function(e){
+            window.parent.orient();
+        });
+    })
+    /*初始化加签意见和说明*/
+    function initSignSuggest(){
+    	var billguid = sessionStorage.getItem("billguid");
+        var guids = billguid.split("_");
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=GBK",
+            url: ipandport+"/flow_action_app?action=addapprovalsugggest",
+            data:"billDataID="+guids[0]+"&billDefineID="+guids[1]+"&workitemid="+guids[2],
+            success: function (routeItems) {
+                initGrid(routeItems);
+            }
+        });
+    }
+    /*初始化加签人意见的table*/
+    function initGrid(routeItems){
+    	var str = "";
+    	if(routeItems.suggest != "" || routeItems.note != ""){
+    		if(routeItems.suggest != "" && routeItems.suggest != undefined && routeItems.suggest != null){
+    			str = "<div class='expandheader' id='signID'>加签意见 </div>"
+    			str += "<table class='commonTableSign'>"
+    			var routeItem = routeItems.suggest.split("；");
+    			$.each(routeItem, function(i, value) {
+	    			if(value != ""){
+	    				str += "<tr><td style='padding: 5px 15px 0px 15px;'>"+value+"；</td></tr>"
+	    			}
+				});
+				str += "</table>"
+    			$("#signSuggest").append(str);
+    		} else if(routeItems.note != "" && routeItems.note != undefined && routeItems.note != null) {
+    			str = "<div class='expandheader' id='signID'>加签说明 </div>"
+    			str += "<table class='commonTableSign'>"
+    			var routeItem = routeItems.note.replace(/\n/g,"<br/>");
+    			str += "<tr><td style='height：33px;padding: 3px 3px 4px 4px;color:#999999;border-right: 1px solid #DDE8FC;border-left: 1px solid #DDE8FC;border-bottom: 1px solid #DDE8FC'>"+routeItems.note+"</td></tr>"
+    			str += "</table>"
+    			$("#signSuggest").append(str);
+    		}
+    	}
+    }
+    /*初始化数据*/
+    function initData() {
+        //var billguid = getParam("billguid");
+        var billguid = sessionStorage.getItem("billguid");
+        var guids = billguid.split("_");
+        var flowtype = sessionStorage.getItem("flowtype");
+        var listguid = window.sessionStorage.getItem("listguid");
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            url: ipandport+"/flow_info_app?action=billinfo",
+            data: "billDataID="+guids[0]+"&billDefineID="+guids[1]+"&workitemid="+guids[2]+"&taskid="+guids[3]+"&businessObjectType="+guids[4]+"&type="+flowtype+"&fapprovaltasklistid="+listguid,
+//          data: "billDataID="+guids[0]+"&billDefineID="+guids[1]+"&workitemid="+guids[2]+"&taskid="+guids[3]+"&type="+flowtype+"&fapprovaltasklistid="+listguid,
+            beforeSend: function () {
+                $("#loading").append("<image src='image/loading.gif'></image>");
+            },
+            success: function (billInfo) {
+            	$("#loading").remove();
+            	if(billInfo.hasDone != null){
+            		swal(billInfo.hasDone);
+            	} else {
+            		$("#navigationTitle").text(billInfo.navigationTitle);
+            		if(billInfo.AddApproverActionList != 0 || billInfo.AttachmentActionList != 0){
+            			if(flowtype != 1){
+            				$(".rightmemu").html("<span id='other'><i id='otherimg' class='icon'></i>");
+	            			if(billInfo.AddApproverActionList != 0 && billInfo.AttachmentActionList == 0){
+	            				$("#submenuUl").html("<li id='adduser_li_menu'>"+billInfo.AddApproverActionList+"</li>");
+	            			}
+	            			if(billInfo.AttachmentActionList != 0 && billInfo.AddApproverActionList == 0){
+	            				$("#submenuUl").html("<li id='enclosure'>"+billInfo.AttachmentActionList+"</li>");
+	            			} 
+	            			if(billInfo.AttachmentActionList != 0 && billInfo.AddApproverActionList != 0){
+	            				$("#submenuUl").html("<li id='enclosure'>"+billInfo.AttachmentActionList+"</li>"+"<li id='adduser_li_menu'>"+billInfo.AddApproverActionList+"</li>");
+	            			}
+            			}
+            		}
+            		if($(".rightmemu").html() == ""){	
+            			$(".rightmemu").html("<span id='other'><i id='otherimg' class='icon'></i>");
+            		}
+            		$("#submenuUl").append("<li id='showimage_li'>查看影像</li>");
+            		if(billInfo.imageState == -2){
+            			$("#showimage_li").click(function () {
+            				swal("此单据无影像")
+                        });
+            		}else{
+            	        /*影像*/
+            	        $("#showimage_li").click(function () {
+            	            $(".submenu ul li").css({"background":"white"});
+            	            $(this).css({"background":"lightskyblue"});
+            	            window.location = "approval_image.html";
+            	        });
+            		}
+            		// update by txj version:2017_05_11
+            		if(typeof(billInfo.AddApproverActionList) == "undefined"){
+            			if(flowtype != 1){
+            				$(".rightmemu").html("");
+            			}
+            		}
+            	 	initInfo(billInfo);
+                	sessionStorage.setItem("id",billInfo.id);
+                	initbuttons();
+            	}
+            }
+        });
+    }
+    function initInfo(billInfo) {
+        var fetchflag = billInfo.getback;/*0:允许取回*/
+        var flowtype = sessionStorage.getItem("flowtype");/*0:待办；1已办*/
+        var adduserflag = billInfo.addapprovalsuggest;/*是否有加签人*/
+        var finishflag = sessionStorage.getItem("listguid");/*如果是32个0，说明书加签待办*/
+        var transformflag = sessionStorage.getItem("transform");/*0：转授权，1非转授权*/
+        var num = 0;
+        var qutoNum = 0;
+        var qutoTitle;
+        var AddApproverAction = billInfo.AddApproverAction;
+        /*
+        if(flowtype == 0) {
+            $("#agree").css({"display":"inline"});
+        }
+        */
+        if(flowtype == 1) {
+            if(fetchflag == 0) {
+                $("#fetch").css({"display":"inline"});
+            }
+            $("#suggest").css({"display":"none"});
+            //$("#agree").css({"display":"none"});
+        }
+        var billinfotitle = "<div><h1 class='billtitle'>"+billInfo.maintitle+"</h1></div>";
+        $("#content").append(billinfotitle);
+        var maininfostr = "<div class='expanddiv'><div class='expandheader'><span class='expandmsg'>基本信息</span><span class='expandimg'><i class='upImg'></i></span></div>";
+       	maininfostr += "<div class='info'>";
+        maininfostr += "<div ><table class='commonTable' style=''>";
+        $.each(billInfo.maininfo, function (index, maininfoitem) {
+          if(maininfoitem.title=="null" || maininfoitem.title=="#title"){
+              	maininfostr += "</table></div>";
+        		maininfostr += "</div></div>";
+        		$("#content").append(maininfostr);
+        		maininfostr = "";
+        		if(maininfoitem.title=="#title")
+        			maininfostr +="<div class='expanddiv'><div class='expandheader'><span class='expandmsg'>"+maininfoitem.value+"</span><span class='expandimg'><i class='upImg'></i></image></span></div>"; 
+        		maininfostr += "<div>";
+        		maininfostr += "<div class='info'>";
+			    maininfostr += "<div ><table class='commonTable'>";
+      	  } else if(maininfoitem.attachmentName != null && maininfoitem.attachmentName != undefined && maininfoitem.attachmentName != "") {
+      	  		num = num + 1;
+			    if(num == 1) {
+			    	maininfostr += "<tr><th rowspan='"+maininfoitem.attachmentSize+"' class='leftAttachmentTd'>附件</th>"
+			    }
+      	  		maininfostr += "<td class='rightAttachmentTd' url='"+maininfoitem.attachmentUrl+"'><table><tr><td><img id='imgarea' src='"+maininfoitem.attachmentIcon+"'/></td><td><u>"+maininfoitem.attachmentName+"</u></td></tr></table></td></tr>";
+      	  } else if(maininfoitem.qutoShowValue != null && maininfoitem.qutoShowValue != undefined  && maininfoitem.qutoShowValue != ""){
+      	  		qutoNum = qutoNum + 1;
+      	  		if(qutoNum == 1 || qutoTitle !=  maininfoitem.qutoShowTitle){
+      	  			qutoTitle = maininfoitem.qutoShowTitle;
+      	  			maininfostr += "<tr><th rowspan='"+maininfoitem.qutoBillSize+"' class='leftAttachmentTd'>"+maininfoitem.qutoShowTitle+"</th>";
+      	  		}
+      	  		maininfostr += "<td class='rightAttachmentTd' url='"+maininfoitem.qutoBillUrl+"' quto='isQuto'><table><tr><td><u>"+maininfoitem.qutoShowValue+"</u></td></tr></table></td></tr>";
+      	  } else if(maininfoitem.title != undefined) {
+      	  		maininfostr += "<tr><td class='leftTd'>"+maininfoitem.title+"</td><td class='rightTd'>"+maininfoitem.value+"</td></tr>";
+      	  }
+        });
+       	maininfostr += "</table></div>";
+        maininfostr += "</div></div>";
+        $("#content").append(maininfostr);
+        var subinfostr = "";
+        $.each(billInfo.subinfos, function (index, sinfo) {
+            if(sinfo.subinfo.length > 0) {
+                subinfostr += "<div class='expanddiv'><div class='expandheader'><span class='expandmsg'>"+sinfo.subinfotitle+"</span><span class='expandimg'><i class='upImg'></i></span></div>";
+                subinfostr += "<div class='info'>";
+                var infostr = "";
+                $.each(sinfo.subinfo, function (index, subinfoitem) {
+                    infostr += "<div ><table class='commonTable'>";
+                    $.each(subinfoitem.item, function (index, item) {
+                    	if(item.title=="null" || item.title=="#title"){
+                    		infostr += "</table></div>";
+			        		infostr += "</div></div>";
+			        		subinfostr += infostr;
+			        		$("#content").append(subinfostr);
+			        		infostr = "";
+			        		subinfostr = "";
+			        		if(item.title=="#title")
+			        			infostr += "<div class='expanddiv'><div class='expandheader'><span class='expandmsg'>"+item.value+"</span><span class='expandimg'><i class='upImg'></i></span></div>"
+			        		infostr += "<div>";
+			        		infostr += "<div class='info'>";
+						    infostr += "<div ><table class='commonTable' style=''>";
+                    	}else if(item.qutoShowValue != null && item.qutoShowValue != undefined && item.qutoShowValue != "") {
+                    		infostr += "<tr><td class='leftTd'>"+item.qutoShowTitle+"</td><td class='rightAttachmentTd' url='"+item.qutoBillDataId+"_"+item.qutoBillDefineId+"' quto='isQuto' style='-webkit-tap-highlight-color:rgba(0,0,0,0);color:#0000CC;'><u>"+item.qutoShowValue+"</u></td></tr>";
+                    	}else if(item.title != null && item.title != undefined && item.title != "") {
+                            infostr += "<tr><td class='leftTd'>"+item.title+"</td><td class='rightTd'>"+item.value+"</td></tr>";
+                    	}
+                    });
+                    infostr += "</table></div>";
+                });
+                if(infostr == "<div class='item'><ul class='table2'></ul></div>")
+                    infostr = "<div class='item'><ul class='table2'><li>该子表无记录！</li></ul></div>";
+                subinfostr += infostr;
+                subinfostr += "</div></div>";
+            }
+        });
+        $("#content").append(subinfostr);
+        $("#content").append("<div id='blank'> </div>");
+        if(AddApproverAction == 1){
+        	$("#suggest").append("<div><div class='expandheader' id='comments'>审批意见 </div><div style='width:92%; margin-left:4%; margin-right:4%'><textarea class='textarea' id='advicetext' rows='10' placeholder='请输入意见...'></textarea></div></div><div class='buttonAreasign'><input class='agreeBtnsign' type='button' id='agreeBt' value='提交'><input class='rejectBtnsign' type='button' id='reject' value='退回'><input class='suggestBtnsign' type='button' id='adduser_li' value='意见征询'></div>");
+        } else {
+        	//$("#adduser_li_menu").css({"display":"none"});
+        	$("#suggest").append("<div><div class='expandheader' id='comments'>审批意见 </div><div style='width:92%; margin-left:4%; margin-right:4%'><textarea class='textarea' id='advicetext' rows='10' placeholder='请输入意见...'></textarea></div></div><div class='buttonArea'><input class='agreeBtn' type='button' id='agreeBt' value='"+billInfo.AgreeActionList+"'><input class='rejectBtn' type='button' id='reject' value='"+billInfo.RejectActionList+"'></div>");
+        }
+        initGrid(billInfo);
+        $("td.rightAttachmentTd").click(function () {
+        	var quto = $(this).attr("quto");
+        	if(quto == "isQuto"){
+        		$(this).css({"color":"#551A8B"});
+        		var insight_billguid = $(this).attr("url");
+        		if(insight_billguid != null && insight_billguid != undefined && insight_billguid != ""){
+        			sessionStorage.setItem("insight_billguid",insight_billguid);
+        			window.location = "approval_info_sso_insight.html";
+        		}
+        	} else {
+        		var url = ipandport+$(this).attr("url");
+	            sessionStorage.setItem("attachment_url",url);
+	            var sUserAgent = navigator.userAgent.toLowerCase();
+	            var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+	            var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+	            $(this).css({"color":"#551A8B"});
+	            window.location = url + "&width=" + document.body.scrollWidth;
+        	}
+        });
+        hideAndShow();
+    }
+    var agreeNum = 1;
+    var rejectNum = 1;
+    /*初始化按钮的事件(phone)*/
+    function initbuttons() {
+        var billguid = sessionStorage.getItem("billguid");
+        var guids = billguid.split("_");
+        var flowtype = sessionStorage.getItem("flowtype");
+        $("#back").click(function () {
+            if(sessionStorage.getItem("sso") != null) {
+                window.location = "approval_item.html";
+            } else {
+                window.location = "approval_item.html";
+            }
+        });
+        $("#agree").click(function () {
+        	if(sessionStorage.getItem("sso") != null) {
+                window.location = "approval_advice_sso.html";
+            } else {
+				window.location = "approval_advice.html";
+            }
+        });
+        $("#finish").click(function () {
+            window.location = "approval_advice.html?finish=1";
+        });
+        $("#fetch").click(function () {
+            var billguid = sessionStorage.getItem("billguid");
+            var guids = billguid.split("_");
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded; charset=GBK",
+                url: ipandport+"/flow_action_app?action=getback",
+                data: "billDataID="+guids[0]+"&billDefineID="+guids[1]+"&workitemid="+guids[2],
+                success: function (msg) {
+                    window.location = "approval_item.html"
+                }
+            });
+        });
+        $("#adduser").click(function () {
+            window.location = "approval_adduser.html";
+        });
+        $("#route").click(function () {
+            window.location = "approval_route.html?action=route";
+        });
+        $("#showimage").click(function () {
+            window.location = "approval_image.html";
+        });
+        $("#other").click(function () {
+            //if ($(".submenu").css("display") == "none") {
+                //$(".submenu").css({"display": "block"});
+            //} else {
+                //$(".submenu").css({"display": "none"});
+            //} 
+            $(".submenu").slideToggle("fast");
+        });
+        /*加签*/
+        $("#adduser_li").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            //$(this).css({"background":"lightskyblue"});
+            window.location = "approval_adduser.html";
+        });
+        $("#adduser_li_menu").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            //$(this).css({"background":"lightskyblue"});
+            window.location = "approval_adduser.html";
+        });
+        /*加签说明*/
+        $("#adduser_desc").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            $(this).css({"background":"lightskyblue"});
+            window.location = "approval_route.html?action=getaddapprpvalnote";
+        });
+        /*审批记录*/
+        $("#approval_route").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            //$(this).css({"background":"lightskyblue"});
+            window.location = "approval_route.html?action=route";
+        });
+        /*加签意见*/
+        $("#adduser_route").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            //$(this).css({"background":"lightskyblue"});
+            window.location = "approval_route.html?action=addapprovalsugggest";
+        });
+        /*转授权意见*/
+        $("#trans_route").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            $(this).css({"background":"lightskyblue"});
+            window.location = "approval_route.html?action=getdelegateoption";
+        });
+        /*影像*/
+        $("#showimage_li").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            $(this).css({"background":"lightskyblue"});
+            window.location = "approval_image.html";
+        });
+        /*附件*/
+        $("#enclosure").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            window.location = "approval_attachment.html";
+        });
+        /*取消审批意见的点击事件*/
+        $('#comments').unbind("click");
+        $('#signID').unbind("click");
+        /*审批相关操作 */
+	    $("#agreeBt").click(function () {
+            if(agreeNum == 1){
+            	agreeNum = 2;
+            	var text = $("#advicetext").val();
+	            if(text == "") {
+	            }
+            	doAddAction(text,"agree");
+            }
+        });
+        $("#reject").click(function () {
+            if(rejectNum == 1){
+            	rejectNum = 2;
+            	var text = $("#advicetext").val();
+            	doAddAction(text,"reject");
+            }
+        });
+    }
+    /*先判断加签人是否通过*/
+	function doAddAction(text, type) {
+		var billguid = sessionStorage.getItem("billguid");
+		var guids = billguid.split("_");
+		var message = "";
+		$.ajax({
+		    type: "GET",
+		    dataType: "json",
+		    contentType: "application/x-www-form-urlencoded; charset=GBK",
+		    url: ipandport+"/flow_action_app?action=checkaddapproval",
+		    data: "billDataID="+guids[0]+"&billDefineID="+guids[1]+"&workitemid="+guids[2],
+		    cache:false,
+		    success: function (msg) {
+		        if(msg.isallapproval == 0) {
+		        	rejectNum = 1;
+		        	agreeNum = 1;
+		        	message = "加签人尚未签署意见";
+		        	swal(message);
+		        } else {
+		        	if(type == "reject") {
+				         if(text == "") {
+				         	swal("驳回意见必填");
+				         	rejectNum = 1;
+				         	return;
+				         } else {
+				         	swal({
+			                    title: "",
+			                    text: "确认执行此操作吗",
+			                    type: "warning",
+			                    showCancelButton: true,
+			                    cancelButtonText: "取消",
+			                    confirmButtonColor: "#DD6B55",
+			                    confirmButtonText: "确定",
+			                    closeOnConfirm: false,
+			                    closeOnCancel: true
+			                },
+			                function(isConfirm){
+			                	if(isConfirm){
+			                		handleAction(text, type);
+			                	} else {
+			                		rejectNum = 1;
+			                	}
+			                }
+			            	);
+				         }
+		        	} else {
+		        		 swal({
+		                    title: "",
+		                    text: "确认执行此操作吗",
+		                    type: "warning",
+		                    showCancelButton: true,
+		                    cancelButtonText: "取消",
+		                    confirmButtonColor: "#DD6B55",
+		                    confirmButtonText: "确定",
+		                    closeOnConfirm: false,
+		                    closeOnCancel: true
+		                },
+		                function(isConfirm){
+		                	if(isConfirm){
+		                		handleAction(text, type);
+		                	} else {
+		                		agreeNum = 1;
+		                	}
+		                }
+		            	);
+		        	}
+		        }
+		    }
+		});
+    }
+    /*进行审批，审批前先判断加签是否审批通过*/
+    function handleAction(text, type) {
+        var billguid = sessionStorage.getItem("billguid");
+        var taskid = sessionStorage.getItem("taskid");
+        var guids = billguid.split("_");
+        swal({
+                title: "",
+                text: "正在执行中,请稍候...",
+                type: "warning",
+                showCancelButton: false,
+                showConfirmButton:false,
+                closeOnConfirm: false
+              }
+            );
+        if(taskid==null)
+        	taskid = guids[3];
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=GBK",
+            url: ipandport+"/flow_action_app",
+            data: "approvalsuggest="+text+"&action="+type+"&billDataID="+guids[0]+"&billDefineID="+guids[1]+"&workitemid="+guids[2]+"&taskid="+taskid+"&businessObjectType="+guids[4],
+//          data: "approvalsuggest="+text+"&action="+type+"&billDataID="+guids[0]+"&billDefineID="+guids[1]+"&workitemid="+guids[2]+"&taskid="+taskid,
+            cache:false,
+            error:function(data){
+             	swal({
+                        title:"执行失败",
+                        type : "success"},function() {
+                        if(getMobileType() == "pad") {
+                            var frames = window.parent.window.document.getElementById("approval_list");
+                            frames.contentWindow.refreshList();
+                        }
+                        else {
+                            window.location = "approval_item.html";
+                        }
+                  });
+                 rejectNum = 1;
+		         agreeNum = 1;
+			},
+            success: function (msg) {
+                if(msg.responsecode == "1") {
+                    swal({
+                        title:"执行成功",
+                        type : "success"},function() {
+                        if(getMobileType() == "pad") {
+                            var frames = window.parent.window.document.getElementById("approval_list");
+                            frames.contentWindow.refreshList();
+                        }
+                        else {
+                        	sessionStorage.setItem("listguid",msg.id);
+                            window.location = "approval_item.html";
+                        }
+                    });
+                } else {
+                	swal(msg.responsemessage);
+                    //swal(msg.responsemessage, "", "error");
+                    rejectNum = 1;
+		        	agreeNum = 1;
+                }
+            }
+        });
+    }
+    /*为子单据添加隐藏显示操作*/
+    function hideAndShow() {
+        $(".expandheader").click(function () {
+            if($(this).next("div").css("display") == "none") {
+                $(this).next("div").css({"display":""});
+                $(this).parent("div").nextUntil("div.expanddiv").css({"display":""});
+                $(this).children("span").find("i").attr("class","upImg");
+            } else {
+                $(this).next("div").css({"display":"none"});
+                $(this).parent("div").nextUntil("div.expanddiv").css({"display":"none"});
+                $(this).children("span").find("i").attr("class","downImg");
+            }
+        });
+    }
+</script>
+<body>
+<div class="page">
+    <div id="loading"></div>
+    <div class="submenu">
+    <ul id="submenuUl">
+        <!--  
+        <li id="adduser_li_menu">意见征询</li>
+        <li id="adduser_route">加签意见</li>
+        <li id="enclosure">查看附件</li>
+        <li id="approval_route">审批记录</li>
+        <li id="adduser_desc">加签说明</li>
+        <li id="trans_route">转授权意见</li>
+        <li id="showimage_li">查看影像</li>
+        -->
+    </ul>
+    </div>
+    <div class="header_menu" style="position:fixd">
+        <div class="leftmemu" id="back">
+            <i class="icon icon-back"></i>
+            <span class="backtext">返回</span>
+        </div>
+        <div class="headerName" id='header'>
+        	<span class="backtext" id="navigationTitle" style='margin-left:30px;width:100px'></span>
+        </div>
+        <div class='rightmemu'></div>
+    </div>
+    <div id="content">
+    	<div class='tab'>
+    		<div class="tabList">
+    			<span id="approval_info_sso" class="tabcur">详情</span>
+				<span id="approval_route">轨迹</span>
+				<div style="clear:both"></div>
+			</div>
+    	</div>
+    </div>
+    <div id="signSuggest">
+    
+    </div>
+    <div id="suggest">
+	    
+    </div>
+   <div class="footer"></div>
+</div>
+</body>
+</html>

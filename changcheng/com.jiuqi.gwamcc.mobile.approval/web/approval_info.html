@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width,initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' />
+    <meta name="format-detection" content="telephone=no">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/jquery.nicescroll.js"></script>
+    <script src="js/myapp_common.js"></script>
+    <script src="js/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/sweetalert.css" />
+    <title></title>
+</head>
+<style>
+    .submenu {
+        display: none;
+        background: white;
+        width: 200px;
+        position: absolute;
+        top:0px;
+        right: 2px;
+        border: 2px solid gainsboro;
+        z-index: 999;
+    }
+    .submenu ul {
+        margin: 0;
+        padding: 0;
+    }
+    .submenu li {
+        list-style: none;
+        height: 45px;
+        line-height: 45px;
+        padding-left: 20px;
+        border-bottom: 1px solid gainsboro;
+    }
+    .expandheader {float: left;
+        background:#f8f8f8;height: 40px;line-height: 40px;padding-left: 10px;
+        border: 1px solid gainsboro;width: 98%;clear: both}
+    .expandimg {float: right;margin-right: 20px;padding-top: 5px}
+    .info {margin-top: 10px;}
+
+    .billtitle {margin-top:15px;width: 98%;height: 30px;line-height:30px;text-align: center;font-size: 20px;}
+
+    .table1 {margin: 0;padding-left: 10px; }
+    .table1 li {list-style: none;line-height: 1.5;width: 100%;}
+
+    .s_text_attr {width: 150px;display: inline-block;vertical-align: top;}
+    .s_text_value {width: 150px;display: inline-block;vertical-align: top;}
+
+    .mainitem,.item {width: 100%;padding-top:10px;border-top: 1px solid gainsboro}
+    .table2 {margin: 0;padding-left: 10px;}
+    .table2 li {list-style: none;line-height: 1.5;}
+
+    #adduser,#route,#showimage,#agree,#fetch,#finish {display: none;margin-right: 5px}
+    #adduser_li,#adduser_route,#adduser_desc,#trans_route,#enclosure {display: none}
+
+    /*横屏*/
+/*    @media only screen and (orientation: landscape) {
+/!*        #other {display: none}
+        #adduser,#route,#showimage {display: inline}*!/
+       /!* .table1 li {display: inline-block}
+        .table2 li {display: inline-block}*!/
+        /!*.s_text_attr {width:200px}*!/
+        /!*.s_text_value {width:60%}*!/
+        .s_text_attr {width:180px}
+        .s_text_value {width:60%}
+    }*/
+    /*横屏：针对pad的横屏*/
+    @media only screen and (max-width:1440px) and (orientation: landscape) {
+        .s_text_attr {width:180px}
+        .s_text_value {width:400px;}
+    }
+    /*竖屏640:针对pad的竖屏*/
+    @media only screen and (max-width:640px) and (orientation: portrait) {
+        .s_text_attr {width: 150px;}
+        .s_text_value {width: 250px;}
+    }
+
+    /*横屏：针对手机的横屏*/
+    @media only screen and (max-width:640px) and (orientation: landscape) {
+        .s_text_attr {width: 150px;}
+        .s_text_value {width: 300px;}
+    }
+    /*竖屏480：针对手机的竖屏*/
+    @media only screen and (max-width:480px) and (orientation: portrait) {
+        .s_text_attr {width: 120px;}
+        .s_text_value {width: 300px;}
+    }
+    /*竖屏480：针对手机的竖屏*/
+    @media only screen and (max-width:384px) and (orientation: portrait) {
+        .s_text_attr {width: 120px;}
+        .s_text_value {width: 220px;}
+    }
+    /*竖屏480：针对手机的竖屏*/
+    @media only screen and (max-width:320px) and (orientation: portrait) {
+        .s_text_attr {width: 120px;}
+        .s_text_value {width: 150px;}
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        initLayOut();
+        $(".page").niceScroll("#content",{cursoropacitymax:0.7,boxzoom:true,touchbehavior:true,iframeautoresize:true});
+        if(getMobileType() == "phone") {
+            if(sessionStorage.getItem("sso") == "1") {
+                $("#route").css("display","inline");
+                $("#enclosure").css("display","inline");
+                $("#other").css("display","none");
+            }
+            /*为了解决手机端固定菜单栏的特殊处理*/
+            $(".submenu").css({"position":"fixed","top":"90px"});
+            $(".billtitle").css({"margin-top":"115px","top":"90px"});
+            if(sessionStorage.getItem("sso") == 1) {
+                $(".submenu").css("top","60px");
+            }
+        }
+        $("body").click(function (e) {
+            if(e.target.id == "otherimg") return;
+            $(".submenu").css({"display":"none"});
+        });
+        initData();
+        initbuttons();
+        window.parent.orient();
+        //用户变化屏幕方向时调用
+        $(window).bind( 'orientationchange', function(e){
+            //window.parent.orient();
+        });
+    })
+    /*初始化数据*/
+    function initData() {
+        //var billguid = getParam("billguid");
+        var billguid = sessionStorage.getItem("billguid");
+        var guids = billguid.split("_");
+        var flowtype = sessionStorage.getItem("flowtype");
+        //var billinfo = sessionStorage.getItem("billinfo");
+//        if(billinfo != null) {
+//            initInfo(billinfo);
+//        } else {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                url: ipandport+"/flow_info_app?action=billinfo",
+                data: "billDataID="+guids[0]+"&billDefineID="+guids[1]+"&workitemid="+guids[2]+"&type="+flowtype,
+                cache:false,
+                beforeSend: function () {
+                    $("#loading").append("<image src='image/loading.gif'></image>");
+                },
+                success: function (billInfo) {
+                    initInfo(billInfo);
+                    //sessionStorage.setItem("billinfo",billInfo);
+                    $("#loading").remove();
+                }
+            });
+        //}
+
+    }
+    function initInfo(billInfo) {
+        var fetchflag = billInfo.getback;/*0:允许取回*/
+        var flowtype = sessionStorage.getItem("flowtype");/*0:待办；1已办*/
+        var adduserflag = billInfo.addapprovalsuggest;/*是否有加签人*/
+        var finishflag = sessionStorage.getItem("listguid");/*如果是32个0，说明书加签待办*/
+        var transformflag = sessionStorage.getItem("transform");/*0：转授权，1非转授权*/
+        if(flowtype == 0) {
+            if(finishflag == "00000000000000000000000000000000") {
+                $("#finish").css({"display":"inline"});
+                $("#adduser_desc").css({"display":"block"});
+            } else {
+                $("#agree").css({"display":"inline"});
+                $("#adduser_li").css({"display":"block"});
+                if(adduserflag == 1) {
+                    $("#adduser_route").css({"display":"block"});
+                }
+                if(transformflag == 0) {
+                    $("#trans_route").css({"display":"block"});
+                }
+            }
+        }
+        if(flowtype == 1) {
+            if(fetchflag == 0) {
+                $("#fetch").css({"display":"inline"});
+            }
+        }
+
+
+        var billinfotitle = "<h1 class='billtitle'>"+billInfo.maintitle+"</h1>";
+        $("#content").append(billinfotitle);
+        /*为了手机端菜单栏固定的特殊处理*/
+        if(getMobileType() == "phone") {
+            $(".billtitle").css({"margin-top":"105px","top":"90px"});
+        }
+        var maininfostr = "<div class='mainitem'><ul class='table1'>";
+        $.each(billInfo.maininfo, function (index, maininfoitem) {
+        	if(maininfoitem.title==null||maininfoitem.title==""||maininfoitem.title.trim()==null){
+                maininfostr += "<li><span class='s_text_attr'>"+maininfoitem.title+"</span><span class='s_text_value'>"+maininfoitem.value+"</span></li>";
+        	}else{
+                maininfostr += "<li><span class='s_text_attr'>"+maininfoitem.title+":</span><span class='s_text_value'>"+maininfoitem.value+"</span></li>";
+        	}
+        });
+        maininfostr += "</ul></div>";
+        $("#content").append(maininfostr);
+
+        var subinfostr = "";
+        $.each(billInfo.subinfos, function (index, sinfo) {
+            if(sinfo.subinfo.length > 0) {
+                subinfostr += "<div class='expanddiv'><div class='expandheader'>"+sinfo.subinfotitle+"<span class='expandimg'><image class='' src='image/down.png'></image></span></div>";
+                subinfostr += "<div class='info'>";
+                var infostr = "";
+                $.each(sinfo.subinfo, function (index, subinfoitem) {
+                    infostr += "<div class='item'><ul class='table2'>";
+                    $.each(subinfoitem.item, function (index, item) {
+                    	if(item.title==null||item.title==""||item.title.trim()==null){
+                    		infostr += "<li><span class='s_text_attr'>"+item.title+"</span><span class='s_text_value'>"+item.value+"</span></li>";
+                    	}else{
+                            infostr += "<li><span class='s_text_attr'>"+item.title+":</span><span class='s_text_value'>"+item.value+"</span></li>";
+                    	}
+                    });
+                    infostr += "</ul></div>";
+                });
+                if(infostr == "<div class='item'><ul class='table2'></ul></div>")
+                    infostr = "<div class='item'><ul class='table2'><li>该子表无记录！</li></ul></div>";
+                subinfostr += infostr;
+                subinfostr += "</div></div>";
+            }
+        });
+
+        $("#content").append(subinfostr);
+        $(".info").css({"display":"none"});
+        $("#content").append("<div id='blank'> </div>");
+        $("#content").append("<div id='blank'> </div>");
+        $("#content").append("<div id='blank'> </div>");
+        hideAndShow();
+    }
+
+    /*初始化按钮的事件(phone)*/
+    function initbuttons() {
+        var billguid = sessionStorage.getItem("billguid");
+        var guids = billguid.split("_");
+        var flowtype = sessionStorage.getItem("flowtype");
+
+        $("#back").click(function () {
+            window.location = "approval_item.html";
+        });
+        $("#agree").click(function () {
+            window.location = "approval_advice.html";
+        });
+        $("#finish").click(function () {
+            window.location = "approval_advice.html?finish=1";
+        });
+        $("#fetch").click(function () {
+            var billguid = sessionStorage.getItem("billguid");
+            var guids = billguid.split("_");
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded; charset=GBK",
+                url: ipandport+"/flow_action_app?action=getback",
+                data: "billDataID="+guids[0]+"&billDefineID="+guids[1]+"&workitemid="+guids[2],
+                cache:false,
+                success: function (msg) {
+                    window.location = "approval_item.html"
+                }
+            });
+        });
+        $("#adduser").click(function () {
+            window.location = "approval_adduser.html";
+        });
+        $("#route").click(function () {
+            window.location = "approval_route.html?action=route";
+        });
+        $("#showimage").click(function () {
+            window.location = "approval_image.html";
+        });
+        $("#other").click(function () {
+            if ($(".submenu").css("display") == "none") {
+                $(".submenu").css({"display": "block"});
+            } else {
+                $(".submenu").css({"display": "none"});
+            }
+        });
+        /*加签*/
+        $("#adduser_li").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            $(this).css({"background":"lightskyblue"});
+            window.location = "approval_adduser.html";
+        });
+        /*加签说明*/
+        $("#adduser_desc").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            $(this).css({"background":"lightskyblue"});
+            window.location = "approval_route.html?action=getaddapprpvalnote";
+        });
+        /*审批记录*/
+        $("#approval_route").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            $(this).css({"background":"lightskyblue"});
+            window.location = "approval_route.html?action=route";
+        });
+        /*加签意见*/
+        $("#adduser_route").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            $(this).css({"background":"lightskyblue"});
+            window.location = "approval_route.html?action=addapprovalsugggest";
+        });
+        /*转授权意见*/
+        $("#trans_route").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            $(this).css({"background":"lightskyblue"});
+            window.location = "approval_route.html?action=getdelegateoption";
+        });
+        /*影像*/
+        $("#showimage_li").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            //$(this).css({"background":"lightskyblue"});
+            window.location = "approval_images.html";
+        });
+        /*附件*/
+        $("#enclosure").click(function () {
+            $(".submenu ul li").css({"background":"white"});
+            window.location = "approval_attachment.html";
+        });
+    }
+    /*为子单据添加隐藏显示操作*/
+    function hideAndShow() {
+        $(".expandheader").click(function () {
+            if($(this).next("div").css("display") == "none") {
+                $(this).next("div").css({"display":""});
+                $(this).children("span").find("img").attr("src","image/up.png");
+            } else {
+                $(this).next("div").css({"display":"none"});
+                $(this).children("span").find("img").attr("src","image/down.png");
+            }
+            $(".page").getNiceScroll().resize();
+        });
+    }
+</script>
+<body>
+
+
+<div class="page">
+    <div id="loading"></div>
+    <div class="submenu">
+        <ul>
+            <li id="adduser_li">加签</li>
+            <li id="approval_route">审批记录</li>
+            <li id="adduser_route">加签意见</li>
+            <li id="adduser_desc">加签说明</li>
+            <li id="trans_route">转授权意见</li>
+            <li id="showimage_li">查看影像</li>
+            <li id="enclosure">查看附件</li>
+        </ul>
+    </div>
+    <div class="header_menu">
+        <div class="leftmemu" id="back">
+            <i class="icon icon-back"></i>
+            <span class="backtext">返回</span>
+        </div>
+        <span id="other"><image id="otherimg" src='image/more.png'></image></span>
+        <div class="rightmemu_text">
+            <span id="agree" class="backtext">审批</span>
+            <span id="fetch" class="backtext">取回</span>
+            <span id="finish" class="backtext">完成</span>
+        </div>
+
+    </div>
+    <div id="content">
+
+    </div>
+    <div class="footer"></div>
+</div>
+</body>
+</html>

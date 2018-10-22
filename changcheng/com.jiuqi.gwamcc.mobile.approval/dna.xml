@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dna>
+	<gathering>
+		<gatherer group="gmt-request1-services" element="request1service" class="test.Request1ServicesGather"/>
+	</gathering>
+	<servlets>
+		<servlet space="gmtcommon" path="/gmt1/*" class="test.GMT1Servlet"/>
+	</servlets>
+
+
+	<publish>		
+		<gmt-request1-services>
+			<request1service name="testService" class="test.TestService"/>
+		</gmt-request1-services>
+		<services>
+			<service space="approval/service" class="com.jiuqi.gmc.mobile.approval.common.service.PushMsgToNextApproversService"/>
+			<service space="approval/service" class="com.jiuqi.gmc.mobile.approval.common.service.PushMsgService"/>
+			<service space="approval/service" class="com.jiuqi.gmc.mobile.approval.common.service.BillStyleService"/>
+		</services>
+		<systemoptions>
+			<systemoption class="com.jiuqi.gmc.mobile.approval.common.systemoption.JPushSysOption"/>
+		</systemoptions>
+		<dna-webapps>
+			<webapp webroot="web" alias="newweb"/>
+			<webapp webroot="app" alias="newapp"/>
+			<webapp webroot="webapp" alias="mapp"/>
+		</dna-webapps>
+		<orms>
+			<orm space="approval/orm" class="com.jiuqi.gmc.mobile.approval.orm.GetMobileBillTp"/>
+		</orms>
+		<commands>
+			<!-- command space="dna/core" class="com.jiuqi.dna.core.XXCommand" -->
+		</commands>
+		<querys>
+			<!-- query space="dna/core" class="com.jiuqi.dna.core.XXQuery" -->
+		</querys>
+		<tables>
+			<table space="approval" class="com.jiuqi.gmc.mobile.approval.common.storage.TB_PUSH_MESSAGE_LOG"/>
+		</tables>
+		<ui-entrys>
+			<!--uientry class="com.jiuqi.dna.bap.workflowmanager.define.ui.DemoApplicationUIEntry" name="workflowdefine">
+				</uientry-->
+		</ui-entrys>
+		<pages>
+			<!--page space="mydemo" name="testtemplate" class="com.jiuqi.dna.ui.template.launch.TemplatePage" /-->
+			<page space="approval" name="JPushSettingPage" class="com.jiuqi.gmc.mobile.approval.ui.page.JPushSettingPage"/>
+		</pages>
+		<ui-stylesheets>
+			<!-- stylesheet name="stylesheet" title="stylesheet" path="com/jiuqi/dna/ui/demo/stylesheet.css" -->
+		</ui-stylesheets>
+		<portlets>
+			<!-- portlet name="portlet" class="com.jiuqi.dna.ui.XXPortlet" -->
+		</portlets>
+		<plantaskRunners>
+			<plantaskRunner class="com.jiuqi.gmc.mobile.approval.intf.plantask.JPushRunnerFactory"/>
+		</plantaskRunners>
+		<templates/>
+	</publish>
+	<servlets>
+		<servlet class="com.jiuqi.gmc.mobile.approval.common.AppLoginServlet" path="/flow_login_app" space="approval"/>
+		<servlet class="com.jiuqi.gmc.mobile.approval.ui.FlowInfoServlet" path="/flow_info_app" space="approval"/>
+		<servlet class="com.jiuqi.gmc.mobile.approval.ui.FlowActionServlet" path="/flow_action_app" space="approval"/>
+		<servlet class="com.jiuqi.gmc.mobile.approval.ui.AttachmentListServlet" path="/attachment_list_app" space="approval"/>
+		<servlet class="com.jiuqi.gmc.mobile.approval.ui.AttachmentServlet" path="/attachment_item_app" space="approval"/>
+		<servlet class="com.jiuqi.gmc.mobile.approval.ui.InsightQutoBillServlet" path="/insight_bill" space="approval"/>
+		<servlet space="approval" path="/OAWFRecord" class="com.jiuqi.gmc.mobile.approval.ui.OARecordServlet" />
+	</servlets>
+</dna>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <meta charset="GBK">
+	<link rel="stylesheet" href="jquery/jquery.mobile-1.4.5.min.css">
+	<script src="jquery/jquery-2.1.4.min.js"></script>
+	<script src="jquery/jquery.mobile-1.4.5.min.js"></script>
+  <title>Document</title>
+  <style>
+	#pageone {margin:0;padding:0;}
+	#div_content {margin:0;padding:0;}
+	.ui-listview {margin:0;padding:0}
+</style>
+<script>
+	function showList() {
+		parent.document.all.approval_list.src = "approval_list.html";
+	}
+	$(document).ready(function() {
+		$("#pageone").dblclick(function() {
+			var name = "";
+			for(var i = 0; i < 3; i ++) {
+				$("#listview").append("<li><a href='javascript:showList()'>测试待审批<span class='ui-li-count'>123</span></li>");
+			}
+			$("#listview").listview("refresh");
+		})
+		
+	})	
+</script>
+ </head>
+ <body>
+	<div data-role="page" id="pageone">
+  <div data-role="content" id="div_content">
+    <ul data-role="listview" data-inset="true" id="listview">
+      <li><a href="javascript:showList()">申请单代办<span class="ui-li-count">25</span></a></li>
+      <li><a href="javascript:showList()">报销单代办<span class="ui-li-count">432</span></a></li>
+      <li><a href="javascript:showList()">动支单代办<span class="ui-li-count">7</span></a></li>
+		<li><a href="javascript:showList()">申请单代办<span class="ui-li-count">25</span></a></li>
+		<li><a href="javascript:showList()">报销单代办<span class="ui-li-count">432</span></a></li>
+		<li><a href="javascript:showList()">动支单代办<span class="ui-li-count">7</span></a></li>
+		<li><a href="javascript:showList()">申请单代办<span class="ui-li-count">25</span></a></li>
+		<li><a href="javascript:showList()">报销单代办<span class="ui-li-count">432</span></a></li>
+		<li><a href="javascript:showList()">动支单代办<span class="ui-li-count">7</span></a></li>
+		<li><a href="javascript:showList()">申请单代办<span class="ui-li-count">25</span></a></li>
+		<li><a href="javascript:showList()">报销单代办<span class="ui-li-count">432</span></a></li>
+		<li><a href="javascript:showList()">动支单代办<span class="ui-li-count">7</span></a></li>
+		<li><a href="javascript:showList()">申请单代办<span class="ui-li-count">25</span></a></li>
+		<li><a href="javascript:showList()">报销单代办<span class="ui-li-count">432</span></a></li>
+		<li><a href="javascript:showList()">动支单代办<span class="ui-li-count">7</span></a></li>
+		<li><a href="javascript:showList()">申请单代办<span class="ui-li-count">25</span></a></li>
+		<li><a href="javascript:showList()">报销单代办<span class="ui-li-count">432</span></a></li>
+		<li><a href="javascript:showList()">动支单代办<span class="ui-li-count">7</span></a></li>
+		<li><a href="javascript:showList()">申请单代办<span class="ui-li-count">25</span></a></li>
+		<li><a href="javascript:showList()">报销单代办<span class="ui-li-count">432</span></a></li>
+		<li><a href="javascript:showList()">动支单代办<span class="ui-li-count">7</span></a></li>
+    </ul>
+  </div>
+</div> 
+ </body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width,initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' />
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cache-control" content="max-age=0"/>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/myapp_common.js"></script>
+    <link rel="stylesheet" href="css/commonBlue.css" />
+    <script src="js/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="css/sweetalert.css" />
+    <title></title>
+</head>
+<style>
+    .leftmenu {color: #278ee5;}
+    .leftmenu image {width: 28px;vertical-align: middle}
+
+    #batchagree {display:none;margin-right: 10px}
+    #checklable1 {margin-left: 5px;color: #fff;font-size: 1.0em;font-weight: bold;vertical-align: middle;}
+    #searchdiv {width: 98%;text-align: center;display: none;z-index: 999;position: relative;top: 0px}
+    #searchtext {width: 99%;margin-top: 1px;height: 30px;border: 1px solid skyblue;border-radius: 5px;z-index: 999;font-size: 16px}
+
+    .content {z-index: -99}
+    .content ul {margin: 0;padding: 0;}
+    .swipeout-content {margin: 0;padding: 0;width: 100%;border-bottom: 1px solid #dde8fc;}
+    td {white-space:nowrap;overflow: hidden;text-overflow:ellipsis}
+    .bg-red {color:red}
+    .bg-blue {color:blue}
+    .checkboxdiv {width: 50px;padding-left: 20px;-webkit-tap-highlight-color:rgba(0,0,0,0);}
+    .info ul li {list-style: none;padding-right: 20px;font-size: 1em;white-space:normal;}
+    .hidespan {width: 100px;background: red}
+    .more {width: 100%;background: none;text-align: center;}
+    #morebutton {margin-top: 20px; margin-bottom: 20px;}
+    #blank {height:50px}
+    /*横屏*/
+    @media only screen and (orientation: landscape) {
+        /*.info ul li {display: inline-block}*/
+        .tr {height: 60px;}
+        .checkboxdiv {height:60px;line-height:60px;}
+    }
+/*    /!*针对iphone4、iphone5的竖屏*!/
+    @media only screen and (max-width:320px) and (orientation: portrait){
+        .info ul li {width: 220px;}
+    }
+    /!*针对MX4:384、iphone6:375的竖屏*!/
+    @media only screen and (max-width:384px) and (min-width:321px)and (orientation: portrait) {
+        .info ul li {width: 260px;}
+    }
+    /!*针对iphone4的横屏*!/
+    @media only screen and (max-width:480px) and (orientation: landscape) {
+        .info ul li {width: 350px;}
+    }
+    /!*针对iphone5的横屏*!/
+    @media only screen and (max-width:568px) and (min-width:481px) and (orientation: landscape){
+        .info ul li {width: 460px;}
+    }*/
+
+</style>
+<script>
+    $(document).ready(function() {
+        initLayOut();
+        if(getMobileType() == "phone") {
+
+        }
+        if(sessionStorage.getItem("returnUrl") == "111") {
+            $("#back").css({"display":"none"});
+        }
+        initMenu();
+        initdata2();
+        window.parent.orient();
+    })
+
+    function orient() {
+        var width = window.document.width;
+        //alert(width);
+        //$(".info ul li").css({"width":width-150});
+    }
+
+    //用户变化屏幕方向时调用
+    $(window).bind( 'orientationchange', function(e){
+        //orient();
+    });
+
+    function initMenu() {
+        var str = "";
+        $(".header_menu").html("");
+        if(getMobileType() == "phone") {
+            str += "<div class='leftmemu' id='back'><i class='icon icon-back'></i><span class='backtext' style='margin-left:8px'>返回</span></div>";
+        }
+        if(sessionStorage.getItem("sso") == null) {
+            str += "<span class='backtext' id='allin'>&nbsp;&nbsp;全选</span><span class='backtext' id='allout'>全清</span>";
+        }
+        str += "<span id='checklable1'></span>";
+        str += "<div class='rightmemu'>"
+        str +="<i id='batchagree' class='icon imgSRight'></i>";
+        str += "<i id='search' class='icon imgFRight'></i>";
+        
+       
+
+        $(".header_menu").append(str);
+        $("#back").click(function() {
+            window.location = "index_x.html";
+        });
+        $("#allin").click(function () {
+            $("[name='checkboxname']").prop("checked",'true');
+            $(".tr").css({"background":"lightyellow"});
+            addMenuContent();
+        });
+        $("#allout").click(function () {
+            $("[name='checkboxname']").removeAttr("checked");
+            $(".tr").css({"background":"white"});
+            addMenuContent();
+        })
+        $("#search").click(function () {
+            if($("#searchdiv").css("display") == "none") {
+                $("#searchtext").val("");
+                $("#searchdiv").css({"display":"block"});
+                if(getMobileType() == "phone") {
+                    if(sessionStorage.getItem("sso") == null) {
+                        $(".content").css({"margin-top":"125px"});
+                    } else {
+                        $(".content").css({"margin-top":"75px"});
+                    }
+
+                }
+            } else {
+                $("#searchdiv").css({"display":"none"});
+                if(getMobileType() == "phone") {
+                    if(sessionStorage.getItem("sso") == null) {
+                        $(".content").css({"margin-top":"90px"});
+                    } else {
+                        $(".content").css({"margin-top":"40px"});
+                    }
+                }
+                $("#checklable1").html("");
+                $(".content").html("");
+                flowItemCurrentIndex = 0;
+                initFlowItems(flowItems);
+            }
+        });
+        $("#searchtext").bind("input",function () {
+            var text = $("#searchtext").val();
+            $(".content").html("");
+            flowItemCurrentIndex = 0;
+            if(text == "") {
+                initFlowItems(flowItems);
+            } else {
+                var tempFlowItems = new Array();
+                $(".content").html("");
+                var str = "";
+                for(var i = 0; i < flowItems.length; i ++) {
+                    var data = flowItems[i].item;
+                    var attrs = data.property;
+                    var flag = 0;
+                    for(var j = 0; j < attrs.length; j ++) {
+                        if(attrs[j].value.indexOf(text) > -1) {
+                            flag = 1;
+                            break;
+                        }
+                    }
+                    if(flag == 1) tempFlowItems.push(flowItems[i]);
+                }
+                initFlowItems(tempFlowItems);
+            }
+        });
+        $("#batchagree").click(function() {
+            var flowguids = "";
+            var bustype = "";
+            var user = localStorage.getItem("default_user");
+            $("input[name='checkboxname']:checked").each(function () {
+                var billdataid = $(this).parents(".tr").attr("billdataid");
+                var billdefineid = $(this).parents(".tr").attr("billdefineid");
+                var workitemid = $(this).parents(".tr").attr("workitemid");
+                bustype = $(this).parents(".tr").attr("bustype");
+                flowguids += billdataid+"_"+billdefineid+"_"+workitemid+";";
+            });
+            if(flowguids == "") {
+                swal("请至少选择一条记录！");
+                return;
+            }
+            swal({
+                        title: "",
+                        text: "确定执行批量同意？",
+                        type: "warning",
+                        showCancelButton: true,
+                        cancelButtonText: "取消",
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定",
+                        closeOnConfirm: false
+                    },
+                    function(){
+	                    swal({
+			                title: "",
+			                text: "正在执行中,请稍候...",
+			                type: "warning",
+			                showCancelButton: false,
+			                showConfirmButton:false,
+			                closeOnConfirm: false
+			              }
+			            );
+                        $.ajax({
+                            type : "GET",
+                            dataType : "json",
+                            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                            url : ipandport+"/flow_action_app?action=batchagree",
+                            data : "flowguids="+flowguids+"&businessObjectType="+bustype+"&user="+user,
+                            cache:false,
+                            beforeSend: function () {
+                                $("#loading").append("<image src='image/loading.gif'></image>");
+                            },
+                            success : function(msg) {
+                                if(msg.responsecode == "1") {
+                                    swal({
+                                        title:"执行成功",
+                                        type : "success"},function() {
+                                        if(getMobileType() == "pad") {
+                                            var frames = window.parent.window.document.getElementById("approval_list");
+                                            frames.contentWindow.refreshList();
+                                        }
+                                        else {
+                                            window.location.reload();
+                                        }
+                                    });
+                                } else {
+                                    swal("执行失败！", "", "error");
+                                }
+                                $("#loading").remove();
+                            }
+                        });
+                    }
+            );
+
+        });
+
+    }
+    var searchflag = 0;
+    var flowItems;
+    var flowItemCurrentIndex = 0;
+    function initFlowItems(items) {
+        var templength = items.length - flowItemCurrentIndex;
+        if(templength > 10) templength = 10;
+        $(".more").remove();
+        var str = "";
+        var rowNum = 1;
+        for(var i = 0; i < templength; i ++) {
+            var data = items[flowItemCurrentIndex].item;
+            /*处理紧急或转授权意见*/
+            var colorclass = "";
+            if(data.urgent == 1) {
+                colorclass = "bg-blue";
+            } else if(data.commissionuser == 0) {
+                colorclass = "bg-red";
+            }
+            /*0:转授权；1非转授权*/
+            str += "<table class='swipeout-content'>";
+            str += "<tr class='tr "+colorclass+"' trans='"+data.commissionuser+"' billdataid='"+data.billDataID+"' billdefineid='"+data.billDefineID+"' workitemid='"+data.workitemid+"' taskid='"+data.taskid+"'' bustype='"+data.businessObjectType+"'><td class='checkboxdiv'>";
+            str += "<input type='checkbox' class='checkboxcss' name='checkboxname' style='zoom:140%'></td>";
+            str += "<td class='info'><table>";
+            var attrs = data.property;
+            for(var j = 0; j < attrs.length; j ++) {
+                str += "<tr style='height:15px'><td>"+attrs[j].title+":</td><td>"+attrs[j].value+"</td></tr>";
+            }
+            str += "</table></td></tr>";
+            str += "</table>";
+            flowItemCurrentIndex ++;
+        }
+        $(".content").append(str);
+        //单击事件
+        $(".tr").click(function(event) {
+            if(event.target.className == "checkboxcss" || event.target.className == "checkboxdiv") return;
+            $(".tr").css({"background":"white"});
+            $(this).css({"background":"lightyellow"});
+            var billguid = $(this).attr("billdataid")+"_"+$(this).attr("billdefineid")+"_"+$(this).attr("workitemid")+"_"+$(this).attr("taskid")+"_"+$(this).attr("bustype");
+            sessionStorage.setItem("billguid",billguid);
+            sessionStorage.setItem("transform",$(this).attr("trans"));
+            //if(sessionStorage.getItem("sso") != null) {
+            
+                window.location = "approval_info_sso.html?billguid="+billguid;
+            //} else {
+                //window.location = "approval_info.html?billguid="+billguid;
+            //}
+        });
+        $(".checkboxdiv").click(function (event) {
+            if(event.target.className == "checkboxcss") return;
+            if($(this).find(".checkboxcss").is(":checked") == true) {
+                $(this).find(".checkboxcss").removeAttr("checked");
+                $(this).parents(".tr").css({"background":"white"});
+            } else {
+                $(this).find(".checkboxcss").prop("checked",true);
+                $(this).parents(".tr").css({"background":"lightyellow"});
+            }
+            addMenuContent();
+        });
+        //复选框选中后，背景变色
+        $("input[name=checkboxname]").change(function () {
+            if($(this).is(":checked") == true) {
+                $(this).parents(".checkboxdiv").parents(".tr").css({"background":"lightyellow"});
+            } else {
+                $(this).parents(".checkboxdiv").parents(".tr").css({"background":"white"});
+            }
+//            复选框选中后，menu变化
+            addMenuContent();
+        });
+        if(flowItemCurrentIndex < items.length) {
+            $(".content").append("<div class='more'><input type='button' id='morebutton' class='button white bigrounded' value='点击查看更多...' style='background:#3199e8;color:#fff;font-size:1.0em;font-weight:bold;-webkit-appearance: none;'></div>");
+            $(".more").bind("click",function () {
+                $("#blank").remove();
+                initFlowItems(items);
+                window.parent.updatescroll();
+            });
+        } else {
+            $(".content").append("<div class='more'><input type='button' id='morebutton' class='button white bigrounded' value='记录已加载完成' style='background:#3199e8;color:#fff;font-size:1.0em;font-weight:bold;-webkit-appearance: none;'></div>");
+        }
+        $(".content").append("<div id='blank'> </div>");
+    }
+    function initdata2() {
+        sessionStorage.removeItem("billinfo");
+        var listguid = window.sessionStorage.getItem("listguid");
+        var flowtype = sessionStorage.getItem("flowtype");
+        var user = localStorage.getItem("default_user");
+//        if(getParam("listguid") == null) {
+//            $(".content").append("<div class='temp'>请选择审批列表！</div>");
+//            $(".temp").css({"width":"100%","height":"100%","margin":"auto","text-align":"center"});
+//            return;
+//        }
+        $.ajax({
+            type : "GET",
+            dataType : "json",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            url : ipandport+"/flow_info_app?action=flowitem",
+            data : "id="+listguid+"&flowtype="+flowtype+"&user="+user,
+            cache:false,
+            beforeSend: function () {
+                $("#loading").append("<image src='image/loading.gif'></image>");
+            },
+            success : function(returnObject) {
+                if(returnObject.batchapproveaction == 1 && flowtype == 0) {
+                    $("#batchagree").css({"display":"inline-block"});
+                }
+                flowItems = returnObject.resultlist;
+                initFlowItems(flowItems);
+                $("#loading").remove();
+            }
+        });
+        //        div点击后，复选框选中
+//        $(".checkboxdiv").click(function () {
+//            if($(this).children(".checkboxcss").is(":checked")) {
+//                $(this).children(".checkboxcss").attr("checked",false);
+//            }else {
+//                $(this).children(".checkboxcss").attr("checked",true);
+//            }
+//        });
+    }
+    //复选框选中后，menu变化
+    function addMenuContent() {
+        var checkednum = 0;
+        $("input[name='checkboxname']:checked").each(function () {
+            checkednum ++;
+        });
+        $("#checklable1").html("");
+
+        if(checkednum > 0) {
+            var str = "";
+            str += "已选："+ checkednum +"条";
+            $("#checklable1").html(str);
+        } else {
+            $("#checklable1").html("");
+        }
+    }
+</script>
+<body>
+<div class="page">
+    <div id="loading"></div>
+    <div class="header_menu"></div>
+    <div id="searchdiv"><input type="text" id="searchtext"></div>
+    <div class="content">
+
+    </div>
+    <div class="footer"></div>
+</div>
+</body>
+</html>
