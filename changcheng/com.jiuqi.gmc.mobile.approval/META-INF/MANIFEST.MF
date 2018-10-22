@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: App
-Bundle-SymbolicName: com.jiuqi.gmc.mobile.approval
+Bundle-SymbolicName: com.jiuqi.gwamcc.mobile.approval
 Bundle-Version: 1.0.0
 Bundle-Vendor: JIUQI
 Require-Bundle: com.jiuqi.dna.ui.wt,
