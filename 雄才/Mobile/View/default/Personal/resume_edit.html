@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+	</head>
+	<body>
+  <include file="public:header"/>
+  <div class="replenishtop  " >
+      <div class="rename"></div>
+      <div class="integrity">完整度：<span>{$resume.complete_percent}%</span></div>
+      <div class="integritys">简历状态：<div class="rg_privacy J_privacy_btn <if condition="$resume['display'] eq 0">close</if>" data-id="{$resume.id}"></div></div>
+    </div>
+    <div class="replenishtopbg"></div>
+    <div class="split-block"></div>
+    <div class="listmod">
+      <div class="eattitle list_height t1">
+        基本资料<span class="font12">(必填)</span>
+        <div class="editbtn font13" onClick="javascript:location.href='{:U('personal/resume_edit_basis',array('pid'=>$resume['id']))}'">修改</div>
+      </div>
+      <div class="picmod">
+        <div class="pic">
+          <div class="picborder">
+            <img src="{$visitor.avatars}">
+          </div>
+        </div>
+        <div class="rneme">
+          <div class="t font16">{$resume.fullname}</div>
+          <div class="txt">{$resume.sex_cn}&nbsp;|&nbsp;{:date('Y')-$resume['birthdate']}岁&nbsp;|&nbsp;{$resume.marriage_cn}<if condition="$resume['height']">&nbsp;|&nbsp;{$resume.height}cm</if></div>
+        </div>
+        <div class="clear"></div>
+      </div>
+      <div class="txt2list">
+        <div class="tleft">最高学历</div>
+        <div class="tright">{$resume.education_cn}</div>
+        <div class="clear"></div>
+        <div class="tleft">工作经验</div>
+        <div class="tright">{$resume.experience_cn}</div>
+        <div class="clear"></div>
+        <div class="tleft">专业</div>
+        <div class="tright"><if condition="$resume['major_cn']">{$resume.major_cn}<else/>未填写</if></div>
+        <div class="clear"></div>
+        <div class="tleft">现居住地</div>
+        <div class="tright"><if condition="$resume['residence']">{$resume.residence}<else/>未填写</if></div>
+        <div class="clear"></div>
+        <div class="tleft">籍贯</div>
+        <div class="tright"><if condition="$resume['householdaddress']">{$resume.householdaddress}<else/>未填写</if></div>
+        <div class="clear"></div>
+        <div class="tleft">手机</div>
+        <div class="tright"><if condition="$resume['telephone']">{$resume.telephone}<else/>未填写</if></div>
+        <div class="clear"></div>
+        <div class="tleft">邮箱</div>
+        <div class="tright"><if condition="$resume['email']">{$resume.email}<else/>未填写</if></div>
+        <div class="clear"></div>
+        <div class="tleft">QQ</div>
+        <div class="tright"><if condition="$resume['qq']">{$resume.qq}<else/>未填写</if></div>
+        <div class="clear"></div>
+        <div class="tleft">微信号</div>
+        <div class="tright"><if condition="$resume['weixin']">{$resume.weixin}<else/>未填写</if></div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div class="split-block"></div>	 
+    <div class="listmod">
+      <div class="eattitle list_height t2">
+      求职意向<span class="font12">(必填)</span>
+        <div class="editbtn font13" onClick="javascript:location.href='{:U('personal/resume_edit_intent',array('pid'=>$resume['id']))}'">修改</div>
+      </div>
+      <div class="txt2list">
+        <div class="tleft">求职状态</div>
+    	<div class="tright">{$resume.current_cn}</div>
+        <div class="clear"></div>
+    	  <div class="tleft">工作性质</div>
+    	<div class="tright">{$resume.nature_cn}</div>
+        <div class="clear"></div>
+    	  <div class="tleft">期望薪资</div>
+    	<div class="tright">{$resume.wage_cn}</div>
+        <div class="clear"></div>
+    	  <div class="tleft">期望行业</div>
+    	<div class="tright"><if condition="$resume['trade_cn']">{$resume.trade_cn}<else/>不限</if></div>
+        <div class="clear"></div>
+    	  <div class="tleft">期望职位</div>
+    	<div class="tright"><if condition="$resume['intention_jobs']">{$resume.intention_jobs}<else/>未填写</if></div>
+        <div class="clear"></div>
+    	  <div class="tleft">工作地区</div>
+    	<div class="tright"><if condition="$resume['district_cn']">{$resume.district_cn}<else/>未填写</if></div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div class="split-block"></div>
+    <div class="listmod">
+      <div class="eattitle list_height t3">
+        自我描述
+        <div class="editbtn font13" onClick="javascript:location.href='{:U('personal/resume_edit_description',array('pid'=>$resume['id']))}'">修改</div>
+      </div>
+      <div class="txtmod">{$resume.specialty}</div>
+    </div>
+    <div class="split-block"></div>
+    <div class="listmod">
+      <div class="eattitle list_height t4">
+      教育经历
+        <div class="addbtn font13" onClick="javascript:location.href='{:U('personal/resume_edit_edu',array('pid'=>$resume['id']))}'">新增</div>
+      </div>
+      <div id="J_education"></div>
+    </div>
+    <div class="split-block"></div>
+    <div class="listmod">
+      <div class="eattitle list_height t5">
+      工作经历
+        <div class="addbtn font13" onClick="javascript:location.href='{:U('personal/resume_edit_work',array('pid'=>$resume['id']))}'">新增</div>
+      </div>
+      <div id="J_work"></div>
+    </div>
+    <div class="split-block"></div>
+      <div class="listmod">
+        <div class="eattitle list_height t6">
+        培训经历
+        <div class="addbtn font13" onClick="javascript:location.href='{:U('personal/resume_edit_train',array('pid'=>$resume['id']))}'">新增</div>
+      </div>
+      <div id="J_training"></div>
+    </div>
+    <div class="split-block"></div>
+    <div class="listmod">
+      <div class="eattitle list_height t7">
+      获得证书
+        <div class="addbtn font13" onClick="javascript:location.href='{:U('personal/resume_edit_certificate',array('pid'=>$resume['id']))}'">新增</div>
+      </div>
+      <div id="J_credent"></div>
+    </div>
+    <div class="split-block"></div>
+    <div class="listmod">
+      <div class="eattitle list_height t8">
+      语言能力
+        <div class="addbtn font13" onClick="javascript:location.href='{:U('personal/resume_edit_lang',array('pid'=>$resume['id']))}'">新增</div>
+      </div>
+       <div id="J_language"></div>
+    </div>
+    <div class="split-block"></div>
+    <div class="listmod">
+      <div class="eattitle list_height t9">
+        特长标签
+        <div class="addbtn font13" onClick="javascript:location.href='{:U('personal/resume_edit_speciality',array('pid'=>$resume['id']))}'">新增</div>
+      </div>
+      <if condition="$resume['tag_cn']">
+      <div id="J_tags" class="tagmod" pid="{$resume.id}">
+        <volist name="resume['tag_key']" id="tag">
+          <div class="J_tagList litag substring" <if condition="$tags[$tag]">tid="{$tag}"<else/>title="{$tag}"</if>>
+            {$tags[$tag]}
+            <div class="del"></div>
+          </div>
+        </volist>
+        <volist name="resume['tag_cn']" id="tag">
+          <if condition="!in_array($tag,$tags)">
+            <div class="J_tagList litag substring" title="{$tag}">{$tag}<div class="del"></div></div>
+          </if>
+        </volist>
+        <div class="clear"></div>
+      </div>
+      </if>
+    </div>
+    <div class="split-block"></div>
+    <div class="listmod">
+      <div class="eattitle list_height t10">
+        照片/作品
+        <div class="addbtn font13" onClick="javascript:location.href='{:U('personal/resume_edit_img',array('pid'=>$resume['id']))}'">新增</div>
+      </div>
+      <volist name="resume_img" id="img">
+        <div class="imgmod" iid="{$img.id}"  type="img" pid="{$resume['id']}" sid="{$img['id']}">
+          <div class="expedit" onClick="javascript:location.href='{:U('personal/resume_edit_img',array('pid'=>$resume['id'],'id'=>$img['id']))}'"></div>
+          <div class="J_delete expdel"></div>
+          <div class="imgtd1"><img src="{:attach($img['img'],'resume_img')}"></div>
+          <div class="imgtd2">
+            <div class="iname"><if condition="$img['title']">{$img.title}<else/>未填写备注</if></div>
+            <switch name="img['audit']">
+              <case value="1">
+                <span class="font_green">审核通过</span>
+              </case>
+              <case value="2">
+                <span class="font_yellow">审核中</span>
+              </case>
+              <case value="3">
+                <span class="font_red">审核未通过</span>
+              </case>
+            </switch>
+          </div>
+          <div class="clear"></div>
+        </div>
+      </volist>
+    </div>
+
+    <div class="btns-div">
+        <div class="btnli"><div  class="qs-btn qs-btn-orange font18" onClick="javascript:location.href='{:U('personal/index')}'">保存简历</div></div>
+        <div class="btnli"><div class="qs-btn qs-btn-border-blue font18" onClick="javascript:location.href='{:url_rewrite('QS_resumeshow',array('id'=>$resume['id']))}'">预览简历</div></div>
+        <div class="clear"></div>
+    </div>
+
+    <include file="public:footer_min" />
+    <script src="../public/js/popWin.js"></script>
+    <script src="../public/js/qsCategory.js"></script>
+    <script id="J_describeTemp" type="text/html">
+      <div class="headernavfixed">
+          <div class="headernav font18"><div class="title">简历标题<div class="return js-back"></div></div></div>
+      </div>
+      <div class="split-block"></div>
+      <div class="list_height plist-txt notarrow">
+          <div class="pic"></div>
+          <div class="tit font14">简历标题</div>
+          <div class="describe font12">
+              <input type="text" id="tpl_title" value="{$resume.title}" class="font13">
+          </div>
+          <div class="arrow"></div>
+          <div class="clear"></div>
+      </div>
+      <div class="split-block"></div>
+      <div class="btn-spacing">
+          <div id="titleBtn" class="qs-btn qs-btn-blue font18" title="确定">确定</div>
+      </div>
+    </script>
+    <script type="text/javascript">
+      $('#J_education').load("{:U('personal/ajax_get_education_list',array('pid'=>$resume['id']))}");
+      $('#J_work').load("{:U('personal/ajax_get_work_list',array('pid'=>$resume['id']))}");
+      $('#J_training').load("{:U('personal/ajax_get_training_list',array('pid'=>$resume['id']))}");
+      $('#J_credent').load("{:U('personal/ajax_get_credent_list',array('pid'=>$resume['id']))}");
+      $('#J_language').load("{:U('personal/ajax_get_language_list',array('pid'=>$resume['id']))}");
+      var tip = {
+        education : '教育经历',
+        language : '语言能力',
+        training : '培训经历',
+        work : '工作经历',
+        credent : '证书',
+        img : '照片/作品'
+      };
+      $('.J_delete').live('click',function(){
+        var f = $(this).parent(),
+            type = $(this).parent().attr('type'),
+            pid = $(this).parent().attr('pid'),
+            id = $(this).parent().attr('sid');
+        var popout = new QSpopout('删除'+tip[type]);
+        popout.setContent('删除后将无法恢复，您确定要删除该'+tip[type]+'吗?');
+        popout.getPrimaryBtn().on('click', function() {
+            $.post(qscms.root + '?m=Mobile&c=Personal&a=del_'+type,{pid:pid,id:id},function(result){
+              if(result.status == 1){
+                f.remove();
+                qsToast({type:1,context: result.msg});
+              }else{
+                qsToast({type:2,context: result.msg});
+              }
+            },'json');
+        });
+        popout.show();
+      });
+      $('.J_privacy_btn').live('click',function(){
+        var f = $(this).parent(),
+            pid = $(this).data('id');
+        var popout = new QSpopout();
+        if ($(this).hasClass('close')) {
+            popout.setContent('简历显示后将在列表页显示以及被搜索，确定显示吗');
+            popout.getPrimaryBtn().on('click', function() {
+                $.post(qscms.root + '?m=Mobile&c=Personal&a=save_resume_privacy',{pid:pid,display:1},function(result){
+                  if(result.status == 1){
+                    f.remove();
+                    qsToast({type:1,context: result.msg});
+                    setTimeout(function () {
+                                window.location.reload();
+                            }, 0);
+                  }else{
+                    qsToast({type:2,context: result.msg});
+                  }
+                },'json');
+            });
+            popout.show();
+       }else{
+           popout.setContent('简历关闭后将不能显示以及被搜索，确定关闭吗？');
+           popout.getPrimaryBtn().on('click', function() {
+                $.post(qscms.root + '?m=Mobile&c=Personal&a=save_resume_privacy',{pid:pid,display:0},function(result){
+                  if(result.status == 1){
+                    f.remove();
+                    qsToast({type:1,context: result.msg});
+                    setTimeout(function () {
+                                window.location.reload();
+                            }, 0);
+                  }else{
+                    qsToast({type:2,context: result.msg});
+                  }
+                },'json');
+            });
+            popout.show();
+       }
+      });
+      $('#J_tags .del').live('click',function(){
+        var pid = $(this).closest('#J_tags').attr('pid');
+        $(this).parent().remove();
+        var tag = $('#J_tags .J_tagList[tid]').map(function(){
+          return $(this).attr('tid');
+        }).get();
+        var tag_cn = $('#J_tags .J_tagList[title]').not('[tid]').map(function(){
+          return $(this).attr('title');
+        }).get();
+        if($('.J_tagList').length==0){
+          $('#J_tags').remove();
+        }
+        $.post("{:U('Personal/resume_edit_speciality')}",{pid:pid,tag:tag,tag_cn:tag_cn},function(result){
+          if(result.status == 1){
+            qsToast({type:1,context: '特长标签删除成功！'});
+          }else{
+            qsToast({type:2,context: result.msg});
+          }
+        },'json');
+      });
+      var describeTemp = $('#J_describeTemp').html();
+      $('.J_titleEdit').on('click',function(){
+        var $this = $(this),
+            baseTxt = $this.text();
+        popWin.init({
+            from:"right",
+            html:describeTemp,
+            handle:function(a){
+              $('#tpl_title').val($('#J_title').html());
+              $('#titleBtn').on('click',function(){
+                  var title = $('#tpl_title').val();
+                  if (title == "") {
+                      qsToast({type:2,context: '请填写简历标题'});
+                      return false;
+                  }
+                  if (title != "" && title.length > 12) {
+                    qsToast({type:2,context: '简历标题应在1~12个字内'});
+                    return false;
+                  }
+                  var pid = "{$resume.id}";
+                  $.post("{:U('Personal/resume_edit_title')}",{pid:pid,title:title},function(result){
+                      if(result.status == 1){
+                        $('#J_title').html(title);
+                        qsToast({type:1,context: result.msg});
+                      }else{
+                        qsToast({type:2,context: result.msg});
+                      }
+                      a.close();
+                  },'json');
+              });
+            }
+        })
+      });
+    function check_complete_percent_allowance(){
+      if(eval("{:C('qscms_perfected_resume_allowance_open')}")==1){
+        $.getJSON("{:U('Personal/check_complete_percent_allowance')}",function(result){
+          if(result.status==1){
+            var popout = new QSpopout();
+            popout.setContent(result.msg);
+            popout.setBtn(1, ['确定']);
+            popout.show();
+          }else if(result.status==2){
+            var popout = new QSpopout();
+            popout.setContent(result.msg);
+            popout.getPrimaryBtn().on('click', function() {
+                $.getJSON("{:U('Personal/check_complete_percent_allowance_nolonger_notice')}");
+            });
+            popout.setBtn(2, ['关闭', '不再提示']);
+            popout.show();
+          }
+        });
+      }
+    }
+      $(document).ready(function(){
+        check_complete_percent_allowance();
+      });
+    </script>
+	</body>
+</html>

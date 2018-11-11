@@ -1,0 +1,111 @@
+<include file="Admin@default/public/header" />
+<div class="toptip">
+    <div class="toptit">提示：</div>
+    <p>标题和描述如不设置请留空，系统会调用默认分享内容</p>
+    <p>图片如不设置请留空，系统会调用企业logo</p>
+</div>
+
+<div class="toptit">分享内容配置</div>
+<form action="{:U('edit')}" method="post" name="FormData" enctype="multipart/form-data">
+    <div class="form_main width200">
+        <div class="fl">可用标签：</div>
+        <div class="fr txt">
+            <div id="{companyname}" class="sellabel" style="background-color: rgb(244, 250, 255);">公司名称</div>
+            <div id="{tag}" class="sellabel" style="background-color: rgb(244, 250, 255);">企业福利</div>
+            <div id="{district_cn}" class="sellabel" style="background-color: rgb(244, 250, 255);">所在地区</div>
+            <div id="{short_desc}" class="sellabel" style="background-color: rgb(244, 250, 255);">企业简介</div>
+            <div class="clear"></div>
+        </div>
+        <div class="fl">标题：</div>
+        <div class="fr">
+            <input name="wzp_share_title" type="text" id="labtitle" class="input_text_default" value="{:C('qscms_wzp_share_title')}"/>
+        </div>
+        <div class="fl">描述：</div>
+        <div class="fr">
+            <input name="wzp_share_desc" type="text" id="labdescription" class="input_text_default" value="{:C('qscms_wzp_share_desc')}"/>
+        </div>
+        <div class="fl">图片：</div>
+        <div class="fr J-file-input-box">
+            <if condition="C('qscms_wzp_share_img')">
+                <div class="file-input-src">
+                    <div class="img"><img src="{:attach(C('qscms_wzp_share_img'),'images')}?_t={:time()}" align=absmiddle></div>
+                    <div class="del file-input-del" id="J_upload_wzp_share_img_btn" name="wzp_share_img">点击更换</div>
+                    <div class="r-note">(建议尺寸120*120)</div>
+                </div>
+            <else/>
+                <div class="file-input-src hid">
+                    <div class="img"></div>
+                    <div class="del file-input-del" id="" name="wzp_share_img">点击更换</div>
+                    <div class="r-note">(建议尺寸120*120)</div>
+                </div>
+                <div class="file-input-block" id="J_upload_wzp_share_img_btn" name="wzp_share_img"><span class="o-txt">上传</span>图片<span class="re-txt">(建议尺寸120*120)</span></div>
+            </if>
+            <input type="hidden" class="file-input-save-name" name="wzp_share_img" value="{:C('qscms_wzp_share_img')}">
+        </div>
+        <div class="fl"></div>
+        <div class="fr">
+            <input type="submit" class="admin_submit" value="保存"/>
+            <input type="button" class="admin_submit" value="返回" onClick="history.go(-1)"/>
+        </div>
+        <div class="clear"></div>
+    </div>
+</form>
+</div>
+<include file="Admin@default/public/footer" />
+<script type="text/javascript">
+  var uploadUrl = "{:U('Admin/Upload/form_upload')}";
+</script>
+<script src="__ADMINPUBLIC__/js/ajaxfileupload.js"></script>
+<script src="__ADMINPUBLIC__/js/fileupload.js"></script>
+<script type="text/javascript" src="__ADMINPUBLIC__/js/jquery.caretInsert.js"></script>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // 上传
+        $.upload('#J_upload_wzp_share_img_btn',{name:'wzp_share_img',dir:'images'},function(result){
+            if(result.error == 1){
+                var htmlResult = '<img src="'+ result.url.src +'" align=absmiddle>';
+                $('#J_upload_wzp_share_img_btn').closest('.J-file-input-box').find('.file-input-src .img').html(htmlResult);
+                $('#J_upload_wzp_share_img_btn').closest('.J-file-input-box').find('.file-input-save-name').val(result.url.savename);
+                if ($('#J_upload_wzp_share_img_btn').hasClass('file-input-block')) {
+                  $('#J_upload_wzp_share_img_btn').closest('.J-file-input-box').find('.file-input-src').removeClass('hid');
+                  var $delObj = $('#J_upload_wzp_share_img_btn').closest('.J-file-input-box').find('.file-input-del');
+                  $('#J_upload_wzp_share_img_btn').remove();
+                  $delObj.attr('id', "J_upload_wzp_share_img_change_btn");
+                  $.upload('#J_upload_wzp_share_img_change_btn',{name:'wzp_share_img',dir:'images'},function(result){
+                    if(result.error == 1){
+                      var htmlResult = '<img src="'+ result.url.src +'" align=absmiddle>';
+                      $('#J_upload_wzp_share_img_change_btn').closest('.J-file-input-box').find('.file-input-src .img').html(htmlResult);
+                      $('#J_upload_wzp_share_img_change_btn').closest('.J-file-input-box').find('.file-input-save-name').val(result.url.savename);
+                    } else {
+                      disapperTooltip("remind", "上传失败："+result.message);
+                    }
+                  })
+                }
+            } else {
+                disapperTooltip("remind", "上传失败："+result.message);
+            }
+        })
+    });
+    $(".sellabel").hover(
+        function(){
+            $(this).css("background-color","#ffffff");
+        },
+        function(){
+            $(this).css("background-color","#F4FAFF");
+        }
+    );
+    $("#labtitle").unbind().focus(function() {
+        $('#labtitle').setCaret();
+         $('.sellabel').unbind("click").click(function(){ 
+           $('#labtitle').insertAtCaret($(this).attr("id"));
+         });
+    });
+    $("#labdescription").unbind().focus(function() {
+        $('#labdescription').setCaret();
+         $('.sellabel').unbind("click").click(function(){ 
+           $('#labdescription').insertAtCaret($(this).attr("id"));
+         });
+    });
+</script>
+</html>

@@ -1,0 +1,135 @@
+<div class="headernavfixed">
+  <div class="headernav font18" style="background-color:<if condition="C('qscms_mobile_top_color') neq ''">{:C('qscms_mobile_top_color')}</if>;">
+    <div class="title">
+		<div class="n-tit-box">
+			<if condition="$page_seo['header_title']">
+				{$page_seo['header_title']}
+			<else/>
+                {$page_seo.pname|default=$page_seo['title']}
+			</if>
+		</div>
+      <div class="return js-back for-event"></div>
+    <div class="rbtn for-event"></div>
+    <if condition="$rong_state eq 1">
+    <div class="im for-event" onclick="javascript:location.href='{:U('Im/user_list')}'"><span id="J_imStatus"></span></div>
+    </if>
+    </div>
+  </div>
+	<include file="public:search" />
+<!--未登录显示以下 -->
+<if condition="!C('visitor')">
+	<div class="t-mask"></div>
+    <div class="topnavshow">
+	    
+	  <div class="navlis">
+	  	<div class="topnav" onclick="javascript:location.href='{:url_rewrite('QS_index')}'">
+		  <div class="imgbox"><img src="../public/images/198.png" /></div>
+		  <div class="tit">返回首页</div>
+		</div>
+		<div class="topnav" onclick="javascript:location.href='{:U('Members/login')}'">
+		  <div class="imgbox"><img src="../public/images/192.png" /></div>
+		  <div class="tit">登录/注册</div>
+		</div>
+		<div class="topnav" onclick="javascript:location.href='{:url_rewrite('QS_jobslist')}'">
+		  <div class="imgbox"><img src="../public/images/197.png" /></div>
+		  <div class="tit">找工作</div>
+		</div>
+		<div class="topnav" onclick="javascript:location.href='{:url_rewrite('QS_resumelist')}'">
+		  <div class="imgbox"><img src="../public/images/196.png" /></div>
+		  <div class="tit">招人才</div>
+		</div>
+		<notempty name="apply['Jobfair']">
+		<div class="topnav" onclick="javascript:location.href='{:url_rewrite('QS_jobfairlist')}'">
+			<div class="imgbox"><img src="../public/images/199.png" /></div>
+			<div class="tit">招聘会</div>
+		</div>
+		</notempty>
+		<div class="topnav" onclick="javascript:location.href='{:url_rewrite('QS_newslist')}'">
+		  <div class="imgbox"><img src="../public/images/202.png" /></div>
+		  <div class="tit">职场资讯</div>
+		</div>
+		<div class="clear"></div>
+	  </div>
+	  
+      <div class="h-navclose qs-center"><div class="navclose"></div></div>
+    </div>
+<elseif condition="C('visitor.utype') eq 1"/>	
+<!--企业已登录显示 -->
+	<div class="t-mask"></div>
+    <div class="topnavshow">
+	   
+	  <div class="navlis">
+	  	<div class="topnav" onclick="javascript:location.href='{:url_rewrite('QS_index')}'">
+		  <div class="imgbox"><img src="../public/images/198.png" /></div>
+		  <div class="tit">返回首页</div>
+		</div>
+		<div class="topnav" onclick="javascript:location.href='{:U('Company/index',array('uid'=>$visitor['uid']))}'">
+		  <div class="imgbox"><img src="../public/images/192.png" /></div>
+		  <div class="tit">企业中心</div>
+		</div>
+		<div class="topnav" onclick="javascript:location.href='{:url_rewrite('QS_resumelist')}'">
+			<div class="imgbox"><img src="../public/images/196.png" /></div>
+			<div class="tit">搜索简历</div>
+		</div>
+		<div class="topnav" id='J_jobs_add_top'>
+		  <div class="imgbox"><img src="../public/images/191.png" /></div>
+		  <div class="tit">发布职位</div>
+		</div>
+		<div class="topnav" id="refresh_jobs_all_top">
+		  <div class="imgbox"><img src="../public/images/195.png" /></div>
+		  <div class="tit">一键刷新</div>
+		</div>
+		<div class="topnav" onclick="javascript:location.href='{:U('Company/jobs_apply')}'">
+		  <div class="imgbox"><img src="../public/images/194.png" /></div>
+		  <div class="tit">收到的简历</div>
+		</div>
+		<div class="clear"></div>
+	  </div>
+	  
+      <div class="logout">
+	    <div class="outbtn for-event">退出登录</div>
+	  </div>
+	    <div class="h-navclose qs-center"><div class="navclose"></div></div>
+    </div>	
+	
+
+<else />
+<!--个人已登录显示 -->
+	<div class="t-mask"></div>
+   <div class="topnavshow">
+	  <div class="navlis">
+	  	<div class="topnav" onclick="javascript:location.href='{:url_rewrite('QS_index')}'">
+		  <div class="imgbox"><img src="../public/images/198.png" /></div>
+		  <div class="tit">返回首页</div>
+		</div>
+		<div class="topnav" onclick="javascript:location.href='{:U('Personal/index',array('uid'=>$visitor['uid']))}'">
+		  <div class="imgbox"><img src="../public/images/192.png" /></div>
+		  <div class="tit">个人中心</div>
+		</div>
+		<div class="topnav" onclick="javascript:location.href='{:url_rewrite('QS_jobslist')}'">
+		  <div class="imgbox"><img src="../public/images/197.png" /></div>
+		  <div class="tit">搜索职位</div>
+		</div>
+		<div class="topnav" id="preview_resume_top" pid="{$resume['id']}">
+		  <div class="imgbox"><img src="../public/images/200.png" /></div>
+		  <div class="tit">预览简历</div>
+		</div>
+		<div class="topnav" id="refresh_resume_top" pid="{$resume['id']}">
+		  <div class="imgbox"><img src="../public/images/195.png" /></div>
+		  <div class="tit">一键刷新</div>
+		</div>
+		<div class="topnav" onclick="javascript:location.href='{:U('Personal/jobs_interview')}'">
+		  <div class="imgbox"><img src="../public/images/193.png" /></div>
+		  <div class="tit">面试通知</div>
+		</div>
+		<div class="clear"></div>
+	  </div>
+	  
+      <div class="logout">
+	    <div class="outbtn for-event">退出登录</div>
+	  </div>
+	   <div class="h-navclose qs-center"><div class="navclose"></div></div>
+    </div>	
+</if>
+	<!--搜搜层 -->
+</div>

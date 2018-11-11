@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/company.css">
+</head>
+<body>
+    <include file="public:header"/>
+    <div class="filter-group x3 filter-outer">
+        <div id="f-mask"></div>
+        <div class="filter-outer">
+            <div class="filter-list js-filter" data-tag="0">
+                <div class="filter-cell">
+	                <div class="filter-cell-txt">
+                    <if condition="$jobs_id eq 0">
+                        应聘职位
+                    <else />
+                        {$jobs_list[$jobs_id]}
+                    </if>
+                  </div>
+                </div>
+            </div>
+            <div class="filter-list js-filter" data-tag="1">
+                <div class="filter-cell">
+	                <div class="filter-cell-txt">
+                    <if condition="$state eq 0">
+                        状态标签
+                    <else />
+                        {$state_arr[$state]}
+                    </if>
+	                </div>
+                </div>
+            </div>
+            <div class="filter-list js-filter" data-tag="2">
+                <div class="filter-cell">
+	                <div class="filter-cell-txt">
+                    <if condition="$Think.get.is_apply eq 2">
+                        主动投递
+                    <elseif condition="$Think.get.is_apply eq 1" />
+                        委托投递
+                    <else />
+                        简历来源
+                    </if>
+	                </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--应聘职位下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item <if condition="$Think.get.jobs_id eq ''">select</if>" href="{:P(array('jobs_id'=>''))}">全部</a></li>
+                    <volist name="jobs_list" id="jobs">
+                        <li><a class="f-item <if condition="$Think.get.jobs_id eq $key">select</if>" href="{:P(array('jobs_id'=>$key))}">{$jobs}</a></li>
+                    </volist>
+                </div>
+            </div>
+        </div>
+        <!--状态标签下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item <if condition="$Think.get.state eq ''">select</if>" href="{:P(array('state'=>0))}">全部</a></li>
+                    <volist name="state_arr" id="state_arr">
+                        <li><a class="f-item <if condition="$Think.get.state eq $key">select</if>" href="{:P(array('state'=>$key))}">{$state_arr}</a></li>
+                    </volist>
+                </div>
+            </div>
+        </div>
+        <!--简历来源下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item <if condition="$Think.get.is_apply eq ''">select</if>" href="{:P(array('is_apply'=>0))}">全部</a></li>
+                    <li><a class="f-item <if condition="$Think.get.is_apply eq 2">select</if>" href="{:P(array('is_apply'=>2))}">主动投递</a></li>
+                    <li><a class="f-item <if condition="$Think.get.is_apply eq 1">select</if>" href="{:P(array('is_apply'=>1))}">委托投递</a></li>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="split-block"></div>
+    <notempty name="apply_list['list']">
+        <volist name="apply_list['list']" id="list">
+            <if condition="$list['fullname']">
+                <div class="resume js-longpress" data-did="{$list.did}" onclick="window.location='{:url_rewrite('QS_resumeshow',array('id'=>$list['resume_id'],'jobs_id'=>$list['jobs_id'],'from_apply'=>1))}'">
+                    <div class="content">
+                        <div class="line-one">
+                            <div class="real-name substring <if condition="$list['is_reply'] eq 0">no-reply</if>">{$list.fullname}
+                                <if condition="$list['is_reply'] eq 0">
+                                    <div class="red-tip"></div>
+                                </if>
+                            </div>
+                            <switch name="list['is_reply']">
+                                <case value="0">
+                                    <div class="reply-status font12 font_yellow">待处理</div>
+                                </case>
+                                <case value="1">
+                                    <div class="reply-status font12 font_green">合适</div>
+                                </case>
+                                <case value="2">
+                                    <div class="reply-status font12 font_red">不合适</div>
+                                </case>
+                                <case value="3">
+                                    <div class="reply-status font12 font_yellow">待定</div>
+                                </case>
+                                <case value="4">
+                                    <div class="reply-status font12 font_red">未接通</div>
+                                </case>
+                            </switch>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="line-two font12">
+                            <div class="info">{$list.sex_cn} / {$list.age}岁 / {$list.education_cn} / {$list.experience_cn}</div>
+                            <div class="date font12">{:date('Y-m-d',$list['apply_addtime'])}</div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="line-three font12 substring">
+                            应聘：{$list.jobs_name}
+                        </div>
+                    </div>
+                </div>
+            <else/>
+                <div class="resume js-longpress">
+                    <div class="content">
+                        <div class="line-two font12">
+                            <div class="info">该简历不存在或已被删除</div>
+                            <div class="date font12">{:date('Y-m-d',$list['apply_addtime'])}</div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </if>
+        </volist>
+        <div class="split-block"></div>
+        <div class="qspage">{$apply_list['page']}</div>
+    <else />
+        <if condition="$hasget">
+            <div class="list-empty">
+                抱歉，没有找到符合您条件的简历！
+            </div>
+            <else />
+            <div class="list-empty link_blue">
+                您目前还没有收到的简历！<br />
+                建议您主动出击 <a href="{:url_rewrite('QS_resumelist')}">搜人才</a>
+            </div>
+        </if>
+    </notempty>
+    <include file="public:footer_min" />
+    <script src="../public/js/longPress.js"></script>
+    <script type="text/javascript">
+        $('.js-filter').on('click', function() {
+            var filter = new QSfilter($(this));
+        });
+        
+        // 长按删除
+        $('.js-longpress').each(function () {
+	        var y_id = $(this).data('did');
+	        $(this).longPress(function(){
+		        var popout = new QSpopout();
+		        popout.setContent('确定删除吗？');
+		        popout.show();
+		        popout.getPrimaryBtn().on('click', function () {
+			        $.getJSON("{:U('company/jobs_apply_del')}",{y_id:y_id},function(result){
+				        if(result.status == 1){
+					        qsToast({type:1,context: result.msg});
+					        setTimeout(function () {
+						        location.href = "{:U('company/jobs_apply')}";
+					        }, 2000);
+				        }else{
+					        qsToast({type:2,context: result.msg});
+				        }
+			        });
+		        });
+	        });
+        })
+        
+    </script>
+</body>
+</html>

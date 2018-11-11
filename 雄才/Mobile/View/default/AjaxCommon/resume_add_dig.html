@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+        <qscms:load type="category" search="1"/>
+	</head>
+	<body>
+		<div class="perindextop">
+		    <div class="return js-back for-event"></div>
+		    <div class="msg resume_dig" onClick="javascript:location.href='{:U('members/login')}'">登录</div>
+		    <div class="header_title font18">{$page_seo.header_title|default="无标题"}</div>
+		    <div class="tip">
+				<div class="title">Hi~,我是该公司HR</div>
+				做个自我介绍，让我快速了解你的经历~
+				<div class="pic_avatar"></div>
+		    </div>
+		</div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">姓名<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	            <input type="text" id="fullname" placeholder="请输入姓名" value="">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">性别<span class="font_red_light">*</span></div>
+	        <div id="sex" class="describe font13">
+		        <div class="radio-group x2">
+			        <div class="radio-cell">
+				        <label for="radio4">男</label>
+				        <input id="radio4" name="sex" type="radio" value="1" title="男" checked="checked">
+			        </div>
+			        <div class="radio-cell">
+				        <label for="radio5">女</label>
+				        <input id="radio5" name="sex" type="radio" value="2" title="女">
+			        </div>
+			        <div class="clear"></div>
+		        </div>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">出生年份<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	        <span class="for-select">请选择</span>
+	            <select id="birthdate" name="birthdate">
+	                <option value="">请选择</option>
+	                <volist name="birthdate_arr" id="birthdate">
+	                    <option value="{$birthdate}">{$birthdate}年</option>
+	                </volist>
+	            </select>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">最高学历<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	        <span class="for-select">请选择</span>
+	    		<select id="education" name="education">
+	    		    <volist name="education" id="education">
+	                    <option value="{$key}">{$education}</option>
+	    			</volist>
+	    		</select>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt last">
+	        <div class="pic"></div>
+	        <div class="tit font14">工作经验<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	        <span class="for-select">请选择</span>
+			    <select id="experience" name="experience">
+	    		    <volist name="experience" id="experience">
+	                    <option value="{$key}">{$experience}</option>
+	    			</volist>
+			    </select>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+
+		<div class="split-block"></div>
+
+	    <div class="list_height plist-txt js-actionParent">
+	        <div class="pic"></div>
+	        <div class="tit font14">期望职位<span class="font_red_light">*</span></div>
+	        <div class="describe font13 qs-temp js-showActionSheet" data-type="jobs" data-base="QS_jobs_parent" data-source="QS_jobs" data-multiple="true" data-num="5" data-link="false" data-level="{:C('qscms_category_jobs_level')}">
+		        <span class="qs-temp-txt-jobs" data-otxt="请选择">{$resume.intention_jobs|default="请选择"}</span>
+	           <input class="qs-temp-code-jobs" name="intention_jobs_id" id="intention_jobs_id" type="hidden" value="" />
+	        </div>
+	         <div class="arrow"></div>
+	         <div class="clear"></div>
+				    <!--BEGIN actionSheet-->
+				    <div>
+					    <div class="qs-mask" style="display: none"></div>
+					    <div class="qs-actionsheet js-actionsheet">
+						    <div class="qs-actionsheet-menu">
+							    <div class="con-filter mul">
+								    <div class="f-selected-group f-selected-group-jobs">
+									    <div class="s-bar">
+										    <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-gray qs-left js-cancelActionSheet">取消</div>
+                                            <div class="qs-left mul-txt font12">多选，最多 5 项</div>
+										    <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet" id="qs-temp-confirm-jobs">确定</div>
+										    <div class="clear"></div>
+									    </div>
+									    <div class="s-list qs-hidden"></div>
+								    </div>
+								    <div class="f-box f-box-jobs"></div>
+							    </div>
+						    </div>
+					    </div>
+				    </div>
+	    </div>
+	    <div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">期望薪资<span class="font_red_light">*</span></div>
+			<div class="describe font13">
+			<span class="for-select">请选择</span>
+	            <select id="wage" name="wage">
+	                <volist name="wage" id="wage">
+	                    <option value="{$key}">{$wage}</option>
+	                </volist>
+	            </select>
+			</div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt js-actionParent">
+	        <div class="pic"></div>
+	        <div class="tit font14">工作地区<span class="font_red_light">*</span></div>
+	        <div class="describe font13 qs-temp-new-city js-showActionSheet" data-multiple="true">
+		        <span class="qs-temp-txt-city" data-otxt="请选择">{$resume.district_cn|default="请选择"}</span>
+	            <input class="qs-temp-code-city" name="district" id="district" type="hidden" value="" keep="" />
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+					<!--BEGIN actionSheet-->
+					<div>
+						<div class="qs-mask" style="display: none"></div>
+						<div class="qs-actionsheet js-actionsheet">
+							<div class="qs-actionsheet-menu">
+								<div class="con-filter mul">
+									<div class="f-selected-group f-selected-group-city">
+										<div class="s-bar">
+											<div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-gray qs-left js-cancelActionSheet">取消</div>
+                                            <div class="qs-left mul-txt font12">多选，最多 3 项</div>
+											<div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet" id="qs-temp-confirm-city">确定</div>
+											<div class="clear"></div>
+										</div>
+										<div class="s-list qs-hidden"></div>
+									</div>
+									<div class="f-box f-box-city"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+	    </div>
+			<div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">手机号码<span class="font_red_light">*</span></div>
+        <div class="describe font13">
+            <input type="text" id="telephone" placeholder="请输入手机号码" value="">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    	</div>
+    	<div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">手机验证码<span class="font_red_light">*</span></div>
+        <div class="font13 vcode_val">
+            <input id="mobile_vcode" name="mobile_vcode" type="text" placeholder="请输入验证码" value="">
+        </div>
+        <div id="getVerfyCode" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-border-gray font14 vcode_btn">获取验证码</div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    	</div>
+			<input type="hidden" id="J_sms_open" value="{:C('qscms_sms_open')}">
+	    <div id="pop" class="qs-hidden"></div>
+        <input type="hidden" id="btnCheck">
+        <input type="hidden" id="J_captcha_open" value="{:C('qscms_mobile_captcha_open')}" />
+        <input type="hidden" id="J_captcha_open_mobile" value="{:C('qscms_wap_captcha_config.varify_mobile')}" />
+		<div class="btn-spacing">
+		  <a id="J_saveresume"  href="javascript:;" class="qs-btn qs-btn-blue font18">立即投递</a>
+		</div>
+	    <div class="split-block"></div>
+	    <include file="public:footer_min" />
+		<!--<script src="../public/js/inobounce.js"></script>-->
+	    <script src="https://static.geetest.com/static/tools/gt.js"></script>
+		<script src="../public/js/qsCategory.js"></script>
+        <script src="../public/js/qsCityUser.js"></script>
+	    <script type="text/javascript">
+			    $(function(){
+				    $(".js-showActionSheet").on("click", function(){
+					    var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+					    var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+					    $iosActionsheet.removeClass('qs-actionsheet-toggle');
+					    $iosActionsheet.addClass('qs-actionsheet-toggle');
+					    $iosMask.fadeIn(200);
+					    $iosMask.on('click', hideActionSheet);
+					    $(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+					    $(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+					    function hideActionSheet() {
+						    $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+						    $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+					    }
+				    });
+			    });
+	        // 验证表单并提交
+	        var regularMobile = /^13[0-9]{9}$|14[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/; // 验证手机号正则
+	        var regularEmail = /^[_\.0-9a-zA-Z-]+[_0-9a-zA-Z-]@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,3}$/; // 
+	        var regularHeight = /^1[2-9][0-9]$|^2[0-2][0-9]$|^230$/; // 验证身高正则
+	        $('#J_saveresume').die().live('click', function() {
+	            var jid = "{$jid}";
+	            var fullnameValue = $.trim($('#fullname').val());
+	            var sexValue = $.trim($('#sex input[name="sex"]:checked').val());
+	            var birthdateValue = $.trim($('#birthdate').val());
+	            var experienceValue = $.trim($('#experience').val());
+	            var residenceValue = $.trim($('#residence').val());
+	            var telephoneValue = $.trim($('#telephone').val());
+	            var mobile_vcode = $.trim($('#mobile_vcode').val());
+	            var educationValue = $.trim($('#education').val());
+	            var intentionJobsValue = $.trim($('#intention_jobs_id').val());
+	            var districtValue = $.trim($('#district').val());
+	            var wageValue = $.trim($('#wage').val());
+	            if (fullnameValue == "") {
+	                qsToast({type:2,context: '请填写姓名'});
+	                return false;
+	            }
+	            if (sexValue == "") {
+	                qsToast({type:2,context: '请选择性别'});
+	                return false;
+	            }
+	            if (birthdateValue == "") {
+	                qsToast({type:2,context: '请选择出生年份'});
+	                return false;
+	            }
+	            if (educationValue == "") {
+	                qsToast({type:2,context: '请选择学历'});
+	                return false;
+	            }
+	            if (experienceValue == "") {
+	                qsToast({type:2,context: '请选择工作经验'});
+	                return false;
+	            }
+	            if (intentionJobsValue == "") {
+	                qsToast({type:2,context: '请选择期望职位'});
+	                return false;
+	            }
+	            if (districtValue == "") {
+	                qsToast({type:2,context: '请选择工作地区'});
+	                return false;
+	            }
+	            if (wageValue == "") {
+	                qsToast({type:2,context: '请选择期望薪资'});
+	                return false;
+	            }
+	            if (telephoneValue == "") {
+                  qsToast({type:2,context: '请填写手机'});
+                  return false;
+              }
+              if (telephoneValue != "" && !regularMobile.test(telephoneValue)) {
+                  qsToast({type:2,context: '手机号码格式不正确'});
+                  return false;
+              }
+              if (mobile_vcode == "") {
+                  qsToast({type:2,context: '请填写手机验证码'});
+                  return false;
+              }
+	            $('#J_saveresume').val('保存中...').addClass('qs-btn-border-disabled');
+	            // 提交表单
+	            $.ajax({
+	                url: "{:U('AjaxPersonal/resume_add')}",
+	                type: 'POST',
+	                dataType: 'json',
+	                data: {jid:jid,fullname: fullnameValue,sex: sexValue, birthdate: birthdateValue,residence: residenceValue,education: educationValue, experience: experienceValue, telephone: telephoneValue,intention_jobs_id:intentionJobsValue,district:districtValue,wage:wageValue,mobilevcode : mobile_vcode},
+	                success:function(data){
+	                    if (data.status == 1) {
+	                        qsToast({type:1,context: data.msg});
+	                        setInterval(function(){
+	                        	window.location.href = "{:url_rewrite('QS_jobsshow',array('id'=>$jid))}";
+	                        },2000);
+	                    } else {
+	                        qsToast({type:2,context: data.msg});
+	                    }
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                },
+	                error:function(result){
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    qsToast({type:2,context: result.msg});
+	                }
+	            });
+	        });
+	        var timer,ountdownVal = 180,
+			ountdown = function(){
+				ountdownVal--;
+				if(ountdownVal<=0){
+					clearInterval(timer);
+					ountdownVal = 180;
+					$('#getVerfyCode').html('获取验证码').removeClass('qs-btn-border-disabled').prop('disabled', 0);
+				}else{
+					$('#getVerfyCode').html('重新发送'+ ountdownVal +'秒').addClass('qs-btn-border-disabled').prop('disabled', !0);
+				}
+			};
+
+            // 图片验证码
+            var verifyPhoto = false;
+
+			/**
+			 * ajax 登录
+			 */
+			function doAjax() {
+				$('#pop').hide();
+                $('#getVerfyCode').html('发送中...').addClass('qs-btn-border-disabled').prop('disabled', !0);
+				var mobile = $.trim($('#telephone').val());
+				$.post("{:U('Members/reg_send_sms')}",{mobile:mobile,sms_type:'gsou_reg'},function(result){
+					if(result.status == 1){
+						qsToast({type:1,context: result.msg});
+						timer=setInterval(ountdown,1000);
+					}else{
+						qsToast({type:2,context: result.msg});
+					}
+				},'json');
+			}
+
+            // 图片验证码
+            function verifyPhotoDialog() {
+                var verifyCodePop = new QSpopout('请输入下图中的文字或字母');
+                verifyCodePop.setContent([
+                    '<div class="dia-captcha-item">',
+                    '<img src="' + qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime() + '" class="dia-captcha-img">',
+                    '<input type="text" name="captcha-solution" class="dia-captcha-solution font16" maxlength="10">',
+                    '</div>'
+                ].join(''));
+                verifyCodePop.setBtn(1);
+                verifyCodePop.show();
+                verifyCodePop.setClose(false);
+                $('.dia-captcha-img').on('click', function() {
+                    $(this).attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+                })
+                // 确定按钮事件
+                verifyCodePop.getPrimaryBtn().on('click', function () {
+                    var currentPhotoVal = $.trim($('.dia-captcha-solution').val());
+                    if (currentPhotoVal.length) {
+                        $.ajax({
+                            url: qscms.root + '?m=Home&c=captcha&a=captchaCode',
+                            cache: false,
+                            async: false,
+                            type: 'post',
+                            dataType: 'json',
+                            data: { postcaptcha: currentPhotoVal },
+                            success: function(result) {
+                                if (result.status) {
+                                    verifyCodePop.hide();
+                                    doAjax();
+                                } else {
+                                    qsToast({type:2,context: '验证码输入错误'});
+                                    $('.dia-captcha-img').attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+                                }
+                            }
+                        });
+                    } else {
+                        $('.dia-captcha-solution').focus();
+                        qsToast({type:2,context: '请输入文字或字母'});
+                    }
+                });
+            }
+
+            var captcha_open = eval($('#J_captcha_open').val());
+            var captcha_open_mobile = eval($('#J_captcha_open_mobile').val());
+
+			$('#getVerfyCode').on('click',function(){
+				if(ountdownVal<180) return false;
+				var mobile = $.trim($('#telephone').val());
+				if (mobile == '') {
+					qsToast({type:2,context: '请输入手机号'});
+					return false;
+				}
+				if (captcha_open) {
+                    if (captcha_open_mobile) {
+                        if (verifyPhoto) {
+                            // 图片验证码
+                            verifyPhotoDialog();
+                        } else {
+                            $('.geetest_panel').remove();
+                            $.ajax({
+                                url: qscms.root+'?m=Mobile&c=captcha&type=mobile&t=' + (new Date()).getTime(),
+                                type: 'get',
+                                dataType: 'json',
+                                success: function(config) {
+                                    initGeetest({
+                                        gt: config.gt,
+                                        challenge: config.challenge,
+                                        offline: !config.success,
+                                        new_captcha: config.new_captcha,
+                                        product: 'bind'
+                                    }, function(captchaObj) {
+                                        captchaObj.appendTo("#pop");
+                                        captchaObj.onSuccess(function() {
+                                            var captChaResult = captchaObj.getValidate();
+                                            $('#pop').hide();
+                                            $('#getVerfyCode').html('发送中...').addClass('qs-btn-border-disabled').prop('disabled', !0);
+                                            var mobile = $.trim($('#telephone').val());
+                                            $.post("{:U('Members/reg_send_sms')}",{mobile:mobile,sms_type:'gsou_reg',geetest_challenge: captChaResult.geetest_challenge,geetest_validate: captChaResult.geetest_validate,geetest_seccode: captChaResult.geetest_seccode},function(result){
+                                                if(result.status == 1){
+                                                    qsToast({type:1,context: result.msg});
+                                                    timer=setInterval(ountdown,1000);
+                                                }else{
+                                                    qsToast({type:2,context: result.msg});
+                                                }
+                                            },'json');
+                                        })
+                                        captchaObj.onReady(function () {
+                                            captchaObj.verify();
+                                        });
+                                        $('#btnCheck').on('click', function () {
+                                            captchaObj.verify();
+                                        })
+                                        window.captchaObj = captchaObj
+                                    });
+                                }
+                            });
+                        }
+                    } else {
+                        doAjax();
+                    }
+                } else {
+                    doAjax();
+                }
+			});
+	    </script>
+	</body>
+</html>

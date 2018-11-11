@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/parttime.css">
+    <link rel="stylesheet" href="../public/css/zepto.mdater.css">
+    <qscms:load type="category" search="1"/>
+</head>
+<body>
+    <include file="public:header"/>
+    <eq name="new_record" value="1">
+    <div class="split-block-title">您的账号还可以发布 <strong>{$leave_jobs_num}</strong> 条兼职！</div>
+    </eq>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">兼职名称<span class="font_red_light">*</span></div>
+        <div class="describe"><input type="text" id="jobs_name" name="jobs_name" placeholder="请输入兼职名称" value="{$jobs['jobs_name']}" class="font13">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">兼职类型<span class="font_red_light">*</span></div>
+        <div class="describe font13 qs-relative">
+            <div class="for-select">请选择兼职类型</div>
+            <select id="category" name="category">
+                <option value="0">请选择兼职类型</option>
+                <volist name="category_jobs" id="vo">
+                    <option value="{$key}" <if condition="$jobs['category'] eq $key">selected</if>>{$vo}</option>
+                </volist>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">招聘人数</div>
+        <div class="describe"><input type="text" id="amount" placeholder="请输入招聘人数" value="{$jobs['amount']}" class="font13">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt js-actionParent">
+        <div class="pic"></div>
+        <div class="tit font14">工作地区<span class="font_red_light">*</span></div>
+        <div class="describe font13 qs-temp-new-city js-showActionSheet" data-multiple="false" >
+            <span class="qs-temp-txt-city" data-otxt="请选择工作地区">{$jobs['district_cn']|default='请选择工作地区'}</span>
+            <input class="qs-temp-code-city" type="hidden" id="district" value="<if condition="$jobs['district']">{$jobs.district}</if>" keep="<if condition="$jobs['district']">{$jobs.district}</if>">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+        <!--BEGIN actionSheet-->
+        <div>
+            <div class="qs-mask" style="display: none"></div>
+            <div class="qs-actionsheet js-actionsheet">
+                <div class="qs-actionsheet-menu">
+                    <div class="con-filter">
+                        <div class="f-selected-group f-selected-group-city">
+                            <div class="s-bar">
+                                <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-gray qs-left js-cancelActionSheet">取消</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="s-list qs-hidden"></div>
+                        </div>
+                        <div class="f-box f-box-city"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">详细地址<span class="font_red_light">*</span></div>
+        <div class="describe"><input type="text" id="address" placeholder="请输入详细地址" value="{$jobs['address']}" class="font13">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt last">
+        <div class="pic"></div>
+        <div class="tit font14">职位描述<span class="font_red_light">*</span></div>
+        <a href="#describe" class="describe font13 describeText">
+            {$jobs['contents']|default='请输入职位描述'}
+        </a>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="split-block"></div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">薪资待遇<span class="font_red_light">*</span></div>
+        <div class="describe salary">
+            <input type="text" id="wage" placeholder="请输入薪资待遇" value="{$jobs['wage']}" class="font13">
+        </div>
+        <div class="divide"></div>
+        <div class="describe salary-type font13 qs-relative">
+            <eq name="new_record" value="1">
+            <volist name="category_wage" id="vo" offset="1" length="1">
+            <div class="for-select">元/{$vo}</div>
+            </volist>
+            <else />
+            <div class="for-select">元/{$jobs['wage_type_cn']}</div>
+            </eq>
+            <select id="wage_type" name="wage_type">
+                <volist name="category_wage" id="vo">
+                    <option value="{$key}" <if condition="$jobs['wage_type'] eq $key or ($jobs['wage_type'] eq 0 and $i eq 1)">selected</if>>元/{$vo}</option>
+                </volist>
+            </select>
+        </div>
+        <div class="arrow arrow_bottom"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">结算方式<span class="font_red_light">*</span></div>
+        <div class="describe font13 qs-relative">
+            <eq name="new_record" value="1">
+            <volist name="category_settlement" id="vo" offset="1" length="1">
+            <div class="for-select">{$vo}</div>
+            </volist>
+            <else />
+            <div class="for-select">{$jobs['settlement_cn']}</div>
+            </eq>
+            <select id="settlement" name="settlement">
+                <volist name="category_settlement" id="vo">
+                    <option value="{$key}" <if condition="$jobs['settlement'] eq $key or ($jobs['settlement'] eq 0 and $i eq 1)">selected</if>>{$vo}</option>
+                </volist>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt notarrow last">
+        <div class="pic"></div>
+        <div class="tit font14">薪资备注</div>
+        <div class="describe"><input type="text" id="wage_remark" placeholder="请输入薪资备注" value="{$jobs['wage_remark']}" class="font13">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="split-block"></div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">工作周期<span class="font_red_light">*</span></div>
+        <a href="#describe" class="describe font13 J_work_time">
+        <eq name="new_record" value="1">
+        请选择工作周期
+        <else />
+            <eq name="jobs['long_period']" value="1">长期招聘<else />{$jobs['cycle_starttime']} 至 {$jobs['cycle_endtime']}</eq>
+        </eq>
+        </a>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt notarrow last">
+        <div class="pic"></div>
+        <div class="tit font14">工作时间<span class="font_red_light">*</span></div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="work-time">
+        <table class="table font12">
+            <tbody><tr>
+                <th>&nbsp;</th>
+                <th>周一</th>
+                <th>周二</th>
+                <th>周三</th>
+                <th>周四</th>
+                <th>周五</th>
+                <th>周六</th>
+                <th>周日</th>
+            </tr>
+            <tr>
+                <th>上午</th>
+                <td <if condition="in_array('0101',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0101" <if condition="in_array('0101',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0201',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0201" <if condition="in_array('0201',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0301',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0301" <if condition="in_array('0301',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0401',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0401" <if condition="in_array('0401',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0501',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0501" <if condition="in_array('0501',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0601',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0601" <if condition="in_array('0601',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0701',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0701" <if condition="in_array('0701',$jobs['worktime'])">checked</if>></td>
+            </tr>
+            <tr>
+                <th>下午</th>
+                <td <if condition="in_array('0102',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0102" <if condition="in_array('0102',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0202',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0202" <if condition="in_array('0202',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0302',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0302" <if condition="in_array('0302',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0402',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0402" <if condition="in_array('0402',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0502',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0502" <if condition="in_array('0502',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0602',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0602" <if condition="in_array('0602',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0702',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0702" <if condition="in_array('0702',$jobs['worktime'])">checked</if>></td>
+            </tr>
+            <tr>
+                <th>晚上</th>
+                <td <if condition="in_array('0103',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0103" <if condition="in_array('0103',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0203',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0203" <if condition="in_array('0203',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0303',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0303" <if condition="in_array('0303',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0403',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0403" <if condition="in_array('0403',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0503',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0503" <if condition="in_array('0503',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0603',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0603" <if condition="in_array('0603',$jobs['worktime'])">checked</if>></td>
+                <td <if condition="in_array('0703',$jobs['worktime'])">class="active"</if>><input name="worktime[]" type="checkbox" value="0703" <if condition="in_array('0703',$jobs['worktime'])">checked</if>></td>
+            </tr></tbody>
+        </table>
+    </div>
+    <div class="split-block"></div>
+    <!--联系方式-->
+    <eq name="new_record" value="1">
+        <eq name="need_mobile_audit" value="1">
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">联系人<span class="font_red_light">*</span></div>
+            <div class="describe">
+                <input type="text" id="contact" name="contact" placeholder="请输入联系人" class="font13" value="{$jobs.contact}">
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">联系手机<span class="font_red_light">*</span></div>
+            <div class="describe">
+                <input type="text" id="mobile" name="mobile" placeholder="请输入联系手机" class="font13" value="{$mobile}">
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">验证码<span class="font_red_light">*</span></div>
+            <div class="verify-code">
+                <input type="text" id="verify_code" name="mobile_vcode" placeholder="请输入验证码" class="font13" value="">
+            </div>
+            <div id="getVerfyCode" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-border-gray font14 btn-get-code">获取验证码</div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <else />
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">联系人<span class="font_red_light">*</span></div>
+            <div class="describe">
+                <input type="text" id="contact" name="contact" placeholder="请输入联系人" class="font13" value="{$contact}">
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">联系手机<span class="font_red_light">*</span></div>
+            <div class="describe">
+                <input type="text" id="mobile" name="mobile" placeholder="请输入联系手机" class="font13" value="{$mobile}" disabled>
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        </eq>
+    <else />
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">联系人<span class="font_red_light">*</span></div>
+        <div class="describe">
+            <input type="text" id="contact" class="font13" value="{$jobs.contact}" disabled>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">联系手机<span class="font_red_light">*</span></div>
+        <div class="describe">
+            <input type="text" id="mobile" class="font13" value="{$mobile}" disabled>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    </eq>
+    
+    <div class="btn-spacing">
+        <input type="hidden" id="id" value="{$jobs.id}">
+        <input type="hidden" id="contents" value="{$jobs.contents}">
+        <input type="hidden" id="cycle_starttime" value="{$jobs.cycle_starttime}">
+        <input type="hidden" id="cycle_endtime" value="{$jobs.cycle_endtime}">
+        <input type="hidden" id="long_period" value="{$jobs.long_period}">
+        <input type="hidden" id="J_captcha_open" value="<if condition="C('qscms_mobile_captcha_open') eq 1 && C('qscms_wap_captcha_config.varify_mobile') eq 1">1<else/>0</if>" />
+        <eq name="new_record" value="1">
+        <div id="J_release" class="qs-btn qs-btn-blue font18" data-title="发布职位">发布职位</div>
+        <else />
+        <div id="J_release" class="qs-btn qs-btn-blue font18" data-title="修改职位">修改职位</div>
+        </eq>
+    </div>
+    <div id="pop" style="display:none"></div>
+    <input type="hidden" id="btnCheck">
+    <div class="split-block"></div>
+    <include file="public:footer_min" />
+    <script src="../public/js/popWin.js"></script>
+    <script src="../public/js/zepto.mdater.js"></script>
+    <script src="../public/js/qsCategory.js"></script>
+    <script src="../public/js/qsCityUser.js"></script>
+    <script src="https://static.geetest.com/static/tools/gt.js"></script>
+    <!--工作周期-->
+    <script id="WorkTimeWrap" type="text/html">
+        <div class="headernavfixed">
+            <div class="headernav font18"><div class="title">工作周期<div class="return js-back"></div></div></div>
+        </div>
+        <div class="split-block"></div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">开始日期</div>
+            <div class="describe font12">
+                <input id="tpl_cycle_starttime" class="in" type="text" placeholder="请选择开始日期" value="{$jobs.cycle_starttime}"/>
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">结束日期</div>
+            <div class="describe font12">
+                <input id="tpl_cycle_endtime" class="in" type="text" placeholder="请选择结束日期" value="{$jobs.cycle_endtime}"/>
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">长期招聘</div>
+            <div class="describe font12">
+	              <div class="d-switch js-d-switch"></div>
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="split-block"></div>
+        <div class="btn-spacing">
+            <input type="hidden" id="long_period" value="{$jobs['long_period']}">
+            <div id="workTimeBtn" class="qs-btn qs-btn-blue font18" title="确定">确定</div>
+        </div>
+    </script>
+    <!--职位描述模板-->
+    <script type="text/html" id="tpl-describe">
+        <div class="headernavfixed">
+            <div class="headernav font18"><div class="title">职位描述<div class="return js-back"></div></div></div>
+        </div>
+        <div class="split-block"></div>
+        <div class="job-desc">
+            <textarea placeholder="请输入职位描述" id="tpl_contents">{$jobs['contents']}</textarea>
+        </div>
+        <div class="job-desc-tip">
+            <div class="text-num">最多可输入2000字</div>
+            <div class="J_empty text-clear">清空</div>
+            <div class="clear"></div>
+        </div>
+        <div class="btn-spacing">
+            <div id="contentsBtn" class="qs-btn qs-btn-blue font18" title="确定">确定</div>
+        </div>
+    </script>
+    <script type="text/javascript">
+        $('.work-time td').on("click",function(){
+            if($(this).find('input').is(':checked')){
+                $(this).addClass('active');
+            }else{
+                $(this).removeClass('active');
+            }
+        });
+        $(function(){
+            $(".js-showActionSheet").on("click", function(){
+                var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+                var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+                $iosActionsheet.removeClass('qs-actionsheet-toggle');
+                $iosActionsheet.addClass('qs-actionsheet-toggle');
+                $iosMask.fadeIn(200);
+                $iosMask.on('click', hideActionSheet);
+                $(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+                $(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+                function hideActionSheet() {
+                    $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+                    $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+                }
+            });
+        });
+        // 验证手机号
+        var regularMobile = /^13[0-9]{9}$|14[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/;
+        // 职位描述
+        var describeTemp = $('#tpl-describe').html();
+        $(".describeText").on('click', function() {
+            var $this = $(this),
+                baseTxt = $this.text();
+            popWin.init({
+                from:"right",
+                html:describeTemp,
+                handle:function(a){
+                    if ($('#contents').val().length) {
+                        $('#tpl_contents').val($('#contents').val());
+                    }
+                    $('.J_empty').on('click',function(){
+                        $('#tpl_contents').val('');
+                    });
+                    $('#contentsBtn').on('click',function(){
+                        if ($.trim($('#tpl_contents').val()) == "") {
+                            qsToast({type:2,context: '请填写职位描述'});
+                            return false;
+                        }
+                        $('#contents').val($('#tpl_contents').val());
+                        $('.describeText').html($('#tpl_contents').val());
+                        a.close();
+                    });
+                }
+            })
+        });
+        // 工作周期
+        var WorkTimeWrap = $('#WorkTimeWrap').html();
+        $(".J_work_time").on('click', function() {
+            var $this = $(this),
+                baseTxt = $this.text();
+            popWin.init({
+                from:"right",
+                html:WorkTimeWrap,
+                handle:function(a){
+                    if ($('#cycle_starttime').val()) {
+                        $('#tpl_cycle_starttime').val($('#cycle_starttime').val());
+                    }
+                    if ($('#cycle_endtime').val()) {
+                        $('#tpl_cycle_endtime').val($('#cycle_endtime').val());
+                    }
+                    if ($('#long_period').val()==1) {
+                        $('.js-d-switch').addClass('active');
+                    }
+                    // 开关
+                    $('.js-d-switch').on('click', function () {
+                        if ($(this).hasClass('active')) {
+                            $('#long_period').val('0');
+                            $(this).removeClass('active');
+                        } else {
+                            $('#long_period').val('1');
+                            $(this).addClass('active');
+                        }
+                    });
+                    $('#workTimeBtn').on('click',function(){
+                        var tpl_cycle_starttime = $('#tpl_cycle_starttime').val();
+                        var tpl_cycle_endtime = $('#tpl_cycle_endtime').val();
+                        if (!$('.js-d-switch').hasClass('active')) {
+                            if (!tpl_cycle_starttime) {
+                                qsToast({type:2,context: '请选择开始日期'});
+                                return false;
+                            }
+                            if (!tpl_cycle_endtime) {
+                                qsToast({type:2,context: '请选择结束日期'});
+                                return false;
+                            }
+                        }
+                        if(!$('.js-d-switch').hasClass('active')){
+                            $('#cycle_starttime').val($('#tpl_cycle_starttime').val());
+                            $('#cycle_endtime').val($('#tpl_cycle_endtime').val());
+                            $('#long_period').val(0);
+                            $('.J_work_time').html(tpl_cycle_starttime+' 至 '+tpl_cycle_endtime);
+                        }else{
+                            $('#tpl_cycle_starttime').val('');
+                            $('#tpl_cycle_endtime').val('');
+                            $('#long_period').val(1);
+                            $('.J_work_time').html('长期招聘');
+                        }
+                        a.close();
+                    });
+                }
+            })
+            // 日期插件调用
+            $('.in').mdater({
+                minDate : new Date(2015, 12, 13)
+            })
+        });
+
+        
+        /**
+         * 发送手机验证码
+         */
+        $('#getVerfyCode').on('click', function() {
+            if ($(this).hasClass('qs-btn-border-disabled')) return false;
+            var mobileValue = $.trim($('input[name=mobile]').val());
+            var captcha_open = eval($('#J_captcha_open').val());
+            if (mobileValue == '') {
+                qsToast({type:2,context: '请输入手机号码'});
+                return false;
+            }
+            if (mobileValue != "" && !regularMobile.test(mobileValue)) {
+                qsToast({type:2,context: '手机号码格式不正确'});
+                return false;
+            }
+            if (captcha_open) {
+                $('.geetest_panel').remove();
+                $.ajax({
+                    url: qscms.root+'?m=Mobile&c=Captcha&type=mobile&t=' + (new Date()).getTime(),
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(config) {
+                        initGeetest({
+                            gt: config.gt,
+                            challenge: config.challenge,
+                            offline: !config.success,
+                            new_captcha: config.new_captcha,
+                            product: 'bind'
+                        }, function(captchaObj) {
+                            captchaObj.appendTo("#pop");
+                            captchaObj.onSuccess(function() {
+                                var captChaResult = captchaObj.getValidate();
+                                $('#getVerfyCode').addClass('qs-btn-border-disabled');
+                                $('#getVerfyCode').text('发送中...');
+                                var mobileValue = $.trim($('input[name=mobile]').val());
+                                $.ajax({
+                                    url: "{:U('PartTime/send_sms')}",
+                                    cache: false,
+                                    async: false,
+                                    type: 'post',
+                                    dataType: 'json',
+                                    data: { sms_type: 'login', mobile: mobileValue,geetest_challenge: captChaResult.geetest_challenge,geetest_validate: captChaResult.geetest_validate,geetest_seccode: captChaResult.geetest_seccode},
+                                    success: function(result) {
+                                        $('#pop').hide();
+                                        qsToast({type:2,context: result.msg});
+                                        if (result.status) {
+                                            // 开始倒计时
+                                            var countdown = 180;
+                                            function settime() {
+                                                if (countdown == 0) {
+                                                    $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                                                    $('#getVerfyCode').text('获取验证码');
+                                                    countdown = 180;
+                                                    return;
+                                                } else {
+                                                    $('#getVerfyCode').addClass('qs-btn-border-disabled');
+                                                    $('#getVerfyCode').text('重新发送' + countdown + '秒');
+                                                    countdown--;
+                                                }
+                                                setTimeout(function() {
+                                                    settime()
+                                                },1000)
+                                            }
+                                            settime();
+                                        } else {
+                                            $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                                            $('#getVerfyCode').text('获取验证码');
+                                            $('#pop').hide();
+                                            qsToast({type:2,context: result.msg});
+                                        }
+                                    }
+                                });
+                            })
+                            captchaObj.onReady(function () {
+                                captchaObj.verify();
+                            });
+                            $('#btnCheck').on('click', function () {
+                                captchaObj.verify();
+                            })
+                            window.captchaObj = captchaObj
+                        });
+                    }
+                });
+            } else {
+                sendVerfy();
+            }
+        })
+        /**
+         * 发送手机验证码
+         */
+        function sendVerfy() {
+            $('#getVerfyCode').addClass('qs-btn-border-disabled');
+            $('#getVerfyCode').text('发送中...');
+            var mobileValue = $.trim($('input[name=mobile]').val());
+            $.ajax({
+                url: "{:U('PartTime/send_sms')}",
+                cache: false,
+                async: false,
+                type: 'post',
+                dataType: 'json',
+                data: { sms_type: 'login', mobile: mobileValue},
+                success: function(result) {
+                    $('#pop').hide();
+                    qsToast({type:2,context: result.msg});
+                    if (result.status) {
+                        // 开始倒计时
+                        var countdown = 180;
+                        function settime() {
+                            if (countdown == 0) {
+                                $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                                $('#getVerfyCode').text('获取验证码');
+                                countdown = 180;
+                                return;
+                            } else {
+                                $('#getVerfyCode').addClass('qs-btn-border-disabled');
+                                $('#getVerfyCode').text('重新发送' + countdown + '秒');
+                                countdown--;
+                            }
+                            setTimeout(function() {
+                                settime()
+                            },1000)
+                        }
+                        settime();
+                    } else {
+                        $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                        $('#getVerfyCode').text('获取验证码');
+                        $('#pop').hide();
+                        qsToast({type:2,context: result.msg});
+                    }
+                }
+            });
+        }
+        // 发布兼职
+        $('#J_release').click(function(){
+            var id = $.trim($('#id').val());
+            var jobsNameValue = $.trim($('#jobs_name').val());
+            var categoryValue = $.trim($('#category').val());
+            var amountValue = $.trim($('#amount').val());
+            var district = $.trim($('#district').val());
+            var address = $.trim($('#address').val());
+            var contentsValue = $.trim($('#contents').val());
+            var wageValue = $.trim($('#wage').val());
+            var wageTypeValue = $.trim($('#wage_type').val());
+            var wageRemarkValue = $.trim($('#wage_remark').val());
+            var settlementValue = $.trim($('#settlement').val());
+            var cycleStarttimeValue = $.trim($('#cycle_starttime').val());
+            var cycleEndtimeValue = $.trim($('#cycle_endtime').val());
+            var longPeriodValue = $.trim($('#long_period').val());
+            var workTimeArr = new Array();
+            $("input[name='worktime[]']:checked").each(function (index, val) {
+                workTimeArr.push($(this).val());
+            });
+            var contactValue = eval("{$new_record}")==1?$.trim($('#contact').val()):"{$jobs['contact']}";
+            var mobileValue = eval("{$new_record}")==1?(eval("{$need_mobile_audit}"==1)?$.trim($('#mobile').val()):"{$mobile}"):"{$mobile}";
+            var verifycodeValue = $.trim($('input[name=mobile_vcode]').val());
+            if (jobsNameValue == "") {
+                qsToast({type:2,context: '请填写兼职名称'});
+                return false;
+            }
+            if (categoryValue == 0) {
+                qsToast({type:2,context: '请选择兼职类型'});
+                return false;
+            }
+            if (district == "") {
+                qsToast({type:2,context: '请选择工作地区'});
+                return false;
+            }
+            if (address == "") {
+                qsToast({type:2,context: '请填写详细地址'});
+                return false;
+            }
+            if (address != "" && address.length > 30) {
+                qsToast({type:2,context: '详细地址不能大于30个字'});
+                return false;
+            }
+            if (contentsValue == "") {
+                qsToast({type:2,context: '请填写职位描述'});
+                return false;
+            }
+            if (wageValue == "") {
+                qsToast({type:2,context: '请填写薪资待遇'});
+                return false;
+            }
+            if (!$('#long_period').val()) {
+                if (!cycleStarttimeValue || !cycleEndtimeValue) {
+                    qsToast({type:2,context: '请填写工作周期'});
+                    return false;
+                }
+            }
+            if(workTimeArr.length == 0){
+                qsToast({type:2,context: '请选择工作时间'});
+                return false;
+            }
+            if (contactValue == "") {
+                qsToast({type:2,context: '请填写联系人'});
+                return false;
+            }
+            if (contactValue != "" && contactValue.length > 10) {
+                qsToast({type:2,context: '联系人1-10个字'});
+                return false;
+            }
+            if (mobileValue != "" && !regularMobile.test(mobileValue)) {
+                qsToast({type:2,context: '手机号格式不正确'});
+                return false;
+            }
+            if (verifycodeValue == '' && eval("{$new_record}")==1 && eval("{$need_mobile_audit}")==1) {
+                qsToast({type:2,context: '请输入手机验证码'});
+                return false;
+            }
+            $(this).html('正在保存...');
+            $(this).addClass('qs-btn-border-disabled');
+            $.ajax({
+                url: "<eq name='new_record' value='1'>{:U('PartTime/add')}<else />{:U('PartTime/edit')}</eq>",
+                type: 'POST',
+                dataType: 'json',
+                data: {id:id,jobs_name: jobsNameValue, category: categoryValue, amount: amountValue, district: district, address: address, contents: contentsValue, wage: wageValue, wage_type: wageTypeValue, settlement: settlementValue, wage_remark: wageRemarkValue, cycle_starttime: cycleStarttimeValue, cycle_endtime: cycleEndtimeValue, long_period: longPeriodValue, worktime: workTimeArr, contact: contactValue, mobile: mobileValue,mobile_vcode:verifycodeValue},
+                success:function(result){
+                    if (result.status == 1) {
+                        qsToast({type:1,context: result.msg});
+                        setTimeout(function () {
+                            location.href = result.data.url;
+                        }, 2000);
+                    } else {
+                        $("#J_release").html($('#J_release').data('title'));
+                        $("#J_release").removeClass('qs-btn-border-disabled');
+                        qsToast({type:2,context: result.msg});
+                    }
+                },
+                error:function(){
+                    $("#J_release").html($('#J_release').data('title'));
+                    $("#J_release").removeClass('qs-btn-border-disabled');
+                    qsToast({type:2,context: result.msg});
+                }
+            });
+        });
+    </script>
+</body>
+</html>

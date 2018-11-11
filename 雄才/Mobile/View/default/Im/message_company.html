@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<div class="pmslist-img for-event last" onClick="javascript:location.href='{:url_rewrite('QS_companyshow',array('id'=>$company_profile['id']))}'">
+				<div class="pic">
+					<img src="{$company_profile['logo']}">
+				</div>
+				<div class="describe font12">
+					<div class="tit font14 substring">{$company_profile.companyname}<span class="font12">({$company_profile.nature_cn}&nbsp;|&nbsp;{$company_profile.scale_cn}&nbsp;|&nbsp;{$company_profile.trade_cn})</span>
+				</div>
+				<div class="txt substring">{$company_profile.address}</div>
+		   </div>		   
+	       <div class="arrow"></div>
+		   <div class="clear"></div>
+		</div>
+		<div class="split-block"></div>
+		<volist name="message['list']" id="msg">
+			<if condition="$msg['formuid'] eq $visitor['uid']">
+				<div class="J_imList pmsshow-right">
+					<div class="txt">{$msg.message}
+						<div class="times font10">{:date('m-d h:i',$msg['addtime'])}</div>
+						<div class="arrow"></div>
+					</div>
+					<div class="pic">
+						<img src="{$ronguser.avatars}">
+					</div>
+					<div class="clear"></div>
+				</div>
+			<else/>
+				<div class="J_imList pmsshow-left">
+					<div class="pic">
+						<img src="{$company_profile.logo}">
+					</div>
+					<div class="txt">{$msg.message}
+						<div class="times font10">{:date('m-d h:i',$msg['addtime'])}</div>
+						<div class="arrow"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</if>
+			<div class="split-block"></div>
+		</volist>
+		<div id="send" class="pmsreply">
+			<div class="replybox">
+				<div class="inputbox">
+					<input id="J_val" type="text"  placeholder="请输入内容">
+				</div>
+				<div class="btnbox">
+					<div id="J_btn" class="qs-btn qs-btn-medium qs-btn-blue">发送</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+        <include file="public:footer_min" />
+        <script src="../public/js/qscrollTo.js"></script>
+        <script type="text/javascript">
+        	rongUser = {
+				sendUser:{
+		        	id:"{$company_profile['uid']}",
+		        	name: "{$company_profile['companyname']}",
+		            avatars: "{$company_profile['logo']}"
+		        },
+		        newTime:"{$message.newTime}"
+			}
+			rongChangeScrollHeight(0);
+			var p = 2,
+		    	is_exe = !1,
+        		is_load = {$message.is_load|default=0};
+		    $('body').slideUp(function(e){
+		        if(!is_load || is_exe) return !1;
+		        is_exe = !0;
+		        $.getJSON("{:U('Im/get_message')}",{uid:rongUser.sendUser.id,page:p},function(result){
+		            if(result.status == 1){
+		                var h = e[0].scrollHeight;
+		                $('.J_imList').first().before(result.data.html);
+		                e.scrollTop(e[0].scrollHeight-h);
+		                if(result.data.is_load){
+		                    p++;
+		                }else{
+		                   is_load = 0; 
+		                }
+		            }
+		            is_exe = !1;
+		        });
+		    });
+        </script>
+	</body>
+</html>

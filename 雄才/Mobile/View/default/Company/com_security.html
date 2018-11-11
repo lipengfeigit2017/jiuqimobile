@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<div class="mui-content">
+			<div class="split-block-title">手机、邮箱认证后可以作为登录名快捷登录</div>
+			<div class="list_height plist-txt" onclick="window.location='{:U('company/com_security_tel')}'">
+				<div class="pic"></div>
+				<div class="tit font14">手机认证</div>
+				<div class="describe font12">
+					{$visitor.mobile}&nbsp;
+					<if condition="$visitor['mobile_audit'] eq 0">
+						未认证
+					<else/>
+						已认证
+					</if>
+				</div>
+				<div class="arrow"></div>
+				<div class="clear"></div>
+			</div>
+			<!-- <div class="list_height plist-txt" onclick="window.location='{:U('company/com_security_email')}'">
+				<div class="pic"></div>
+				<div class="tit font14">邮箱认证</div>
+				<div class="describe font12">
+					{$visitor.email}&nbsp;
+					<if condition="$visitor['email_audit'] eq 0">
+						未认证
+					<else/>
+						已认证
+					</if>
+				</div>
+				<div class="arrow"></div>
+				<div class="clear"></div>
+			</div> -->
+			<div class="list_height plist-txt" onclick="window.location='{:U('company/com_security_user')}'">
+				<div class="pic"></div>
+				<div class="tit font14">修改用户名</div>
+				<div class="describe font12">{$visitor.username}</div>
+				<div class="arrow"></div>
+				<div class="clear"></div>
+			</div>
+			<div class="list_height plist-txt" onclick="window.location='{:U('company/com_security_pwd')}'">
+				<div class="pic"></div>
+				<div class="tit font14">修改密码</div>
+				<div class="describe font12"></div>
+				<div class="arrow"></div>
+				<div class="clear"></div>
+			</div>
+			<div class="list_height plist-txt last" onclick="window.location='{:U('company/com_security_log')}'">
+				<div class="pic"></div>
+				<div class="tit font14">登录日志</div>
+				<div class="describe font12"></div>
+				<div class="arrow"></div>
+				<div class="clear"></div>
+			</div>
+			<div class="split-block"></div>
+		</div>
+		<include file="public:footer_min" />
+	</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<div class="mui-content">
+			<div class="split-block-title">账号密码修改成功后，请记住新密码以便下次登录时使用！</div>
+			<form class="mui-input-group">
+				<div class="list_height plist-txt notarrow">
+					<div class="pic"></div>
+					<div class="tit font14">原密码</div>
+					<div class="describe font12">
+						<input id="oldpassword" type="password" name="oldpassword" placeholder="请输入原密码">
+					</div>
+					<div class="arrow"></div>
+					<div class="clear"></div>
+				</div>
+				<div class="list_height plist-txt notarrow">
+					<div class="pic"></div>
+					<div class="tit font14">新密码</div>
+					<div class="describe font12">
+						<input id="password" type="password" name="password" class="mui-input-clear" placeholder="6-20位数字和字母">
+					</div>
+					<div class="arrow"></div>
+					<div class="clear"></div>
+				</div>
+				<div class="list_height plist-txt notarrow last">
+					<div class="pic"></div>
+					<div class="tit font14">确认密码</div>
+					<div class="describe font12">
+						<input id="password1" type="password" name="password1" class="mui-input-clear" placeholder="再次输入新密码">
+					</div>
+					<div class="arrow"></div>
+					<div class="clear"></div>
+				</div>
+			</form>
+			<div class="split-block"></div>
+			<div class="btn-spacing"><a id="loginBtn" href="javascript:;" class="qs-btn qs-btn-blue font18">提交</a></div>
+		</div>
+		<include file="public:footer_min" />
+		<script type="text/javascript">
+			$('#loginBtn').on('click',function(){
+				var oldpassword = $('#oldpassword').val(),
+					password = $('#password').val(),
+					password1 = $('#password1').val();
+				$.post("{:U('Members/save_password')}",{oldpassword:oldpassword,password:password,password1:password1},function(result){
+					if(result.status == 1){
+						qsToast({type:1,context:result.msg});
+						setTimeout(function(){
+							window.location.href="{:U('Personal/per_security')}";
+						},2000);
+					}else{
+						qsToast({type:2,context:result.msg});
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

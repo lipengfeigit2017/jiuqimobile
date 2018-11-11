@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<include file="public:meta" />
+    <link rel="stylesheet" href="../public/css/store.css">
+</head>
+<body>
+	<include file="public:header" />
+    <div class="add-layer" style="display: none; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+        <div class="J_close"></div>
+        <div class="content">
+            <div class="title">你要发布哪种信息？</div>
+            <a href="javascript:;" data-checkurl="{:U('Storerecruit/check_jobs_num')}" data-url="{:U('Storerecruit/add')}" class="item t1 item_add">店铺招聘</a>
+            <a href="javascript:;" data-checkurl="{:U('Storetransfer/check_info_num')}" data-url="{:U('Storetransfer/add')}" class="item t2 item_add">店铺求租</a>
+            <a href="javascript:;" data-checkurl="{:U('Storetenement/check_info_num')}" data-url="{:U('Storetenement/add')}" class="item t3 item_add">店铺求租</a>
+        </div>
+    </div>
+    <div class="jobs-manager-top-nav list_height">
+        <div class="n-cell" onclick="window.location='{:U('Storerecruit/manage')}'">门店招聘</div>
+        <div class="n-cell" onclick="window.location='{:U('Storetransfer/manage')}'">门店转让</div>
+        <div class="n-cell active" onclick="window.location='{:U('Storetenement/manage')}'">门店求租<div class="b-line"></div></div>
+        <div class="clear"></div>
+    </div>
+	<div class="split-block"></div>
+    <notempty name="infolist">
+        <volist name="infolist" id="vo">
+        <div class="p-job js-actionParent">
+            <div class="info">
+                <div class="line-one">
+                    <div class="job-name substring">{$vo['title']}</div>
+                    <if condition="$vo['audit'] eq 0">
+                        <div class="job-status font12 font_yellow">审核中</div>
+                        <elseif condition="$vo['audit'] eq 2" />
+                        <div class="job-status font12 font_red">审核未通过</div>
+                    </if>
+                    <div class="clear"></div>
+                </div>
+                <div class="line-two font12">{$vo['district_cn']} | {$vo['category_cn']} | <eq name="vo.rent" value="0">租金不限<else/>{$vo['rent_cn']}/月</eq> | {$vo['area_cn']}</div>
+                <div class="line-three font12">
+                    <div class="pic browse">浏览{$vo['click']|default="0"}次</div>
+                    <div class="pic refresh">{:date('Y-m-d H:i',$vo['refreshtime'])}</div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="handler font14">
+                <div class="item J_refresh x3" yid="{$vo.id}"><span>刷新</span></div>
+                <div class="item x3" onclick="window.location='{:U('Storetenement/edit',array('id'=>$vo['id']))}'"><span>修改</span></div>
+                <div class="item J_del x3" url="{:U('Storetenement/delete',array('id'=>$vo['id']))}"><span class="last">删除</span></div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="split-block"></div>
+        </volist>
+        <div class="qspage">{$page}</div>
+    <else />
+        <div class="list-empty link_blue">
+            您还没有发布的店铺求租信息！<br>
+            想要快速租到店铺，就赶紧 <a class="J_add">发布求租信息</a> 吧~
+        </div>
+    </notempty>
+    <div class="btn-spacing">
+        <a class="qs-btn qs-btn-blue font18 J_add">发布求租信息</a>
+    </div>
+    <div class="split-block"></div>
+	<include file="public:footer_min" />
+	<script type="text/javascript">
+        $('.J_del').on('click',function(){
+            var url = $(this).attr('url');
+            var popout = new QSpopout('删除信息');
+            var tip = '被删除后将无法恢复，您确定要删除选中的信息吗？';
+            popout.setContent(tip);
+            popout.getPrimaryBtn().on('click', function () {
+                $.getJSON(url,function(result){
+                    if(result.status==1){
+                        qsToast({type: 1, context: result.msg});
+                        setTimeout(function(){
+                            window.location.href = result.data;
+                        },2000);
+                    }else{
+                        qsToast({type: 2, context: result.msg});
+                        return false;
+                    }
+                });
+            });
+            popout.show();
+        });
+        $('.J_refresh').on('click',function(){
+            var obj = $(this);
+            $.getJSON("{:U('Storetenement/refresh')}",{yid:obj.attr('yid')},function(result){
+                if (result.status == 1) {
+                    qsToast({type: 1, context: result.msg});
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000);
+                }else {
+                    qsToast({type: 2, context: result.msg});
+                    return false;
+                }
+            });
+        });
+        $('.J_add').on('click',function(){
+            $('.add-layer').show();
+        });
+        $('.item_add').on('click',function(){
+            var url = $(this).data('url');
+            var checkurl = $(this).data('checkurl');
+            $.getJSON(checkurl,function(result){
+                if(result.status == 0){
+                    $('.add-layer').hide();
+                    var popout = new QSpopout('发布信息');
+                    popout.setContent(result.msg);
+                    popout.show();
+                }else{
+                    window.location.href=url;
+                }
+            });
+        });
+        $('.J_close').on('click',function(){
+            $('.add-layer').hide();
+        });
+	</script>
+</body>
+</html>

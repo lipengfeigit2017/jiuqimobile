@@ -1,0 +1,90 @@
+<meta charset="utf-8">
+<title>{$page_seo.title}</title>
+<meta name="keywords" content="{$page_seo.keywords}"/>
+<meta name="description" content="{$page_seo.description}"/>
+<meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,shrink-to-fit=no,user-scalable=no,minimal-ui" name="viewport"/>
+<meta name ="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<if condition="C('qscms_page_full_screen') eq 1">
+    <!-- UC默认竖屏` UC强制全屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <meta name="full-screen" content="yes"/>
+    <meta name="browsermode" content="application"/>
+    <!-- QQ强制竖屏` QQ强制全屏 -->
+    <meta name="x5-orientation" content="portrait"/>
+    <meta name="x5-fullscreen" content="true"/>
+    <meta name="x5-page-mode" content="app"/>
+</if>
+<if condition="$apply['Subsite']">
+	<base href="{:C('SUBSITE_DOMAIN')}"/>
+</if>
+<script src="../public/js/rem.js"></script>
+<script src="../public/js/zepto.min.js"></script>
+<script src="../public/js/htmlspecialchars.js"></script>
+<script>
+	var qscms = {
+		base : "{:C('SUBSITE_DOMAIN')}",
+		domain : "{:C('HTTP_TYPE')}{$_SERVER['HTTP_HOST']}",
+		root : "__ROOT__/index.php",
+		companyRepeat:"{:C('qscms_company_repeat')}",
+		is_subsite : <if condition="$apply['Subsite'] and C('SUBSITE_VAL.s_id') gt 0">1<else/>0</if>,
+        smsTatus: "{:C('qscms_sms_open')}",
+        subsite_level : "<if condition="$apply['Subsite'] and C('SUBSITE_VAL.s_id') gt 0">{:C('SUBSITE_VAL.s_level')}<else/>{:C('qscms_category_district_level')}</if>",
+        default_district : "<if condition="$apply['Subsite'] and C('SUBSITE_VAL.s_id') gt 0">{:C('SUBSITE_VAL.s_default_district')}<else/>{:C('qscms_default_district')}</if>",
+        default_district_spell : "<if condition="$apply['Subsite'] and C('SUBSITE_VAL.s_id') gt 0">{:C('SUBSITE_VAL.s_default_district_spell')}<else/>{:C('qscms_default_district_spell')}</if>"
+	};
+	<if condition="$rong_state eq 1">
+		var rongConfig = {
+			messageReadUrl:"{:U('Im/read_message')}",
+			messageUrl:"{:U('Im/add_message')}",
+			messageUnreadUrl:"{:U('Im/unread_message')}",
+			messageInfoUrl:"{:U('Im/message',array('uid'=>_touid))}",
+			delDialog : "{:U('Im/del_dialog')}",
+	        Key:"{$ronguser['rong_key']}",
+	        Token:"{$ronguser['rong_token']}",
+	        userInfo : {
+	            id: "{$ronguser['uid']}",
+	            name: "{$ronguser['username']}",
+	            avatars: "{$ronguser['avatars']}"
+	        }
+		};
+		var rongUser = {
+			isDialogue:'',
+			sendUser:{
+	        	id:'',
+	        	name: '',
+	            avatars: ''
+	        },
+	        newTime:''
+		};
+	</if>
+	if (!!window.ActiveXObject || "ActiveXObject" in window) {
+		window.location.href = '{:U('Index/compatibility')}';
+	}
+</script>
+{$synlogin}
+{$synsitegroupregister}
+{$synsitegroupunbindmobile}
+{$synsitegroupedit}
+{$synsitegroup}
+<link rel="stylesheet" href="../public/css/common.css">
+<if condition="$apply['Magappx'] and $magappx and !$magappx['token']">
+	<script type="text/javascript" src="__ROOT__/{$Think.APP_NAME}/Magappx/View/default/public/magjs-x.js"></script>
+	<script type="text/javascript">
+	  $(function(){
+	    var url = "{:U('',array('magappx_token'=>'MAGAPPX'))}";
+	    mag.ready(function(a){
+	      mag.toLogin(function(rs){
+	      	window.location.href=url.replace('MAGAPPX',rs.token);
+	      });
+	    })
+	  });
+	</script>
+</if>
+<if condition="$apply['Qianfanyunapp'] && $qianfanyunapp_is_login">
+	<script type="text/javascript">
+		QFH5.jumpLogin(function(state,data){})
+	</script>
+</if>

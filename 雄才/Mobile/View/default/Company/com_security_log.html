@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<div class="mui-content">
+			<div class="split-block-title">最近登录记录</div>
+			<volist name="loginlog['list']" id="list">
+				<div class="login_log">
+					<div class="log_group">
+						<div class="log_date">{:log_date($key)}</div>
+					</div>
+					<volist name="list" id="log">
+						<div class="log_list" address="{$log.log_address}" ip="{$log.log_ip}" time="{:date('Y-m-d H:i:s',$log['log_addtime'])}">
+							<div class="log_radius"></div>
+							<div class="log_info">
+								<div class="log_arrow"></div>
+								<div class="log_title log_height font12">
+									<span>{$log.log_source}</span><br/>
+									{$log.log_address}
+								</div>
+								<div class="log_time log_height">{:date('H:i',$log['log_addtime'])}</div>
+								<div class="arrow_right log_height"></div>
+								<div class="clear"></div>
+							</div>
+						</div>
+					</volist>
+				</div>
+			</volist>
+		</div>
+		<include file="public:footer_min" />
+		<script id="logWrap" type="text/html">
+			<div class="log_dig">
+				<div class="log_dig_list">
+					<div class="log_tit font14">时间：</div>
+					<div class="J_time describe font12"></div>
+					<div class="clear"></div>
+				</div>
+				<div class="log_dig_list">
+					<div class="log_tit font14">地点：</div>
+					<div class="J_address describe font12"></div>
+					<div class="clear"></div>
+				</div>
+				<div class="log_dig_list">
+					<div class="log_tit font14">IP：</div>
+					<div class="J_ip describe font12"></div>
+					<div class="clear"></div>
+				</div>
+			</div>
+		</script>
+		<script type="text/javascript">
+			$('.log_list').on('click', function(e) {
+				var f = $(this);
+				var popout = new QSpopout('登录日志');
+				var h = $($('#logWrap').html());
+				h.find('.J_time').html(f.attr('time'));
+				h.find('.J_address').html(f.attr('address'));
+				h.find('.J_ip').html(f.attr('ip'));
+				popout.setBtn(1);
+				popout.setContent(h);
+				popout.show();
+			});
+		</script>
+	</body>
+</html>

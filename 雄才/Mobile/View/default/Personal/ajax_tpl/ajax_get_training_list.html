@@ -1,0 +1,9 @@
+<volist name="list" id="list">
+	<div class="expmod <if condition="$count eq $i">last</if>" type="training" pid="{$pid}" sid="{$list['id']}">
+		<div class="expedit" onClick="javascript:location.href='{:U('personal/resume_edit_train',array('pid'=>$pid,'id'=>$list['id']))}'"></div>
+		<div class="J_delete expdel"></div>
+		<div class="exptr1 substring">{$list.agency}</div>
+		<div class="exptr2 substring font13">{$list.course}&nbsp;|&nbsp;{$list.startyear}-{$list.startmonth} 至<if condition="$list['todate'] eq 1">今<else/> {$list.endyear}-{$list.endmonth}</if></div>
+		<div class="exptr3 font12">{$list.description}</div>
+	</div>
+</volist>

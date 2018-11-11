@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<include file="public:meta" />
+	<link rel="stylesheet" href="../public/css/company.css">
+</head>
+	<body>
+	<include file="public:header" />
+	<div class="split-block"></div>
+	<div class="pmsshow-left">
+		<div class="pic"><img src="../public/images/206.png"></div>
+		<div class="txt">
+	        {$msg['message']}
+			<div class="times font10">{:date('Y-m-d H:i',$msg['dateline'])}</div>
+			<div class="arrow"></div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="split-block"></div>
+	<include file="public:footer_min" /> 
+	</body>
+</html>

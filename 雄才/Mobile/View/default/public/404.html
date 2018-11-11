@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+	</head>
+	<body style="background-color:#FFFFFF">
+		<include file="public:header"/>
+		
+    <div class="qs404">
+	
+	
+	  <div class="pic">
+	  	<img src="../public/images/145.png">
+	  </div>
+	  <div class="txt font18">{$tip|default="哎呀，您访问的页面打不开啦！"}</div>
+	  
+      <div class="btns">
+	  	<div class="qs-btn  qs-btn-blue font16" onclick="javascript:history.go(-1);">返回上一页</div>
+	  </div>
+	  
+	  <div class="btns">
+	  	<div class="qs-btn  qs-btn-border-orange font16" onclick="window.location.href='__MODULE__'">返回首页</div>
+	  </div>
+    </div>
+
+	</body>
+	<include file="public:footer_min" />
+</html>

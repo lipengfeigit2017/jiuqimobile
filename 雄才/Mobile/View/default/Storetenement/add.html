@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/store.css">
+    <qscms:load type="category" search="1"/>
+</head>
+<body>
+    <include file="public:header"/>
+    <eq name="new_record" value="1">
+    <div class="split-block-title">您的账号还可以发布 <strong>{$leave_info_num}</strong> 条店铺求租！</div>
+    </eq>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">信息标题<span class="font_red_light">*</span></div>
+        <div class="describe"><input type="text" id="title" name="title" placeholder="请输入信息标题" value="{$info['title']}" class="font13">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">经营业态<span class="font_red_light">*</span></div>
+        <div class="describe font13 qs-relative">
+            <div class="for-select">请选择</div>
+            <select id="category" name="category">
+                <option value="0">请选择</option>
+                <volist name="category_engagein_type" id="vo">
+                    <option value="{$key}" <if condition="$info['category'] eq $key">selected</if>>{$vo}</option>
+                </volist>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt js-actionParent">
+        <div class="pic"></div>
+        <div class="tit font14">意向区域<span class="font_red_light">*</span></div>
+        <div class="describe font13 qs-temp-new-city js-showActionSheet" data-multiple="false" >
+            <span class="qs-temp-txt-city" data-otxt="请选择意向区域">{$info['district_cn']|default='请选择'}</span>
+            <input class="qs-temp-code-city" type="hidden" id="district" value="<if condition="$info['district']">{$info.district}</if>" keep="<if condition="$info['district']">{$info.district}</if>">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+        <!--BEGIN actionSheet-->
+        <div>
+            <div class="qs-mask" style="display: none"></div>
+            <div class="qs-actionsheet js-actionsheet">
+                <div class="qs-actionsheet-menu">
+                    <div class="con-filter">
+                        <div class="f-selected-group f-selected-group-city">
+                            <div class="s-bar">
+                                <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-gray qs-left js-cancelActionSheet">取消</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="s-list qs-hidden"></div>
+                        </div>
+                        <div class="f-box f-box-city"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">面积需求</div>
+        <div class="describe font13 qs-relative">
+            <div class="for-select">不限</div>
+            <select id="area" name="area">
+                <option value="0">不限</option>
+                <volist name="category_area" id="vo">
+                    <option value="{$key}" <if condition="$info['area'] eq $key">selected</if>>{$vo}</option>
+                </volist>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="split-block"></div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">租金预算<span class="font_red_light">*</span></div>
+        <div class="describe font13 qs-relative">
+            <div class="for-select">不限</div>
+            <select id="rent" name="rent">
+                <option value="0">不限</option>
+                <volist name="category_rent" id="vo">
+                    <option value="{$key}" <if condition="$info['rent'] eq $key">selected</if>>{$vo}</option>
+                </volist>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">转让费<span class="font_red_light">*</span></div>
+        <div class="describe font13 qs-relative">
+            <div class="for-select">不限</div>
+            <select id="fee" name="fee">
+                <option value="0">不限</option>
+                <option value="1" <if condition="$info['fee'] eq 1">selected</if>>无转让费</option>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt last js-actionParent">
+        <div class="pic"></div>
+        <div class="tit font14">配套设施需求</div>
+        <a href="#tagStr" class="describe font13 J_tag">{$tagStr.cn|default='请选择'}</a>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">意向商铺类型<span class="font_red_light">*</span></div>
+        <div class="describe font13 qs-relative">
+            <div class="for-select">请选择</div>
+            <select id="engagein" name="engagein">
+                <option value="0">请选择</option>
+                <volist name="category_property_type" id="vo">
+                    <option value="{$key}" <if condition="$info['engagein'] eq $key">selected</if>>{$vo}</option>
+                </volist>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="split-block"></div>
+    <!--联系方式-->
+    <eq name="new_record" value="1">
+        <eq name="need_mobile_audit" value="1">
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">发布人<span class="font_red_light">*</span></div>
+            <div class="describe">
+                <input type="text" id="contact" name="contact" placeholder="请输入发布人" class="font13" value="{$info.contact}">
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">联系电话<span class="font_red_light">*</span></div>
+            <div class="describe">
+                <input type="text" id="mobile" name="mobile" placeholder="请输入联系电话" class="font13" value="{$mobile}">
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">验证码<span class="font_red_light">*</span></div>
+            <div class="verify-code">
+                <input type="text" id="verify_code" name="mobile_vcode" placeholder="请输入验证码" class="font13" value="">
+            </div>
+            <div id="getVerfyCode" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-border-gray font14 btn-get-code">获取验证码</div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <else />
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">发布人<span class="font_red_light">*</span></div>
+            <div class="describe">
+                <input type="text" id="contact" name="contact" placeholder="请输入发布人" class="font13" value="{$contact}">
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">联系电话<span class="font_red_light">*</span></div>
+            <div class="describe">
+                <input type="text" id="mobile" name="mobile" placeholder="请输入联系电话" class="font13" value="{$mobile}" disabled>
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        </eq>
+    <else />
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">发布人<span class="font_red_light">*</span></div>
+        <div class="describe">
+            <input type="text" id="contact" class="font13" value="{$info.contact}" disabled>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">联系电话<span class="font_red_light">*</span></div>
+        <div class="describe">
+            <input type="text" id="mobile" class="font13" value="{$mobile}" disabled>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    </eq>
+    
+    <div class="btn-spacing">
+        <input type="hidden" id="id" value="{$info.id}">
+        <input type="hidden" id="tag" value="{$tagStr.id}">
+        <input type="hidden" id="J_captcha_open" value="<if condition="C('qscms_mobile_captcha_open') eq 1 && C('qscms_wap_captcha_config.varify_mobile') eq 1">1<else/>0</if>" />
+        <eq name="new_record" value="1">
+        <div id="J_release" class="qs-btn qs-btn-blue font18" data-title="发布信息">发布信息</div>
+        <else />
+        <div id="J_release" class="qs-btn qs-btn-blue font18" data-title="修改信息">修改信息</div>
+        </eq>
+    </div>
+    <div id="pop" style="display:none"></div>
+    <input type="hidden" id="btnCheck">
+    <div class="split-block"></div>
+    <include file="public:footer_min" />
+    <script src="../public/js/popWin.js"></script>
+    <script src="../public/js/qsCategory.js"></script>
+    <script src="../public/js/qsCityUser.js"></script>
+    <script src="https://static.geetest.com/static/tools/gt.js"></script>
+    <script id="tagWrap" type="text/html">
+        <div class="headernavfixed">
+            <div class="headernav font18"><div class="title">配套设施需求<div class="return js-back"></div></div></div>
+        </div>
+        <div class="split-block"></div>
+        <div class="edittag">
+            <div id="J_tagWrap">
+                <volist name="category_tag" id="tag">
+                    <div class="J_tagPage">
+                        <div class="tag <if condition="in_array($key,$tag_val)">select</if>" tid="{$key}" title="{$tag}">{$tag}</div>
+                    </div>
+                </volist>
+            </div>
+            <div class="clear"></div>
+            <div class="tagbtns">
+                <div id="J_savetag" class="qs-btn qs-btn-blue font18">保存</div>
+            </div>
+        </div>
+    </script>
+    <script type="text/javascript">
+        $(function(){
+            $(".js-showActionSheet").on("click", function(){
+                var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+                var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+                $iosActionsheet.removeClass('qs-actionsheet-toggle');
+                $iosActionsheet.addClass('qs-actionsheet-toggle');
+                $iosMask.fadeIn(200);
+                $iosMask.on('click', hideActionSheet);
+                $(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+                $(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+                function hideActionSheet() {
+                    $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+                    $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+                }
+            });
+        });
+        // 验证手机号
+        var regularMobile = /^13[0-9]{9}$|14[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/;
+        var regularTelLast = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/; // 验证分机号码
+        var tagWrap = $('#tagWrap').html();
+        $(".J_tag").on('click', function() {
+            var $this = $(this),
+                baseTxt = $this.text();
+            popWin.init({
+                from:"right",
+                html:tagWrap,
+                handle:function(a){
+                    var tpl_tagvalueArray = $('#tag').val();
+                    $.each(tpl_tagvalueArray.split(','),function(k,v){
+                        $('.tag[tid="'+v+'"]').addClass('select');
+                    });
+                    $('#J_tagWrap .tag,#J_taglist .tag').die().live('click',function(){
+                        if($(this).hasClass('select')){
+                            $(this).removeClass('select');
+                        }else{
+                            if($('.tag.select').length >= 6){
+                                qsToast({type:2,context: '配套设施最多可以选6项！'});
+                                return false;
+                            }
+                            $(this).addClass('select');
+                        }
+                    });
+                    var n = 0;
+                    $('.J_more').on('click',function(){
+                        n++;
+                        if(n>$('.J_tagPage').length-1){
+                            n=0;
+                        }
+                        $('.J_tagPage').eq(n).removeClass('qs-hidden').siblings().addClass('qs-hidden');
+                    });
+                    $('#J_savetag').on('click',function(){
+                        var tagvalueArray = $('.tag.select').map(function(){
+                            return $(this).attr('tid');
+                        }).get().join(',');
+                        var tagcnvalueArray = $('.tag.select').map(function(){
+                            return $(this).attr('title');
+                        }).get().join(',');
+                        $('#tag').val(tagvalueArray);
+                        $('.J_tag').html(tagcnvalueArray);
+                        a.close();
+                    });
+                }
+            })
+        });
+
+        
+        /**
+         * 发送手机验证码
+         */
+        $('#getVerfyCode').on('click', function() {
+            if ($(this).hasClass('qs-btn-border-disabled')) return false;
+            var mobileValue = $.trim($('input[name=mobile]').val());
+            var captcha_open = eval($('#J_captcha_open').val());
+            if (mobileValue == '') {
+                qsToast({type:2,context: '请输入手机号码'});
+                return false;
+            }
+            if (mobileValue != "" && !regularMobile.test(mobileValue)) {
+                qsToast({type:2,context: '手机号码格式不正确'});
+                return false;
+            }
+            if (captcha_open) {
+                $('.geetest_panel').remove();
+                $.ajax({
+                    url: qscms.root+'?m=Mobile&c=Captcha&type=mobile&t=' + (new Date()).getTime(),
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(config) {
+                        initGeetest({
+                            gt: config.gt,
+                            challenge: config.challenge,
+                            offline: !config.success,
+                            new_captcha: config.new_captcha,
+                            product: 'bind'
+                        }, function(captchaObj) {
+                            captchaObj.appendTo("#pop");
+                            captchaObj.onSuccess(function() {
+                                var captChaResult = captchaObj.getValidate();
+                                $('#getVerfyCode').addClass('qs-btn-border-disabled');
+                                $('#getVerfyCode').text('发送中...');
+                                var mobileValue = $.trim($('input[name=mobile]').val());
+                                $.ajax({
+                                    url: "{:U('Storetenement/send_sms')}",
+                                    cache: false,
+                                    async: false,
+                                    type: 'post',
+                                    dataType: 'json',
+                                    data: { sms_type: 'login', mobile: mobileValue,geetest_challenge: captChaResult.geetest_challenge,geetest_validate: captChaResult.geetest_validate,geetest_seccode: captChaResult.geetest_seccode},
+                                    success: function(result) {
+                                        $('#pop').hide();
+                                        qsToast({type:2,context: result.msg});
+                                        if (result.status) {
+                                            // 开始倒计时
+                                            var countdown = 180;
+                                            function settime() {
+                                                if (countdown == 0) {
+                                                    $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                                                    $('#getVerfyCode').text('获取验证码');
+                                                    countdown = 180;
+                                                    return;
+                                                } else {
+                                                    $('#getVerfyCode').addClass('qs-btn-border-disabled');
+                                                    $('#getVerfyCode').text('重新发送' + countdown + '秒');
+                                                    countdown--;
+                                                }
+                                                setTimeout(function() {
+                                                    settime()
+                                                },1000)
+                                            }
+                                            settime();
+                                        } else {
+                                            $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                                            $('#getVerfyCode').text('获取验证码');
+                                            $('#pop').hide();
+                                            qsToast({type:2,context: result.msg});
+                                        }
+                                    }
+                                });
+                            })
+                            captchaObj.onReady(function () {
+                                captchaObj.verify();
+                            });
+                            $('#btnCheck').on('click', function () {
+                                captchaObj.verify();
+                            })
+                            window.captchaObj = captchaObj;
+                        });
+                    }
+                });
+            } else {
+                sendVerfy();
+            }
+        })
+        /**
+         * 发送手机验证码
+         */
+        function sendVerfy() {
+            $('#getVerfyCode').addClass('qs-btn-border-disabled');
+            $('#getVerfyCode').text('发送中...');
+            var mobileValue = $.trim($('input[name=mobile]').val());
+            $.ajax({
+                url: "{:U('Storetenement/send_sms')}",
+                cache: false,
+                async: false,
+                type: 'post',
+                dataType: 'json',
+                data: { sms_type: 'login', mobile: mobileValue},
+                success: function(result) {
+                    $('#pop').hide();
+                    qsToast({type:2,context: result.msg});
+                    if (result.status) {
+                        // 开始倒计时
+                        var countdown = 180;
+                        function settime() {
+                            if (countdown == 0) {
+                                $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                                $('#getVerfyCode').text('获取验证码');
+                                countdown = 180;
+                                return;
+                            } else {
+                                $('#getVerfyCode').addClass('qs-btn-border-disabled');
+                                $('#getVerfyCode').text('重新发送' + countdown + '秒');
+                                countdown--;
+                            }
+                            setTimeout(function() {
+                                settime()
+                            },1000)
+                        }
+                        settime();
+                    } else {
+                        $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                        $('#getVerfyCode').text('获取验证码');
+                        $('#pop').hide();
+                        qsToast({type:2,context: result.msg});
+                    }
+                }
+            });
+        }
+        // 发布兼职
+        $('#J_release').click(function(){
+            var id = $.trim($('#id').val());
+            var titleValue = $.trim($('#title').val());
+            var categoryValue = $.trim($('#category').val());
+            var district = $.trim($('#district').val());
+            var areaValue = $.trim($('#area').val());
+            var rentValue = $.trim($('#rent').val());
+            var feeValue = $.trim($('#fee').val());
+            var tagValue = $.trim($('#tag').val());
+            var engageinValue = $.trim($('#engagein').val());
+            var contactValue = eval("{$new_record}")==1?$.trim($('#contact').val()):"{$info['contact']}";
+            var mobileValue = eval("{$new_record}")==1?(eval("{$need_mobile_audit}"==1)?$.trim($('#mobile').val()):"{$mobile}"):"{$mobile}";
+            var verifycodeValue = $.trim($('input[name=mobile_vcode]').val());
+            if (titleValue == "") {
+                qsToast({type:2,context: '请填写信息标题'});
+                return false;
+            }
+            if (categoryValue == 0) {
+                qsToast({type:2,context: '请选择经营业态'});
+                return false;
+            }
+            if (district == "") {
+                qsToast({type:2,context: '请选择店铺地区'});
+                return false;
+            }
+            if (rentValue == "") {
+                qsToast({type:2,context: '请选择租金预算'});
+                return false;
+            }
+            if (areaValue == "") {
+                qsToast({type:2,context: '请选择面积需求'});
+                return false;
+            }
+            if (engageinValue == 0) {
+                qsToast({type:2,context: '请选择店铺类型'});
+                return false;
+            }
+            if (contactValue == "") {
+                qsToast({type:2,context: '请填写联系人'});
+                return false;
+            }
+            if (contactValue != "" && contactValue.length > 10) {
+                qsToast({type:2,context: '联系人1-10个字'});
+                return false;
+            }
+            if (mobileValue != "" && !regularMobile.test(mobileValue)) {
+                qsToast({type:2,context: '手机号格式不正确'});
+                return false;
+            }
+            if (verifycodeValue == '' && eval("{$new_record}")==1 && eval("{$need_mobile_audit}")==1) {
+                qsToast({type:2,context: '请输入手机验证码'});
+                return false;
+            }
+            $(this).html('正在保存...');
+            $(this).addClass('qs-btn-border-disabled');
+            $.ajax({
+                url: "<eq name='new_record' value='1'>{:U('Storetenement/add')}<else />{:U('Storetenement/edit')}</eq>",
+                type: 'POST',
+                dataType: 'json',
+                data: {id:id,title: titleValue,category: categoryValue, district: district, rent: parseInt(rentValue),fee: parseInt(feeValue), area: parseInt(areaValue), tag: tagValue,engagein:engageinValue, contact: contactValue, mobile: mobileValue,mobile_vcode:verifycodeValue},
+                success:function(result){
+                    if (result.status == 1) {
+                        qsToast({type:1,context: result.msg});
+                        setTimeout(function () {
+                            location.href = result.data.url;
+                        }, 2000);
+                    } else {
+                        $("#J_release").html($('#J_release').data('title'));
+                        $("#J_release").removeClass('qs-btn-border-disabled');
+                        qsToast({type:2,context: result.msg});
+                    }
+                },
+                error:function(){
+                    $("#J_release").html($('#J_release').data('title'));
+                    $("#J_release").removeClass('qs-btn-border-disabled');
+                    qsToast({type:2,context: result.msg});
+                }
+            });
+        });
+    </script>
+</body>
+</html>

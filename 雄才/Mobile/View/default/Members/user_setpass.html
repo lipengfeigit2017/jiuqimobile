@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/members.css">
+	</head>
+	<body>
+		<include file="public:header" />
+        <div class="list-top-txt list_height">您的身份信息验证成功，请设置新密码：</div>
+        <form action="post" id="resetForm">
+            <div class="list-group">
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">新密码</div>
+                    <div class="describe font12"><input type="password" name="password" id="password" placeholder="请输入6-16位密码"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">确认密码</div>
+                    <div class="describe font12"><input type="password" name="password1" id="password1" placeholder="请再次输入新密码"></div>
+                    <div class="clear"></div>
+                </div>
+                <input type="hidden" name="token" value="{$token}" />
+            </div>
+        </form>
+        <div class="btn-spacing mt4"><a id="resetPwdBtn" href="javascript:;" class="qs-btn qs-btn-blue font18">重置密码</a></div>
+        <include file="public:footer" />
+        <include file="public:footer_min" />
+	</body>
+    <script>
+        /**
+         * 重置密码验证
+         */
+        $('#resetPwdBtn').on('click', function () {
+            var passwordValue = $.trim($('input[name=password]').val());
+            var password1Value = $.trim($('input[name=password1]').val());
+            if (passwordValue == '') {
+                qsToast({type:2,context: '请输入密码'});
+                return false;
+            }
+            if(!inputRegValiPassword(passwordValue)){
+                qsToast({type:2,context: '密码长度要求为6-16个字符'});
+                return false;
+            }
+            if (password1Value == '') {
+                qsToast({type:2,context: '请再次输入新密码'});
+                return false;
+            }
+            if(!inputRegValiPassword(password1Value)){
+                qsToast({type:2,context: '密码长度要求为6-16个字符'});
+                return false;
+            }
+            if(!inputRegValiPasswordRepeat(passwordValue,password1Value)){
+                qsToast({type:2,context: '两次输入的密码不一致'});
+                return false;
+            }
+            var url = "{:U('members/user_setpass')}";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: $('#resetForm').serialize(),
+                success: function (data) {
+                    if(data.status==1){
+                        window.location.href = data.data.url;
+                    }else{
+                        qsToast({type:2,context: data.msg});
+                    }
+                }
+            });
+        })
+
+        /**
+         * 验证密码长度
+         * @param value 密码
+         * @returns {boolean}
+         */
+        function inputRegValiPassword(value){
+            achoice = true;
+            if(value.length>16 || value.length<6){
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 验证密码两次输入是否一致
+         * @param password 第一次密码
+         * @param passwordRepeat 第二次密码
+         * @returns {boolean}
+         */
+        function inputRegValiPasswordRepeat(password,passwordRepeat){
+            achoice = true;
+            if(password!=passwordRepeat){
+                achoice = false;
+            }
+            return achoice;
+        }
+    </script>
+</html>

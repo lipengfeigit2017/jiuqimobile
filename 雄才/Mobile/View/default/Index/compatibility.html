@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="renderer" content="webkit">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>低版本浏览器升级提醒</title>
+	<meta name="author" content="骑士CMS"/>
+	<meta name="copyright" content="74cms.com"/>
+	<link rel="shortcut icon" href="{:C('qscms_site_dir')}favicon.ico"/>
+	<link rel="stylesheet" href="../public/css/compatibility.css">
+</head>
+<body>
+	<div class="container">
+		<h1><i class="sprite alibaba"></i><span><i class="sprite warn"></i><em>您当前电脑浏览器版本过低，暂不支持手机版浏览操作。建议您尽快升级浏览器或者使用手机扫码浏览以获得最佳的使用体验。</em></span></h1>
+		<div class="box pc-box">
+			<span class="box-title"><i class="sprite pc"></i><b>浏览器升级推荐</b><em class="arrow"></em></span>
+			<ul>
+				<li class="chrome-item"><i class="sprite chrome"></i><p>推荐选择</p><a id="chrome" target="_blank" href="http://www.google.cn/intl/zh-CN/chrome/browser/desktop/"><b>谷歌浏览器</b><em></em><i></i></a></li>
+				<li class="seperator"></li>
+				<li class="ff-item"><i class="sprite ff"></i><p>推荐选择</p><a target="_blank" href="http://www.mozilla.com/firefox/"><b>火狐浏览器</b><em></em><i></i></a></li>
+				<li class="seperator"></li>
+				<li class="uc-item"><i class="sprite uc"></i><p>推荐选择</p><a id="uc" target="_blank" href="http://www.uc.cn/ucbrowser/download/"><b>UC浏览器</b><em></em><i></i></a></li>
+			</ul>
+		</div>
+		<div class="box mobile-box">
+			<span class="box-title"><i class="sprite mobile"></i><b>也可用手机扫码浏览</b><em class="arrow"></em></span>
+			<ul class="pdl">
+				<li><a target="_blank" onclick="return false;" href="{:U('index/index')}"><img class="pimg" src="{:C('qscms_site_dir')}index.php?m=Home&c=Qrcode&a=index&url={:urlencode(build_mobile_url())}"><p class="ptxt">手机扫码直接访问</p></a></li>
+				<li><a target="_blank" onclick="return false;" href="{:U('index/index')}"><img class="pimg" src="{:attach(C('qscms_weixin_img'),'weixin')}"><p class="ptxt">微信公众号</p></a></li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

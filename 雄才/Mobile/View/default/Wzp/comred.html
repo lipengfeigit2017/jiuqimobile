@@ -1,0 +1,308 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<qscms:company_show 列表名="info" 企业id="$_GET['id']"/>
+<title>{$info['companyname']} - {:C('qscms_site_name')}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="format-detection" content="email=no" />
+<meta name="format-detection" content="address=no;">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="author" content="骑士CMS" />
+<meta name="copyright" content="74cms.com" />
+<link type="text/css" href="../public/css/wzp_style_red.css" rel="stylesheet" />
+<link type="text/css" href="../public/css/wzp_style_left.css" rel="stylesheet" />
+<script type="text/javascript" charset="urf-8" src="../public/js/jq.mobi.min.js"></script>
+</head>
+<body>
+<img src="{:C('qscms_site_domain')}{:C('qscms_site_dir')}{$info['logo']}" width="0" height="0" />
+<div id="poster_contain">
+<section class="load" id="load">
+  <div class="p_loading">
+    <div class="p_loading_logo"></div>
+    <p class="p_loading_tip">新生活，从新工作开始</p>
+  </div>
+</section>
+
+<section class="poster_wrap index focus" style="-webkit-transform: translate3d(0px, 0px, 0px); -webkit-transition-duration: 0ms; transition-duration: 0ms; opacity: 1; display: block; z-index: 20;">
+  <div class="poster_home_page">
+    <div class="poster_logo_con">
+      <div class="p_logo_b01"></div>
+      <div class="p_logo_b02"></div>
+      <div class="poster_logo"><img src="../public/images/wzp_img/wzp_logo.png"></div>
+    </div>
+    <h1 class="poster_tit">{$info.companyname}</h1>
+    <p class="poster_details">诚聘英才，欢迎您加入</p>
+  </div>
+  <div class="footer_msg">机遇，等你发现</div>
+</section>
+<!-- 关于我们  -->
+<section class="poster_wrap abus" style="-webkit-transform: translate3d(0px, 0px, 0px); -webkit-transition-duration: 0ms; transition-duration: 0ms; opacity: 1; display: none; z-index: 20;">
+  <div class="poster_home_page">
+    <div class="poster_logo_con">
+      <div class="p_logo_b01"></div>
+      <div class="p_logo_b02"></div>
+      <div class="poster_logo"><img src="../public/images/wzp_img/wzp_logo.png"></div>
+    </div>
+    <div class="about_us">
+      <h3 class="about_us_tit">关于我们</h3>
+      <div class="about_us_msg">
+        <div class="about_us_msg_p">{$info.contents}</div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="poster_wrap welf" style="-webkit-transform: translate3d(0px, 0px, 0px); -webkit-transition-duration: 0ms; transition-duration: 0ms; opacity: 1; display: none; z-index: 20;">
+  <div class="company_intro">
+    <div class="company_intro_list">
+      <div class="company_intro_logo">
+        <i class="logo_ico city"></i>
+      </div>
+      <p class="company_intro_tit">{$info.district_cn}</p>
+    </div>
+    <div class="company_intro_list">
+      <div class="company_intro_logo">
+        <i class="logo_ico num"></i>
+      </div>
+      <p class="company_intro_tit">{$info.scale_cn}</p>
+    </div>
+    <div class="company_intro_list">
+      <div class="company_intro_logo">
+        <i class="logo_ico nature"></i>
+      </div>
+      <p class="company_intro_tit">{$info.nature_cn}</p>
+    </div>
+  </div>
+  <if condition="$info['tag_arr']">
+  <div class="welfare">
+    <h2 class="welfare_tit">我们能给你的</h2>
+    <div class="welfare_con">
+
+      <div class="welfare_list">
+        <div class="welfare_list_l">
+          <div class="welfare_list_skew"><span class="welfare_list_details">{$info['tag_arr'][0]}</span></div>
+        </div>
+        <div class="welfare_list_r">
+          <div class="welfare_list_skew"><span class="welfare_list_details">{$info['tag_arr'][1]}</span></div>
+        </div>
+      </div>
+
+      <div class="welfare_list">
+        <div class="welfare_list_l">
+          <div class="welfare_list_skew"><span class="welfare_list_details">{$info['tag_arr'][2]}</span></div>
+        </div>
+        <div class="welfare_list_r">
+          <div class="welfare_list_skew"><span class="welfare_list_details">{$info['tag_arr'][3]}</span></div>
+        </div>
+      </div>
+
+      <div class="welfare_list">
+        <div class="welfare_list_l">
+          <div class="welfare_list_skew"><span class="welfare_list_details">{$info['tag_arr'][4]}</span></div>
+        </div>
+        <div class="welfare_list_r">
+          <div class="welfare_list_skew"><span class="welfare_list_details">{$info['tag_arr'][5]}</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </if>
+</section>
+<!-- 职位列表  -->
+<qscms:jobs_list 列表名="jobs" 显示数目="4" 会员UID="$info['uid']" 职位页面="QS_jobsshow" 联系方式="1"/>
+<if condition="$jobs['list']">
+<section class="poster_wrap posit" style="-webkit-transform: translate3d(0px, 0px, 0px); -webkit-transition-duration: 0ms; transition-duration: 0ms; opacity: 1; display: none; z-index: 20;">
+    <h1 class="posit_tit"><i class="about_us_tit_ico"></i>我们招聘的职位</h1>
+    <div class="posit_list_con">
+        <if condition="$jobs['list']">
+        <div class="posit_list_ul" style="width: 840px; -webkit-transition-duration: 0ms; transition-duration: 0ms; -webkit-transition-timing-function: linear; transition-timing-function: linear; -webkit-transform: translate3d(0px, 0px, 0px);">
+            <volist name="jobs['list']" id="vo">
+            <div class="posit_details" style="width: 260px;" jobs_id="{$vo.id}" jobs_tel="{$jobs['contact_arr'][$vo['id']]}" jobs_name="{$vo.jobs_name}" company_id="{$vo.company_id}" company_name="{$vo.companyname}" company_uid="{$vo.uid}"> 
+                <div class="posit_details_head">
+                    <h3 class="posit_details_tit">{$vo.jobs_name}</h3>
+                    <span class="posit_details_money"><strong>{$vo.wage_cn}</strong></span>
+                    <p class="posit_details_tip">{$vo.experience_cn}、{$vo.education_cn}</p>
+                </div>
+                <div class="job_details">
+                    <p class="job_address">工作地点：{$vo.district_cn}</p>
+                    <h3 class="job_name">任职要求：<a class="job_name_details" href="{$vo.jobs_url}">职位详情&gt;&gt;</a></h3>
+                    <div class="job_msg">
+                      {$vo.contents}
+                    </div>
+                </div>
+                <div class="posit_arrow_bot"></div>
+            </div>
+            </volist>
+        </div>
+        <else />
+        <div class="posit_list_ul" style="width: 840px; -webkit-transition-duration: 0ms; transition-duration: 0ms; -webkit-transition-timing-function: linear; transition-timing-function: linear; -webkit-transform: translate3d(0px, 0px, 0px);">
+          <div class="posit_details" style="width: 260px;"> 
+          <img src="../public/images/wzp_img/posit_none_logo.jpg" >
+          </div>
+        </div>
+        </if>
+    </div>
+    <div class="job_btn_con">
+      <div class="job_btn_list" jqmoldstyle="block">
+          <a href="javascript:;" class="job_btn add" id="jobs_apply">投个简历</a>
+          <a href="javascript:;"  class="job_btn tel" id='jobs_phone' phone='1'>电话联系</a>
+      </div>
+    </div>
+</section>
+</if>
+<!-- 点赞 -->
+<section class="poster_wrap praise" style="-webkit-transform: translate3d(0px, 0px, 0px); -webkit-transition-duration: 0ms; transition-duration: 0ms; opacity: 1; display: none; z-index: 18;" jqmoldstyle="block">
+    <div class="poster_praise_con">
+        <div class="poster_praise_logo"><img src="../public/images/wzp_img/wzp_logo.png"></div>
+    </div>
+    <p class="praise_tip">已有<b id="praise_num">{$praise}</b>人觉得这家公司值得加入</p>
+    <a class="praise_btn praise_btn_click" href="javascript:;">
+    <i><em></em></i><span>点赞，值得加入</span>
+    </a>
+    <a class="praise_share_btn" href="javascript:;" >分享给好友</a>
+    <a class="more_position" href="{:url_rewrite('QS_jobslist')}">查看更多职位&gt;&gt;</a>
+</section>
+
+</div>
+<div class="arrow_con">
+  <div class="arrow_top"><span></span></div>
+</div>
+<div class="layer"></div>
+<div class="wx_layer"></div>
+
+<!-- 电话联系 弹出框 -->
+
+<div class="menu choose_menu" id="jobs_phone_menu" style="opacity:0;position:absolute;z-index:9999;">
+  <div class="menu_title">电话联系</div>
+  <ul>
+      <li id='phone_error'>{$phone_error}</li>
+  </ul>
+  <div class="choose_but">
+    <div class="but_left" id="">
+      <a id="jobs_phone_code" code="{$phone_code}" href = '{$phone_url}'>{$phone_error_tit}</a>
+    </div>
+   
+    <div class="but_right" id="">
+      <a>取消</a>
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+
+
+<!-- 左侧划出内容  -->
+<if condition="$show_menu">
+<section class="reward_manager_list_con">
+  <a class="manager_set" href="{:U('Wzp/com',array('id'=>$info['id']))}">
+    <h3 class="manager_set_tit">微招聘首页</h3>
+  </a>
+  <a class="manager_set" href="{:U('Wzp/comtpl',array('id'=>$info['id']))}">
+    <h3 class="manager_set_tit">微招聘模板</h3>
+  </a>
+  <a class="manager_set" href="{:U('Wzp/comtag',array('id'=>$info['id']))}">
+    <h3 class="manager_set_tit">企业福利</h3>
+  </a>
+</section>
+<div class="nav_btn_con" style="position: fixed;">
+  <div class="nav_btn">
+    <div class="nav_btn_arrrow"></div>
+  </div>
+</div>
+<div class="reward_manager_list_con_bg"></div>
+</if>
+</body>
+<script>
+  var utype= "{:C('visitor.utype')}";
+  var company_id = "{$Think.get.id}";
+  var qscms = {
+      root : "__ROOT__",
+      resume_id : "{$resume.id}"
+  };
+</script>
+<script src="../public/js/zepto.min.js"></script>
+<script type="text/javascript" charset="urf-8" src="../public/js/jquery.swipe.js"></script>
+<script type="text/javascript" charset="utf-8" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" charset="utf-8" src="../public/js/jquery.wzp.js"></script>
+<script>
+
+  wx.config({
+    // debug: true,
+    appId: '{$signPackage.appId}',
+    timestamp: '{$signPackage.timestamp}',
+    nonceStr: '{$signPackage.nonceStr}',
+    signature: '{$signPackage.signature}',
+    jsApiList: [
+      // 所有要调用的 API 都要加到这个列表中
+      "onMenuShareTimeline",
+      "onMenuShareAppMessage",
+      "onMenuShareQQ",
+      "onMenuShareWeibo"
+    ]
+  });
+  wx.ready(function () 
+  {
+      var linkUrl = "{:build_mobile_url(array('c'=>'Wzp','a'=>'com','params'=>'id='.$info['id']))}";//放链接
+      var title = "{$info.companyname}真棒,招个人都搞的这么轰动,下血本啊,小伙伴们快来看看吧。";
+      var desc = "我司正在招聘人才，待遇福利优厚，欢迎各路人才，快来看看吧。"; 
+      var imgUrl="{:C('qscms_site_domain')}{:C('qscms_site_dir')}{$info['logo']}";//图片链接
+      
+      wx.onMenuShareTimeline({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          success: function () { 
+          // 用户确认分享后执行的回调函数
+            $.getJSON("{:U('Wzp/com_share')}",{id:company_id});
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareAppMessage({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          type: '', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          $.getJSON("{:U('Wzp/com_share')}",{id:company_id});
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareQQ({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          $.getJSON("{:U('Wzp/com_share')}",{id:company_id});
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareWeibo({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          $.getJSON("{:U('Wzp/com_share')}",{id:company_id});
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+  });
+</script>
+</html>

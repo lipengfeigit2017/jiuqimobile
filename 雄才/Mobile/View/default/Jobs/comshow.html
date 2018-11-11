@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <qscms:company_show 列表名="info" 企业id="$_GET['id']"/>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/jobs.css">
+</head>
+<body>
+<div class="comshowtop">
+  <div class="topbg">
+    <div class="return js-back for-event"></div>
+    <if condition="$info['preview'] eq 0">
+    <div class="attention font14 <eq name="info['focus']" value="1">for_cancel<else /></eq>"><eq name="info['focus']" value="1">取消关注<else />关注</eq></div>
+    </if>
+    <div class="logobox"><img src="{$info['logo']}"></div>
+  </div>
+
+
+  <div class="com">
+  	<div class="cname font16">{$info['companyname']}
+    <if condition="$info['audit'] eq 1"><img src="../public/images/120.png" title="认证企业"></if>
+    <if condition="$info['setmeal_id'] gt 1"><img src="../public/images/121.png" title="{$info.setmeal_name}"></if>
+    <if condition="$info['famous'] eq 1"><img src="../public/images/122.png" title="诚聘通企业"></div></if>
+    <if condition="$info['report'] eq 1"><img src="../public/images/291.png" title="实地认证企业"></if>
+    <div class="txt font14">{$info['nature_cn']} | {$info['scale_cn']} | {$info['district_cn']}</div>
+  </div>
+</div>
+
+
+<div class="split-block"></div>
+<div class="comshowpor">
+<div class="eattitle list_height">
+  公司名片
+  <div id="J_reply" class="qs-btn qs-btn-blue qs-btn-inline apply_jobs reply">咨询</div>
+</div>
+
+<div class="txt substring"><span>规模</span>{$info['scale_cn']}</div>
+<div class="txt substring"><span>行业</span>{$info['trade_cn']}</div>
+<if condition="$info['website']">
+<div class="txt substring"><span>网址</span>{$info['website_']}</div>
+</if>
+<div class="txt substring"><span>地址</span>{$info['address']}</div>
+<if condition="$info['report'] eq 1">
+<div class="report font12" onclick="javascript:location.href='{:url_rewrite('QS_company_report',array('id'=>$info['id']))}'">该企业已通过实地认证，点击查看认证报告>></div>
+</if>
+</div>
+
+<if condition="$info['tag_arr']">
+<div class="split-block"></div>
+<div class="comshowtag font13">
+<div class="eattitle list_height">公司福利</div>
+  <div class="tagul">
+  <volist name="info['tag_arr']" id="vo">
+    <div class="tagli substring">{$vo}</div>
+  </volist>
+	<div class="clear"></div>
+  </div>
+</div>
+</if>
+<div class="split-block"></div>
+
+<div class="comshowdes">
+  <div class="eattitle list_height">公司简介</div>
+  <div class="txt desc">{:nl2br($info['company_profile'])}</div>
+  <div class="more">
+  	<div class="showbtn font12 ">展开信息</div>
+  	<!--<div class="showbtn font12 topbtn">收起信息</div> -->
+  </div>
+</div>
+<if condition="$info['img']">
+<div class="split-block"></div>
+<div class="comshowimg">
+  <div class="eattitle list_height">企业风采</div>
+  <div class="scrollbox">
+    <volist name="info['img']" id="vo">
+    <div class="imgbox"><img src="{$vo['img']}"></div>
+    </volist>
+  </div>
+    <div class="clear"></div>
+</div>
+</if>
+
+<div class="split-block"></div>
+<div class="comshowcon">
+  <div class="eattitle list_height">
+  联系方式
+  <if condition="$info['hide']">
+    <div class="ritle font12 J_check_truenum">点击查看</div>
+    </if>
+  </div>
+  <if condition="$info['landline_tel']">
+  <div class="tel">{$info['landline_tel']}</div>
+  </if>
+  <if condition="$info['telephone']">
+  <div class="mob">{$info['telephone']} ({$info['contact']})</div>
+  </if>
+  <div class="email">{$info['email']}</div>
+  <div class="font12" style="padding-left: 0.7rem;padding-top: 0.3rem;">(联系我时，请说是在{:C('qscms_site_name')}上看到的)</div>
+  </if>
+  <div class="map link_blue">{$info['address']} <if condition="$info['map_x'] gt 0 && $info['map_y'] gt 0"><a class="show-map" href="#map">[地图]</a></if></div>
+  <if condition="$info['famous'] eq 1">
+  <div class="tip font12">该企业已加入诚聘通会员，可放心求职</div>
+  <else />
+   <div class="tip font12">面试过程中，遇到用人单位收取费用请提高警惕！</div>
+  </if>
+  </if>
+</div>
+
+<qscms:jobs_list 列表名="jobs" 会员UID="$info['uid']" 显示数目="100"/>
+ <if condition="$jobs['list']">
+<div class="split-block"></div>
+<div class="comshowrec">
+  <div class="eattitle list_height">
+  该企业正在招聘
+  </div>
+ <volist name="jobs['list']" id="vo">
+  <div class="jobslist" onclick="javascript:location.href='{$vo.jobs_url}'">
+    <div class="jname font15 link_gray6 substring"><a href="{$vo.jobs_url}">{$vo['jobs_name']}</a></div>
+	<div class="cname font12">{$vo['district_cn']} | {$vo['education_cn']} | {$vo['experience_cn']}</div>
+	<div class="wage font13">{$vo['wage_cn']}</div>
+	<div class="time font12">{$vo['refreshtime_cn']}</div>
+  </div>
+  </volist>
+</div>
+</if>
+<div class="split-block"></div>
+<script id="tpl-map" type="text/html">
+    <!--地图-->
+    <div class="headernavfixed">
+        <div class="headernav font18"><div class="title">企业位置<div class="return js-back"></div></div></div>
+    </div>
+    <div class="com-map">
+        <div class="map" id="container"></div>
+    </div>
+    <div class="split-block"></div>
+    <div class="btn-spacing">
+        <div id="mapBtn" class="qs-btn qs-btn-blue font18" title="返回">返回</div>
+    </div>
+</script>
+<include file="public:footer_min" />
+<script src="../public/js/popWin.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak={:C('qscms_map_ak')}"></script>
+<script type="text/javascript" charset="utf-8" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="../public/js/imageScrool.js"></script>
+<script type="text/javascript">
+      var mapTemp = $('#tpl-map').html();
+      $(".show-map").on('click', function() {
+          var $this = $(this);
+          popWin.init({
+              from:"right",
+              html:mapTemp,
+              handle:function(a){
+                var map = new BMap.Map("container");
+                var point = new BMap.Point("{$info['map_x']}","{$info['map_y']}");  // 创建点坐标
+                map.centerAndZoom(point, "{$info['map_zoom']}");
+                var qs_marker = new BMap.Marker(point);        // 创建标注
+                map.addOverlay(qs_marker);
+                map.setCenter(point);
+                map.addControl(new BMap.NavigationControl());//添加鱼骨
+                map.enableScrollWheelZoom();//启用滚轮放大缩小，默认禁用。
+                $('#mapBtn').on('click',function(){
+                    a.close();
+                });
+              }
+          })
+      });
+  (function(){
+  /*
+      注意：$.mggScrollImg返回的scrollImg对象上有
+              next，prev，go三个方法，可以实现外部对滚动索引的控制。
+      如：scrollImg.next();//会切换到下一张图片
+          scrollImg.go(0);//会切换到第一张图片
+  */
+  var scrollImg = $.mggScrollImg('.scrollbox',{
+          loop : true,//循环切换
+          auto : true//自动切换
+      });
+  })()
+  $.getJSON("{:U('ajaxCommon/company_statistics_add')}",{comid:"{$info['id']}"});
+  var isVisitor = "{:C('visitor.uid')}";
+  var utype = "{:C('visitor.utype')}";
+  $('.more').on('click',function(){
+    var prev = $(this).prev();
+    var child = $(this).children('.showbtn');
+    if(prev.hasClass('desc')){
+      prev.removeClass('desc');
+      child.addClass('topbtn');
+      child.html('收起信息');
+    }else{
+      prev.addClass('desc');
+      child.removeClass('topbtn');
+      child.html('展开信息');
+    }
+  });
+  // 关注
+    $(".attention").on('click',function(){
+      var url = "{:U('ajaxPersonal/company_focus')}";
+      var company_id = "{$info['id']}";
+      var thisObj = $(this);
+      if ((isVisitor > 0)) {
+        if(utype != 2){
+          qsToast({type:2,context: '请登录个人会员'});
+          return false;
+        }
+        $.getJSON(url,{company_id:company_id},function(result){
+          if(result.status==1){
+            qsToast({type:1,context: result.msg});
+            thisObj.html(result.data.html).toggleClass('for_cancel');
+          } else {
+            qsToast({type:2,context: result.msg});
+            return false;
+          }
+        });
+      } else {
+        window.location.href="{:U('members/login')}";
+        return false;
+      }
+    });
+    $('.J_check_truenum').on('click',function(){
+      if(isVisitor > 0) {
+        if(utype == 1){
+          qsToast({type:2,context: '请登录个人会员'});
+          return false;
+        }else{
+          qsToast({type:2,context: '请先创建一份简历'});
+          window.location.href="{:U('personal/resume_add')}";
+          return false;
+        }
+      }else{
+          window.location.href="{:U('members/login')}";
+          return false;
+      }
+    });
+    $('#J_reply').on('click',function(){
+      if(!isVisitor){
+        window.location.href="{:U('members/login')}";
+        return false;
+      }
+      if(utype != 2){
+        qsToast({type:2,context: '请登录个人会员'});
+        return false;
+      }
+      window.location.href="{:U('personal/pms_consult_show',array('uid'=>$info['uid']))}";
+    });
+    wx.config({
+    // debug: true,
+    appId: '{$signPackage.appId}',
+    timestamp: '{$signPackage.timestamp}',
+    nonceStr: '{$signPackage.nonceStr}',
+    signature: '{$signPackage.signature}',
+    jsApiList: [
+      // 所有要调用的 API 都要加到这个列表中
+      "onMenuShareTimeline",
+      "onMenuShareAppMessage",
+      "onMenuShareQQ",
+      "onMenuShareWeibo"
+    ]
+  });
+  wx.ready(function ()
+  {
+      var linkUrl = "{:build_mobile_url(array('c'=>'Jobs','a'=>'comshow','params'=>'id='.$info['id']))}";//放链接
+      var title = "{$info['companyname']}真棒,招个人都搞的这么轰动,下血本啊,小伙伴们快来看看吧。";
+      var desc = "我司正在招聘人才，待遇福利优厚，欢迎各路人才，快来看看吧。";
+      var imgUrl="{:C('qscms_site_domain')}{:C('qscms_site_dir')}{$info['logo']}";//图片链接
+
+      wx.onMenuShareTimeline({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          success: function () {
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () {
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareAppMessage({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          type: '', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () {
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () {
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareQQ({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () {
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () {
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareWeibo({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () {
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () {
+              // 用户取消分享后执行的回调函数
+          }
+      });
+  });
+</script>
+</body>
+</html>

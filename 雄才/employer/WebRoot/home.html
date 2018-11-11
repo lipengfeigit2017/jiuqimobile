@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>国聘</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="css/app.css" />
+		
+		<style>
+		.home-line {
+		    position: absolute;
+		    left: 80%;
+		    height: 40px;
+		    width: 1px;
+		    content: '';
+		    transform: scaleY(.5);
+		    background-color: #c8c7cc;
+		}	
+		.mui-card {
+		    font-size: 14px;
+		    position: relative;
+		    overflow: hidden;
+		    /* margin: 10px; */
+		    /* border-radius: 2px; */
+		    background-color: #fff;
+		    background-clip: padding-box;
+		    box-shadow: 0 1px 2px rgba(0,0,0,.3);
+		}
+		</style>
+
+	</head>
+	<body>
+<header class="mui-bar mui-bar-nav">
+	<h1 class="mui-title">招聘</h1>
+</header>
+<div class="mui-content">		
+	
+	<div class="mui-card" style="margin-top: 0px;
+	    margin: 0px;">
+	    <div style="height: 40px;float: left;width: 100%;">
+			<img src="images/igplogo22.png" style="width:100px;height:40px;"></img>
+			<span class="home-line"></span>
+			
+			<button id="login" type="button" class="mui-btn" style="float: right;line-height: 1;margin-top: 6px;">登录</button>
+		</div>
+	</div>
+	
+
+	
+	<div id="background" style="position:absolute;z-index:-1;width:100%;height:100%;top:-5px;left:0px;"><img src="images/index_top_bg.jpg" width="100%" height="100%"/>					
+	</div>
+	
+	<div style="position:absolute;z-index:0;top:30%;color: white;padding-left: 10%;">参与国家大事，就上雄才
+	</div>
+	
+	<div style="position:absolute;z-index:0;top:40%;padding-left: 10%;">
+		<a href="new1.html" style="color: red;">河北雄安新区党工委管委会党群工作部关于公开招聘审批专职人员和综合受理人员的公告</a>
+
+	</div>
+		<div style="position:absolute;z-index:0;top:50%;padding-left: 10%;">
+		<a href="new2.html" style="color: red;">河北雄安新区党工委管委会党群工作部关于公开招聘辅助性岗位工作人员的公告</a>
+		
+	</div>
+</div>
+<script src="js/mui.min.js"></script>
+<script src="js/jquery-2.1.4.min.js"></script>
+<script>
+  	$("#login").click(function () {
+  		window.location = "login.html";
+  	});
+	
+</script>
+</body>
+
+</html>

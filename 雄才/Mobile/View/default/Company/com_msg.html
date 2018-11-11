@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<div class="mui-content company-reg-group map">
+			<ul class="mui-table-view no-mar-top">
+				<li class="mui-table-view-cell txt-highlight">绑定第三方账号后，您可以用绑定账号登录{:C('qscms_site_name')}，便于账号密码记忆。</li>
+			</ul>
+			<div class="bind-list-group">
+			<volist name="oauth_list" id="oauth">
+				<empty name="$user_bind[$oauth['alias']]">
+				<div class="bind-list">
+					<div class="mui-clearfix">
+						<div class="icon-box mui-pull-left"><span class="mui-icon mui-icon-{$oauth.alias}"></span></div>
+						<div class="icon-txt mui-pull-left" onclick="javascript:location.href='{:U('Home/callback/index',array('mod'=>$oauth['alias'],'type'=>'bind'))}'">绑定{$oauth.name}账号</div>
+					</div>
+				</div>
+				<else />
+				<div class="bind-list active">
+					<div class="mui-clearfix">
+						<div class="icon-box mui-pull-left"><span class="mui-icon mui-icon-{$oauth.alias}"></span></div>
+						<div class="icon-txt mui-pull-left" onclick="javascript:location.href='{:U('Home/callback/index',array('mod'=>$oauth['alias'],'type'=>'unbind'))}'">解除绑定</div>
+					</div>
+				</div>
+				</empty>
+			</volist>
+			</div>
+		</div>
+		<include file="public:footer" />
+	</body>
+</html>

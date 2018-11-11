@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/members.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<if condition="C('qscms_sms_open') eq 1">
+			<div class="qs-top-nav x2 list_height">
+				<div class="n-cell active">账号密码登录<div class="b-line"></div></div>
+				<div class="n-cell" onclick="javascript:location.href='{:U('Members/login_mobile')}'">手机动态码登录<div class="b-line"></div></div>
+				<div class="clear"></div>
+			</div>
+		</if>
+		<div class="split-block"></div>
+		<form action="post" id="logingForm">
+			<div class="loging-input-group">
+				<div class="group-list">
+					<div class="g-close"></div>
+					<input id="username" name="username" type="text" class="l-input j-l-input font14" placeholder="请输入账户名/手机号/邮箱" autocomplete="off">
+				</div>
+                <div class="group-list had-remind-box qs-center link_blue" onclick="javascript:location.href='{:U('members/register')}'"><a href="javascript:;"><span class="mal"></span><span class="txt-o-red">点击立即注册</span></a></div>
+				<div class="group-list pwd">
+					<div class="g-close"></div>
+					<input id="password" name="password" type="text" onfocus="this.type='password'" class="l-input j-l-input font14" placeholder="请输入密码" autocomplete="off">
+				</div>
+                <div class="group-list had-remind-box-pw qs-center link_blue" onclick="javascript:location.href='{:U('Members/login_mobile')}'"><a href="javascript:;"><span class="mal"></span><span class="txt-o-red">通过动态码登录</span></a></div>
+			</div>
+			<div class="l-tool-bar list_height">
+				<div class="auto-loging">
+					<div class="for-checkbox active" id="for-checkbox">下次自动登录</div>
+				</div>
+				<div class="for-pwd link_gray6"><a href="<if condition="C('qscms_sms_open') eq 1">{:U('members/user_getpass')}<else />{:U('members/user_getpass', array('type'=>2))}</if>">忘记密码</a></div>
+				<div class="clear"></div>
+			</div>
+			<div id="pop" style="display:none"></div>
+            <input type="hidden" id="btnCheck">
+			<input type="hidden" name="expire" id="expire" value="1" >
+		</form>
+		<div class="btn-spacing"><a id="loginBtn" href="javascript:;" class="qs-btn qs-btn-blue font18">登录</a></div>
+		<div class="qs-center"><a href="{:U('members/register')}" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-border-orange font14">立即注册</a></div>
+		<notempty name="oauth_list">
+			<if condition="!(count($oauth_list) eq 1 AND array_key_exists('weixin',$oauth_list))">
+				<div class="qs-center coop-title">使用合作账号登录/注册</div>
+			</if>
+		</notempty>
+		<div class="coop-group g3 qs-center">
+			<volist name="oauth_list" id="oauth">
+			<if condition="$key neq 'weixin'">
+				<a href="{:U('callback/index',array('mod'=>$key,'type'=>'login'))}" class="coop-cell">
+					<div class="img {$key}"></div>
+					<p>{$oauth.name}</p>
+				</a>
+			</if>
+			</volist>
+			<div class="clear"></div>
+		</div>
+        <input type="hidden" id="J_captcha_open" value="{:C('qscms_mobile_captcha_open')}" />
+		<input type="hidden" id="verifyLogin" value="{$verify_userlogin}">
+		<include file="public:footer" />
+		<include file="public:footer_min" />
+	</body>
+	<script src="https://static.geetest.com/static/tools/gt.js"></script>
+	<script>
+        // 图片验证码
+        var verifyPhoto = false;
+		// 自动登录
+		$('#for-checkbox').on('click', function() {
+			$(this).toggleClass('active');
+			if ($(this).hasClass('active')) {
+				$('#expire').val('1');
+			} else {
+				$('#expire').val('0');
+			}
+		})
+
+        var regularMobile = /^13[0-9]{9}$|14[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/;
+        var noUrl = "{:U('members/register', array('mobile'=>_mobile))}";
+        $('input[name=username]').keyup(function () {
+          var currentValue = $(this).val();
+          if (currentValue.length >= 11) {
+            if(regularMobile.test(currentValue) && remoteValid('mobile',currentValue)) {
+              $('.had-remind-box .mal').text('手机号 ' + currentValue + ' 未注册，');
+              $('.had-remind-box').show();
+              noUrl = noUrl.replace('_mobile',currentValue);
+              $('.had-remind-box').on('click', function () {
+                window.location.href = noUrl;
+              })
+            } else {
+              $('.had-remind-box').hide();
+            }
+          } else {
+            $('.had-remind-box').hide();
+          }
+        })
+
+        function remoteValid(validType, validValue){
+          var result = false;
+          $.ajax({
+            url: "{:U('members/ajax_check')}",
+            cache: false,
+            async: false,
+            type: 'post',
+            dataType: 'json',
+            data: { type: validType, param: validValue },
+            success: function(json) {
+              if (json && json.status) {
+                result = true;
+              } else {
+                result = false;
+              }
+            }
+          });
+          return result;
+        }
+
+		/**
+		 * ajax 登录
+		 */
+		function doAjax() {
+            var usernameValue = $('input[name="username"]').val();
+            var passwordValue = $('input[name="password"]').val();
+            var expireValue = $('input[name="expire"]').val();
+			$.ajax({
+				url: "{:U('Members/login')}",
+				type: 'POST',
+				dataType: 'json',
+				data: {
+                    username: usernameValue,
+                    password: passwordValue,
+                    expire: expireValue
+                },
+				success: function(result) {
+					if (result.status) {
+						window.location.href = result.data;
+					} else {
+            			$('#pop').hide();
+						if (result.data) {
+							$("#verifyLogin").val(result.data);
+						}
+						qsToast({type:2,context: result.msg});
+						if (result.msg == '密码错误!') {
+                          $('.had-remind-box').hide();
+                          $('.had-remind-box-pw .mal').text('密码错误，请重新输入或');
+                          $('.had-remind-box-pw').show();
+                        } else if (result.msg == '账号未激活') {
+                            $('.had-remind-box').hide();
+                        } else {
+                          $('.had-remind-box-pw').hide();
+                          $('.had-remind-box').show();
+                        }
+					}
+				},
+				error: function(result) {
+					$('#pop').hide();
+					qsToast({type:2,context: result.msg});
+				}
+			})
+		}
+
+        // 图片验证码
+		function verifyPhotoDialog() {
+            var verifyCodePop = new QSpopout('请输入下图中的文字或字母');
+            verifyCodePop.setContent([
+                '<div class="dia-captcha-item">',
+                '<img src="' + qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime() + '" class="dia-captcha-img">',
+                '<input type="text" name="captcha-solution" class="dia-captcha-solution font16" maxlength="10">',
+                '</div>'
+            ].join(''));
+            verifyCodePop.setBtn(1);
+            verifyCodePop.show();
+            verifyCodePop.setClose(false);
+            $('.dia-captcha-img').on('click', function() {
+                $(this).attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+            })
+            // 确定按钮事件
+            verifyCodePop.getPrimaryBtn().on('click', function () {
+                var currentPhotoVal = $.trim($('.dia-captcha-solution').val());
+                if (currentPhotoVal.length) {
+                    $.ajax({
+                        url: qscms.root + '?m=Home&c=captcha&a=captchaCode',
+                        cache: false,
+                        async: false,
+                        type: 'post',
+                        dataType: 'json',
+                        data: { postcaptcha: currentPhotoVal },
+                        success: function(result) {
+                            if (result.status) {
+                                verifyCodePop.hide();
+                                doAjax();
+                            } else {
+                                qsToast({type:2,context: '验证码输入错误'});
+                                $('.dia-captcha-img').attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+                            }
+                        }
+                    });
+                } else {
+                    $('.dia-captcha-solution').focus();
+                    qsToast({type:2,context: '请输入文字或字母'});
+                }
+            });
+        }
+
+        var captcha_open = $('#J_captcha_open').val();
+		/**
+		 * 登录验证
+		 */
+		$('#loginBtn').on('click', function(e) {
+			var usernameValue = $.trim($('input[name=username]').val());
+			var passwordValue = $.trim($('input[name=password]').val());
+			if (usernameValue == '') {
+				qsToast({type:2,context: '请输入账户名/手机号/邮箱'});
+				return false;
+			}
+			if (passwordValue == '') {
+				qsToast({type:2,context: '请输入密码'});
+				return false;
+			}
+			if (captcha_open) {
+                if (eval($('#verifyLogin').val())) {
+                    // 登录错误次数达到最大值
+                    if (verifyPhoto) {
+                        // 图片验证码
+                        verifyPhotoDialog();
+                    } else {
+                        // 极验
+                        $('.geetest_panel').remove();
+                        $.ajax({
+                            url: qscms.root+'?m=Mobile&c=Captcha&type=mobile&t=' + (new Date()).getTime(),
+                            type: 'get',
+                            dataType: 'json',
+                            success: function(config) {
+                                initGeetest({
+                                    gt: config.gt,
+                                    challenge: config.challenge,
+                                    offline: !config.success,
+                                    new_captcha: config.new_captcha,
+                                    product: 'bind'
+                                }, function(captchaObj) {
+                                    captchaObj.appendTo("#pop");
+                                    captchaObj.onSuccess(function() {
+                                        var captChaResult = captchaObj.getValidate();
+                                        var usernameValue = $('input[name="username"]').val();
+                                        var passwordValue = $('input[name="password"]').val();
+                                        var expireValue = $('input[name="expire"]').val();
+                                        $.ajax({
+                                            url: "{:U('Members/login')}",
+                                            type: 'POST',
+                                            dataType: 'json',
+                                            data: {
+                                                username: usernameValue,
+                                                password: passwordValue,
+                                                expire: expireValue,
+                                                geetest_challenge: captChaResult.geetest_challenge,
+                                                geetest_validate: captChaResult.geetest_validate,
+                                                geetest_seccode: captChaResult.geetest_seccode
+                                            },
+                                            success: function(result) {
+                                                if (result.status) {
+                                                    window.location.href = result.data;
+                                                } else {
+                                                    $('#pop').hide();
+                                                    if (result.data) {
+                                                        $("#verifyLogin").val(result.data);
+                                                    }
+                                                    qsToast({type:2,context: result.msg});
+                                                    if (result.msg == '密码错误!') {
+                                                        $('.had-remind-box').hide();
+                                                        $('.had-remind-box-pw .mal').text('密码错误，请重新输入或');
+                                                        $('.had-remind-box-pw').show();
+                                                    } else if (result.msg == '账号未激活') {
+                                                        $('.had-remind-box').hide();
+                                                    } else {
+                                                        $('.had-remind-box-pw').hide();
+                                                        $('.had-remind-box').show();
+                                                    }
+                                                }
+                                            },
+                                            error: function(result) {
+                                                $('#pop').hide();
+                                                qsToast({type:2,context: result.msg});
+                                            }
+                                        })
+                                    })
+                                    captchaObj.onReady(function () {
+                                        captchaObj.verify();
+                                    });
+                                    $('#btnCheck').on('click', function () {
+                                        captchaObj.verify();
+                                    })
+                                    window.captchaObj = captchaObj;
+                                });
+                            }
+                        })
+                    }
+                } else {
+                    doAjax();
+                }
+            } else {
+                doAjax();
+            }
+		});
+
+		/**
+         * 清空所填项
+         */
+        $('.j-l-input').on('keyup',function(){
+          if($(this).val()!=''){
+            $(this).closest('.group-list').addClass('has-inp');
+          }else{
+            $(this).closest('.group-list').removeClass('has-inp');
+          }
+        });
+        $('.g-close').on('click', function() {
+          $(this).next().val('');
+          $(this).closest('.group-list').removeClass('has-inp');
+          $('.had-remind-box').hide();
+        })
+	</script>
+</html>

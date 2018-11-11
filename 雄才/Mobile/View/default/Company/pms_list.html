@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<div class="qs-top-nav x2 list_height">
+		    <div class="n-cell <if condition="$Think.get.type eq ''">active</if>" onClick="window.location='{:U('company/pms_list')}'">系统消息<div class="b-line"></div></div>
+		<div class="n-cell <if condition="$Think.get.type eq 1">active</if>" onClick="window.location='{:U('company/pms_list',array('type'=>1))}'">求职者咨询<div class="b-line"></div></div>
+			<div class="clear"></div>
+		</div>
+		<div class="split-block"></div>
+		<if condition="$Think.get.type eq 1">
+			<notempty name="msg_list['list']">
+				<volist name="msg_list['list']" id="msg">
+					<div class="pmslist-img for-event" onClick="window.location='{:U('company/pms_consult_show',array('id'=>$msg['id']))}'">
+						<div class="pic"><img src="{$msg.from_avatars}"></div>
+						<div class="describe font12">
+							<div class="tit font14">求职者咨询
+								<div class="time font12">{:date('Y-m-d H:i',$msg['addtime'])}</div>
+							</div>
+							<div class="txt substring">
+								{$msg.message}
+							</div>
+						</div>
+						<div class="arrow"></div>
+						<div class="clear"></div>
+					</div>
+				</volist>
+				<div class="qspage">{$msg_list.page}</div>
+			<else />
+				<div class="list-empty">
+					暂时没有求职者咨询！
+				</div>
+			</notempty>
+		 <else/>
+			<notempty name="msg_list['list']">
+				<volist name="msg_list['list']" id="msg">
+					<div class="pmslist-img for-event" onClick="window.location='{:U('company/pms_show',array('id'=>$msg['pmid']))}'">
+						<div class="pic"><img src="../public/images/206.png"></div>
+						<div class="describe font12">
+							<div class="tit font14">系统消息
+								<div class="time font12">{:date('Y-m-d H:i',$msg['dateline'])}</div>
+							</div>
+							<div class="txt substring">
+								{$msg.message}
+							</div>
+						</div>
+						<div class="arrow"></div>
+						<div class="clear"></div>
+					</div>
+				</volist>
+				<div class="qspage">{$msg_list.page}</div>
+			<else />
+				<div class="list-empty">
+					暂时没有系统消息！
+				</div>
+			</notempty>
+		 </if>
+		<include file="public:footer_min" /> 
+	</body>
+</html>

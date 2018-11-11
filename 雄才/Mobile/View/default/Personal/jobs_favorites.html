@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta" />
+    <link rel="stylesheet" href="../public/css/personal.css">
+    <link rel="stylesheet" href="../public/css/jobs.css">
+</head>
+<body>
+    <include file="public:header" />
+    <div class="favorites-top-nav list_height">
+        <div class="n-cell active" onclick="window.location='{:U('Personal/jobs_favorites')}'">收藏的职位<div class="b-line"></div></div>
+        <div class="n-cell" onclick="window.location='{:U('Personal/attention_com')}'">关注的企业</div>
+        <div class="clear"></div>
+    </div>
+    <div class="split-block"></div>
+    <notempty name="favorites['list']">
+    <volist name="favorites['list']" id="list">
+        <if condition="$list['companyname'] and $list['education_cn']">
+            <div class="job-list-item js-longpress for-event" data-yid="{$list.did}" onclick="window.location.href='{$list.jobs_url}'">
+                <div class="info">
+                    <div class="line-one">
+                        <div class="job-name substring font15">{$list.jobs_name}</div>
+                        <div class="refresh-time font12">{:date('Y-m-d',$list['addtime'])}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="line-two font14">
+                        <div class="salary">{$list.wage_cn}</div>
+                        <div class="category substring">{$list.category_cn}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <if condition="$list['tag_cn']">
+                        <div class="line-three font12">
+                            <volist name="list['tag_arr']" id="tag" offset="1" length="4">
+                                <div class="job-tag">{$tag}</div>
+                            </volist>
+                            <div class="clear"></div>
+                        </div>
+                    <else/>
+                        <div class="line-four font14">学历{$list.education_cn} / 经验{$list.experience_cn} / 年龄{$list['age_cn']}</div>
+                    </if>
+                    <div class="J_apply apply-btn" jid="{$list.jobs_id}" onClick="event.cancelBubble = true">申请</div>
+                </div>
+                <div class="company font13">
+                    <div class="company-name substring">{$list.companyname}</div>
+                    <div class="district">{$list.district_cn}</div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        <else/>
+            <div class="job-list-item js-longpress for-event" data-yid="{$list.did}">
+                <div class="info">
+                    <div class="line-one">
+                        <div class="job-name substring font13">该职位不存在或已被删除</div>
+                        <div class="refresh-time font12">{:date('Y-m-d',$list['addtime'])}</div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+        </if>
+        <div class="list-split-block"></div>
+    </volist>
+    <div class="qspage">{$favorites['page']}</div>
+    <else />
+    <div class="list-empty link_blue">
+        目前您没有收藏的职位！<br>
+        建议您主动出击 <a href="{:url_rewrite('QS_jobslist')}">找工作</a>
+    </div>
+    </notempty>
+    <include file="public:footer_min" />
+    <script src="../public/js/longPress.js"></script>
+    <script type="text/javascript">
+        $('.J_apply').on('click',function(){
+            var jid = $(this).attr('jid');
+            $.ajax({
+                url: "{:U('AjaxPersonal/resume_apply')}",
+                type: 'POST',
+                dataType: 'json',
+                data: {jid: jid},
+                success : function(result){
+                    if (result.status == 1) {
+                        qsToast({type:1,context: result.msg});
+                    } else {
+                        if(result.dialog == 1){
+                            window.location.href = "{:U('AjaxPersonal/resume_add')}";
+                        }else{
+                            qsToast({type:1,context: result.msg});
+                        }
+                    }
+                },
+                error:function(){
+                    qsToast({type:1,context: result.msg});
+                }
+            });
+        });
+        // 长按删除
+        $('.js-longpress').each(function () {
+            var y_id = $(this).data('yid');
+            $(this).longPress(function(){
+                var popout = new QSpopout();
+                popout.setContent('确定删除吗？');
+                popout.show();
+                popout.getPrimaryBtn().on('click', function () {
+                    $.getJSON("{:U('personal/del_favorites')}",{did:y_id},function(result){
+                        if(result.status == 1){
+                            qsToast({type:1,context: result.msg});
+                            setTimeout(function () {
+                                location.href = "{:U('personal/jobs_favorites')}";
+                            }, 2000);
+                        }else{
+                            qsToast({type:2,context: result.msg});
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

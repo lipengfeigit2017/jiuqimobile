@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<include file="public:meta"/>
+	<link rel="stylesheet" href="../public/css/company.css">
+</head>
+<body>
+	<include file="public:header"/>
+	<div class="filter-group x3 filter-outer">
+		<div id="f-mask"></div>
+		<div class="filter-outer">
+			<div class="filter-list js-filter" data-tag="0">
+				<div class="filter-cell">
+					<div class="filter-cell-txt">
+						<if condition="$Think.get.education eq 0">
+							最高学历
+						<else/>
+							{$education[$_GET['education']]}
+						</if>
+					</div>
+				</div>
+			</div>
+			<div class="filter-list js-filter" data-tag="1">
+				<div class="filter-cell">
+					<div class="filter-cell-txt">
+						<if condition="$Think.get.experience eq 0">
+							工作经验
+						<else/>
+							{$experience[$_GET['experience']]}
+						</if>
+					</div>
+				</div>
+			</div>
+			<div class="filter-list js-filter" data-tag="2">
+				<if condition="$Think.get.settr eq 0">
+					<div class="filter-cell"><div class="filter-cell-txt">收藏时间</div></div>
+				<else />
+					<switch name="Think.get.settr">
+                        <case value="0">
+                        	<div class="filter-cell"><div class="filter-cell-txt">不限</div></div>
+                        </case>
+                        <case value="3">
+                        	<div class="filter-cell"><div class="filter-cell-txt">3天内</div></div>
+                        </case>
+                        <case value="7">
+                        	<div class="filter-cell"><div class="filter-cell-txt">7天内</div></div>
+                        </case>
+                        <case value="15">
+                        	<div class="filter-cell"><div class="filter-cell-txt">15天内</div></div>
+                        </case>
+                        <case value="30">
+                        	<div class="filter-cell"><div class="filter-cell-txt">30天内</div></div>
+                        </case>
+                    </switch>
+				</if>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<!--学历下拉选择-->
+		<div class="con-filter">
+			<div class="f-box qs-hidden">
+				<div class="f-box-inner">
+					<li><a class="f-item <if condition="$Think.get.education eq ''">select</if>" href="{:P(array('education'=>0))}">全部</a></li>
+					<volist name="education" id="education">
+						<li><a class="f-item <if condition="$Think.get.education eq $key">select</if>" href="{:P(array('education'=>$key))}">{$education}</a></li>
+					</volist>
+				</div>
+			</div>
+		</div>
+		<!--工作经验下拉选择-->
+		<div class="con-filter">
+			<div class="f-box qs-hidden">
+				<div class="f-box-inner">
+					<li><a class="f-item <if condition="$Think.get.experience eq ''">select</if>" href="{:P(array('experience'=>0))}">全部</a></li>
+					<volist name="experience" id="experience">
+						<li><a class="f-item <if condition="$Think.get.experience eq $key">select</if>" href="{:P(array('experience'=>$key))}">{$experience}</a></li>
+					</volist>
+				</div>
+			</div>
+		</div>
+		<!--收藏时间下拉选择-->
+		<div class="con-filter">
+			<div class="f-box qs-hidden">
+				<div class="f-box-inner">
+					<li><a class="font12 f-item <if condition="$Think.get.settr eq '' || $Think.get.settr eq '0'">select</if>" href="{:P(array('settr'=>0))}">全部</a></li>
+					<li><a class="font12 f-item <if condition="$Think.get.settr eq 3">select</if>" href="{:P(array('settr'=>3))}">3天内</a></li>
+					<li><a class="font12 f-item <if condition="$Think.get.settr eq 7">select</if>" href="{:P(array('settr'=>7))}">7天内</a></li>
+					<li><a class="font12 f-item <if condition="$Think.get.settr eq 15">select</if>" href="{:P(array('settr'=>15))}">15天内</a></li>
+					<li><a class="font12 f-item <if condition="$Think.get.settr eq 30">select</if>" href="{:P(array('settr'=>30))}">30天内</a></li>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="split-block"></div>
+	<notempty name="favorites['list']">
+		<volist name="favorites['list']" id="list">
+			<if condition="$list['title']">
+				<div class="resume js-longpress" data-yid="{$list.did}" onclick="window.location='{$list['resume_url']}'">
+					<div class="content">
+						<div class="line-one">
+							<div class="real-name substring">{$list.fullname}</div>
+							<div class="J_delete delete font12" did="{$list.did}" url="{:U('company/resume_favorites_del',array('y_id'=>$list['did']))}"  onClick="event.cancelBubble = true">删除</div>
+							<div class="clear"></div>
+						</div>
+						<div class="line-two font12">
+							<div class="info">{$list.sex_cn} / {$list.age}岁 / {$list.education_cn} / {$list.experience_cn}</div>
+							<div class="date font12">{:date('Y-m-d',$list['favorites_addtime'])}</div>
+							<div class="clear"></div>
+						</div>
+						<div class="line-three font12 substring">
+							意向职位：{$list.intention_jobs}
+						</div>
+					</div>
+				</div>
+			<else/>
+				<div class="resume js-longpress" data-yid="{$list.did}">
+					<div class="content">
+						<div class="line-two font12">
+							<div class="info">该简历不存在或已被删除</div>
+							<div class="date font12">{:date('Y-m-d',$list['favorites_addtime'])}</div>
+							<div class="clear"></div>
+						</div>
+					</div>
+				</div>
+			</if>
+		</volist>
+		<div class="split-block"></div>
+		<div class="qspage">{$favorites['page']}</div>
+	<else />
+		<if condition="$hasget">
+			<div class="list-empty">
+				抱歉，没有找到符合您条件的简历！
+			</div>
+			<else />
+			<div class="list-empty link_blue">
+				您还没有收藏的简历！<br />
+				建议您主动出击 <a href="{:url_rewrite('QS_resumelist')}">搜人才</a>
+			</div>
+		</if>
+	</notempty>
+	<include file="public:footer_min" />
+	<script src="../public/js/longPress.js"></script>
+	<script type="text/javascript">
+		$('.J_delete').on('click',function(){
+			var url = $(this).attr('url');
+			var popout = new QSpopout('删除收藏的简历');
+			popout.setContent('被删除后将无法恢复，您确定要删除选中的简历吗？');
+			popout.getPrimaryBtn().on('click', function() {
+	            window.location=url;
+	        });
+			popout.show();
+		});
+		$('.js-filter').on('click', function() {
+			var filter = new QSfilter($(this));
+		});
+		// 长按删除
+        $('.js-longpress').each(function () {
+	        var y_id = $(this).data('yid');
+	        $(this).longPress(function(){
+		        var popout = new QSpopout('删除收藏的简历');
+		        popout.setContent('被删除后将无法恢复，您确定要删除选中的简历吗？');
+		        popout.show();
+		        popout.getPrimaryBtn().on('click', function () {
+			        $.getJSON("{:U('company/resume_favorites_del')}",{y_id:y_id},function(result){
+				        if(result.status == 1){
+					        qsToast({type:1,context: result.msg});
+					        setTimeout(function () {
+						        location.href = "{:U('company/resume_favorites')}";
+					        }, 2000);
+				        }else{
+					        qsToast({type:2,context: result.msg});
+				        }
+			        });
+		        });
+	        });
+        });
+	</script>
+</body>
+</html>

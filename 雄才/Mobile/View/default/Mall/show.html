@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<qscms:goods_show 列表名="info" 商品id="$_GET['id']"/>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/mall.css">
+</head>
+<body>
+<include file="public:header"/>
+
+<div class="split-block"></div>
+
+<div class="goods-info">
+    <div class="pic">
+        <img src="{$info['goods_img']}" border="0" />
+    </div>
+    <div class="info">
+        <div class="name font16">{$info['goods_title']}</div>
+        <div class="row font13">
+            <div class="brand">品牌：{$info['goods_brand']}</div>
+            <div class="reserve">库存: {$info['goods_stock']}</div>
+            <div class="clear"></div>
+        </div>
+        <div class="row font13">编号：{$info['goods_number']}</div>
+        <div class="point">{$info['goods_points']} {:C('qscms_points_byname')}</div>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="introduce">
+    <div class="title list_height">商品介绍</div>
+    <div class="desc">{$info['content']}</div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="foot-nav">
+    <div class="fixed">
+        <div class="point font16">{$info['goods_points']}{:C('qscms_points_byname')}/件</div>
+        <div class="btn">
+            <div class="qs-btn qs-btn-medium qs-btn-blue qs-btn-inline exchange" id="exchange">立即兑换</div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<include file="public:footer_min"/>
+<script type="text/javascript">
+    var isVisitor = "{:C('visitor.uid')}";
+    $('#exchange').on('click',function(){
+        if ((isVisitor > 0)) {
+            var url = "{:U('Mall/ajax_exchange_check',array('goods_id'=>$info['id']))}";
+            $.getJSON(url,function(result){
+                if(result.status==1){
+                    window.location.href=result.data.url;
+                }else{
+                    qsToast({type:2,context: result.msg});
+                    return false;
+                }
+            });
+        }else{
+            window.location.href="{:U('members/login')}";
+        }
+    });
+</script>
+</body>
+</html>

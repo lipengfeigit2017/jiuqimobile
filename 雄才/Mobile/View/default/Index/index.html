@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/index.css">
+	</head>
+	<body>
+		<include file="public:search" />
+		<div class="new-index-top">
+			<div class="ni-head <if condition="$apply['Subsite']">sub</if>" style="background-color:<if condition="C('qscms_mobile_top_color') eq ''">#0180CC<else />{:C('qscms_mobile_top_color')}</if>;">
+				<empty name="sitegroup">
+					<if condition="$apply['Subsite']">
+						<div class="m-sub-txt-group">
+							<div class="stg-txt font13">{:C('SUBSITE_VAL.s_sitename')}</div>
+							<div class="stg-icon"></div>
+							<div class="clear"></div>
+						</div>
+						<eq name="subsite_choose_type" value="simple">
+							<div class="m-sub-filter-page">
+								<div class="msp-head">
+									<div class="msp-input-group">
+										<div class="msg-icon-ser"></div>
+										<input type="text" class="msg-input-ser" placeholder="输入地区名称进行筛选">
+										<div class="suo-close js-suo-close"></div>
+										<div class="clear"></div>
+									</div>
+									<div class="msp-cancel-btn">取消</div>
+									<div class="clear"></div>
+								</div>
+								<div class="m-sub-head-tip font12">请您切换到对应的地区分站，让我们为您提供更准确的信息</div>
+								<if condition="$subsite_org">
+									<div class="m-sub-city-head link_blue">进入 <a href="{:U('subsite/set',array('sid'=>$subsite_org['s_id']))}">{$subsite_org.s_sitename}</a> 或者切换到以下站点</div>
+									<else/>
+									<div class="m-sub-city-head link_blue">切换到以下站点</div>
+								</if>
+								<div class="m-sub-city-group">
+									<volist name="district" id="district">
+										<div class="m-sub-city-box"><a href="{:U('subsite/set',array('sid'=>$district['s_id']))}" class="m-sub-city-cell" title="{$district.s_sitename}" alias="{$district.s_spell}">{$district.s_sitename}</a></div>
+									</volist>
+									<div class="clear"></div>
+								</div>
+								<div class="m-sub-city-no-data">
+									<div class="sub-no-data-cell link_blue">
+										抱歉，没有找到相关的地区立即进入 <a href="{:U('subsite/set',array('sid'=>0))}">[总站]</a>
+									</div>
+								</div>
+							</div>
+							<else />
+							<div class="m-sub-filter-page-complex">
+								<div class="msp-head">
+									<div class="msp-input-group">
+										<div class="msg-icon-ser"></div>
+										<input type="text" class="msg-input-ser" placeholder="输入地区名称进行筛选">
+										<div class="suo-close js-suo-close"></div>
+										<div class="clear"></div>
+									</div>
+									<div class="msp-cancel-btn">取消</div>
+									<div class="clear"></div>
+								</div>
+								<div class="search_subsite_ajax"><ul id="search_subsite"></ul></div>
+								<div id="choose-box">
+									<div class="m-sub-head-tip font12">请您切换到对应的地区分站，让我们为您提供更准确的信息</div>
+									<if condition="$subsite_org">
+										<div class="m-sub-city-head t-center link_blue">定位城市：<a href="{:U('subsite/set',array('sid'=>$subsite_org['s_id']))}">{$subsite_org.s_sitename}</a><span>进入<a href="{:U('subsite/set',array('sid'=>0))}">总站</a></span></div>
+										<else/>
+										<div class="m-sub-city-head link_blue">切换到以下站点<span>进入<a href="{:U('subsite/set',array('sid'=>0))}">总站</a></span></div>
+									</if>
+									<div class="m-sub-split-block"></div>
+									<div class="city-box">
+										<div class="m-sub-city-group font13">
+											<div class="title list_height"><span class="title-img">按字母排序</span></div>
+											<div class="word-ul">
+												<volist name="word_arr" id="word">
+													<notempty name="district[$word]">
+														<a href="#cityblock{$word}" class="word-li" data-nm="true">{$word}</a>
+													</notempty>
+												</volist>
+												<div class="clear"></div>
+											</div>
+										</div>
+										<volist name="word_arr" id="word">
+											<notempty name="district[$word]">
+												<div class="m-sub-split-block"></div>
+												<div class="m-sub-city-group font13">
+													<a name="cityblock{$word}" id="cityblock{$word}"> </a>
+													<div class="title list_height city-word"><span class="img font10">{$word}</span> 以 {$word} 为开头的城市名</div>
+													<volist name="district[$word]" id="vo">
+														<div class="m-sub-city-box"><a href="{:U('subsite/set',array('sid'=>$vo['s_id']))}" class="m-sub-city-cell" title="{$vo.s_sitename}" alias="{$vo.s_spell}">{$vo.s_sitename}</a></div>
+													</volist>
+													<div class="clear"></div>
+												</div>
+											</notempty>
+										</volist>
+									</div>
+									<div class="m-sub-city-no-data">
+										<div class="sub-no-data-cell link_blue">
+											抱歉，没有找到相关的地区立即进入 <a href="{:U('subsite/set',array('sid'=>0))}">[总站]</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</eq>
+					</if>
+				<else/>
+	                <div class="m-sub-txt-group">
+						<div class="stg-txt font13">{$sitegroup_org.name}</div>
+						<div class="stg-icon"></div>
+						<div class="clear"></div>
+					</div>
+					<div class="m-sub-filter-page">
+						<div class="msp-head">
+							<div class="msp-input-group">
+								<div class="msg-icon-ser"></div>
+								<input type="text" class="msg-input-ser" placeholder="输入地区名称进行筛选">
+								<div class="suo-close js-suo-close"></div>
+								<div class="clear"></div>
+							</div>
+							<div class="msp-cancel-btn">取消</div>
+							<div class="clear"></div>
+						</div>
+						<div class="m-sub-head-tip font12">请您切换到对应的地区分站，让我们为您提供更准确的信息</div>
+						<div class="m-sub-city-head link_blue">切换到以下站点</div>
+						<div class="m-sub-city-group">
+							<volist name="sitegroup" id="dis" offset="0" length="10">
+			                    <div class="m-sub-city-box"><a href="{$dis.domain}" class="m-sub-city-cell" title="{$dis.name}" alias="{$dis.spell}">{$dis.name}</a></div>
+			                </volist>
+							<div class="clear"></div>
+						</div>
+					</div>
+	            </empty>
+                <if condition="C('qscms_logo_mobile') eq ''">
+                <div class="nih-l font18"><if condition="C('SUBSITE_VAL.s_id') gt 0">{:C('SUBSITE_VAL.s_title')}<else />{:C('qscms_site_name')}</if></div>
+                <else />
+                <div class="logo"><img src="{:attach(C('qscms_logo_mobile'),'resource')}"></div>
+                </if>
+				<div class="ni-user">
+					<a href="{:U('Im/user_list')}"><img src="../public/images/308.png"><span id="J_imStatus"></span></a>
+					<a href="{:U('Members/login')}"><img src="../public/images/249.png"></a>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="index-slider">
+			<div id="hwslider" class="hwslider">
+				<ul>
+				<notempty name="index_focus">
+				<volist name="index_focus" id="vo">
+					<li <if condition="$vo['url'] neq ''">onclick="javascript:location.href='{$vo['url']}'"</if>><img class="s-img" src="{:attach($vo['content'],'ads')}" alt="{$vo['explain']}"></li>
+				</volist>
+				<else />
+					<li><img class="s-img" src="http://www.74cms.com/plus/m_ad.png" alt=""></li>
+				</notempty>
+				</ul>
+			</div>
+		</div>
+        <div class="ni-search-g">
+            <div class="nis-box font14 js-show-qspageso">请输入职位名/公司名<div class="nis-s-icon"></div></div>
+        </div>
+        <script>
+          // 显示搜索层
+          $('.js-show-qspageso').on('click', function(){
+            $('.qspageso').toggle();
+            $('#J_soinput').focus();
+            if($('#J_soinput').val()!=''){
+              $('#J_soinput').val($('#J_soinput').val());
+              $('#J_soinput').closest('.topbg').addClass('has-inp');
+            }
+          });
+        </script>
+        <!--图标组合-->
+        <div class="ic-group font12">
+            <div class="ic-line <if condition="count($nav) eq 2">ic2<elseif condition="count($nav) eq 3" />ic3</if>">
+                <volist name="nav" id="vo">
+                <div class="ic-cell" data-url="{$vo['url']}" data-alias="{$vo['alias']}" <if condition="$vo['alias'] neq 'nearbyjobs'">onclick="javascript:location.href='{$vo['url']}'"</if>>
+                    <div class="ic-img"><img src="<if condition="$vo['nav_img'] eq ''">{:attach($vo['alias'].'.png','resource/mobile_nav')}<else />{:attach($vo['nav_img'],'images')}</if>" alt=""></div>
+                    <div class="ic-text">{$vo['show_name']}</div>
+                </div>
+                </volist>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <!--图标组合end-->
+		<div class="indexnotice">
+		  <div class="leftimg"><img src="../public/images/11.png"></div>
+		  <qscms:notice_list 列表名="notice_list" 显示数目="10" 分类="1" 排序="addtime:desc"/>
+			<ul class="txt ul-upscroll">
+		  <volist name="notice_list['list']" id="notice">
+		    <li class="" onClick="javascript:location.href='{$notice.url}'">{$notice.title}</li>
+		  </volist>
+			</ul>
+		  <div class="clear"></div>
+		</div>
+        <!--红包职位-->
+        <if condition="C('apply.Allowance')">
+        <qscms:jobs_list 列表名="jobslist" 搜索内容="allowance" 显示数目="4" 排序="rtime"/>
+		<div class="split-block"></div>
+        <div class="index-alw">
+            <div class="alw-title font14">
+                <div class="alw-t">红包职位</div>
+                <div class="alw-link link_gray9"><a href="{:url_rewrite('QS_jobslist',array('search_cont'=>'allowance'))}">共<span class="txt-red">{$jobslist['allowance_count']}</span>个红包职位 ></a></div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-group">
+            	<volist name="jobslist['list']" id="vo" key="k">
+                <div class="alw-cell" onclick="javascript:location.href='{$vo['jobs_url']}'">
+                    <div class="ac-h font13">
+                        <div class="ach-l">{$vo['allowance_info']['type_cn']}</div>
+                        <div class="ach-r">￥{$vo['allowance_info']['per_amount']}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="ac-wave"></div>
+                    <div class="ac-ten">
+                        <div class="sp-h-25"></div>
+                        <div class="act-line substring font14 txt-3">{$vo['jobs_name']}</div>
+                        <div class="sp-h-19"></div>
+                        <div class="act-line substring font12 txt-9">{$vo['short_name']}</div>
+                    </div>
+                </div>
+                </volist>
+                <div class="clear"></div>
+            </div>
+        </div>
+        </if>
+        <!--红包职位end-->
+        <!--名企专区-->
+        <div class="vip-box">
+            <div class="vip-head"><div class="con font13"><div class="icon">央企专区</div></div></div>
+            <div class="vip-group">
+                <qscms:company_jobs_list 列表名="company_list" 名企="1" 显示数目="18" 职位数量="0" 企业名长度="6" />
+                <volist name="company_list['list']" id="company">
+                <div class="vip-cell" onclick="javascript:location.href='{$company.company_url}'">
+                    <div class="img"><img src="<empty name="company['logo']">{:attach('no_logo.png','resource')}<else/>{:attach($company['logo'],'company_logo')}</empty>" alt="{$company.short_name}"></div>
+                    <div class="v-txt">{$company.short_name}</div>
+                </div>
+                </volist>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <!--名企专区end-->
+        <!--广告位-->
+        <notempty name="index_block">
+        <div class="middle-ad">
+			<volist name="index_block" id="vo">
+				<div class="mad-cell" <if condition="$vo['url'] neq ''">onclick="javascript:location.href='{$vo['url']}'"</if>><img src="{:attach($vo['content'],'ads')}" alt="{$vo['explain']}"></div>
+			</volist>
+            <div class="clear"></div>
+        </div>
+		</notempty>
+        <!--广告位 end-->
+        <!--最新人才-->
+        <div class="resume-box" style="display: none">
+            <div class="resume-head"><div class="con font13"><div class="icon">最新人才</div></div></div>
+            <div class="resume-group">
+                <div class="list-box">
+                <qscms:resume_list 列表名="recommend_resume" 照片="1" 显示数目="4"/>
+                <volist name="recommend_resume['list']" id="resume">
+                    <div class="list-cell" onclick="javascript:location.href='{$resume.resume_url}'">
+                        <div class="img"><img src="{$resume.photosrc}" alt="{$resume.fullname}"></div>
+                        <div class="r-name">{$resume.fullname}</div>
+                    </div>
+                </volist>
+                    <div class="clear"></div>
+                </div>
+                <div class="r-more"><a href="{:url_rewrite('QS_resumelist')}" class="rm font13">查看更多</a></div>
+            </div>
+        </div>
+        <!--最新人才end-->
+        <!--最新职位-->
+        <div class="job-box" id="recommend_jobs_box"></div>
+        <!--最新职位 end-->
+		<include file="public:footer" />
+        <if condition="C('qscms_footer_nav_status') eq 1">
+            <div class="bottom-nav-bar-group">
+                <div class="bottom-nav-bar">
+                    <div class="nav-bar-cell qs-left">
+                        <a href="{:url_rewrite('QS_index')}" class="bar-cell index active">
+                            <div class="b-img"></div>
+                            <div class="b-txt font10">首页</div>
+                        </a>
+                        <a href="{:url_rewrite('QS_jobslist')}" class="bar-cell job">
+                            <div class="b-img"></div>
+                            <div class="b-txt font10">求职</div>
+                        </a>
+                        <div class="clear"></div>
+                    </div>
+					<div class="nav-bar-more qs-left for-event">
+						<a href="{:url_rewrite('QS_login')}" style="color: #666">
+							<div class="nav-bar-more-cell js-b-nav-bar1" style="top: 0.1rem;left: .17rem;background-size: 0.58rem"></div>
+							<div class="b-txt font10"
+								 style="width: 100%;text-align: center; bottom: 0.13rem; position: absolute;">招聘
+							</div>
+						</a>
+					</div>
+                    <div class="nav-bar-cell qs-left">
+						<a href="{:url_rewrite('QS_newslist')}" class="bar-cell resume">
+						<!--<a href="{:url_rewrite('QS_resumelist')}" class="bar-cell resume">-->
+                            <div class="b-img"></div>
+                            <div class="b-txt font10">资讯</div>
+                        </a>
+                        <a href="{:url_rewrite('QS_login')}" class="bar-cell mine">
+                            <div class="b-img"></div>
+                            <div class="b-txt font10">我的</div>
+                        </a>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="bottom-bar-more-group">
+                    <div class="bn-mask js-b-nav-bar-active"></div>
+                    <div class="bar-more-cell">
+                        <div id="hwslider-bottom" class="hwslider">
+                            <ul>
+                                <li>
+                                    <a href="{:url_rewrite('QS_jobslist')}"><dl class="l1"><dt class="job for-event"></dt><dd class="font12">找工作</dd></dl></a>
+                                    <a href="{:url_rewrite('QS_resumelist')}"><dl class="l1"><dt class="resume for-event"></dt><dd class="font12">找人才</dd></dl></a>
+                                    <a href="{:url_rewrite('QS_login')}"><dl class="l1"><dt class="fabu for-event"></dt><dd class="font12">招聘</dd></dl></a>
+                                    <div class="clear"></div>
+                                </li>
+                                <li>
+                                    <a href="{:url_rewrite('QS_newslist')}"><dl class="l1"><dt class="news for-event"></dt><dd class="font12">资讯</dd></dl></a>
+                                    <notempty name="apply['Mall']">
+                                        <a href="{:url_rewrite('QS_mall_index')}"><dl class="l1"><dt class="shop for-event"></dt><dd class="font12">商城</dd></dl></a>
+                                    </notempty>
+                                    <notempty name="apply['Jobfair']">
+                                        <a href="{:url_rewrite('QS_jobfairlist')}"><dl class="l1"><dt class="zhaoph for-event"></dt><dd class="font12">招聘会</dd></dl></a>
+                                    </notempty>
+                                    <div class="clear"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="bar-more-closecell js-b-nav-bar-active for-event"></div>
+                </div>
+            </div>
+        </if>
+		<include file="public:footer_min" />
+        <div class="left_float_bar font12">
+            <if condition="C('qscms_weixin_img')">
+            	<span class="img-dialog J_sub_us"> 订阅 <i></i> 我们 </span>
+            </if>
+            <if condition="C('qscms_weixin_service_img')">
+            	<span class="img-dialog J_con_us"> 联系 <i></i> 客服 </span>
+            </if>
+        </div>
+	</body>
+	<script src="../public/js/zepto.hwSlider.js"></script>
+	<script src="../public/js/fx.js"></script>
+	<script src="../public/js/touch-0.2.14.min.js"></script>
+	<script src="../public/js/zepto.textSlider.js"></script>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak={:C('qscms_map_ak')}"></script>
+	<script>
+        // 订阅我们
+        <if condition="C('qscms_weixin_img')">
+	        $('.J_sub_us').on('click', function () {
+	            var $subPop = new QSpopout();
+	            $subPop.setContent('<img class="left_float_img" src="{:attach(C('qscms_weixin_img'),'resource')}"><p>长按二维码识别关注</p><p></p>');
+	            $subPop.setBtn(1, ['确定']);
+	            $subPop.show();
+	        })
+        </if>
+        <if condition="C('qscms_weixin_service_img')">
+	        // 联系客服
+	        $('.J_con_us').on('click', function () {
+	            var $subPop = new QSpopout();
+	            $subPop.setContent('<img class="left_float_img" src="{:attach(C('qscms_weixin_service_img'),'resource')}"><p>长按二维码添加客服微信</p><p></p>');
+	            $subPop.setBtn(1, ['确定']);
+	            $subPop.show();
+	        })
+	    </if>
+		// 职位、简历数量动态效果
+		var jobCount = '{$jobs_count}';
+		var resumeCount = '{$resume_count}';
+		window.setTimeout(function() {
+			$('.jobs-roll-count').empty();
+			peopleRoll(jobCount, '.jobs-roll-count');
+		}, 300)
+		window.setTimeout(function() {
+			$('.resume-roll-count').empty();
+			peopleRoll(resumeCount, '.resume-roll-count');
+		}, 5600)
+		function peopleRoll(a, container) {
+			function b(a) {
+				for (var b = 0; b < a.length; b++) {
+					var e = a.charAt(b);
+					d.push(e)
+				}
+				c()
+			}
+			function c() {
+				var a = 0;
+				$(container).append("<span></span>");
+				var b = window.setInterval(function() {
+					$(container + " span").eq(e).text(a), a == d[e] && (window.clearInterval(b), e++, d[e] && c()), a++
+				}, 30)
+			}
+			var d = [],
+					e = 0,
+					f = a + "";
+			b(f)
+		}
+
+		// 职位简历数滚动
+		$('#hwslider-count').hwSlider({
+			autoPlay: true,
+			dotShow: false,
+			touch: false,
+			interval: 5000,
+			arrShow: false
+		});
+
+		// 滚动更多
+		$("#hwslider").hwSlider({
+			autoPlay: false,
+			dotShow: true,
+			touch: true,
+			arrShow: false
+		});
+
+		$(".ul-upscroll").textSlider({line:1,speed:500,timer:3000});
+		<if condition="!$sitegroup && $apply['Subsite']">
+			// 显示分站
+			<notempty name="subsite_org">
+				showMSubPop();
+		        function showMSubPop() {
+		            var $mPop = new QSpopout();
+		            $mPop.setContent('<div class="link_yellow" style="line-height: 180%;">我们检测到您所在地区为 {$district_org}，建议您切换至<a href="{:U('subsite/set',array('sid'=>$subsite_org['s_id']))}">[{$subsite_org['s_sitename']}]</a>，让我们为您提供更准确的职位信息。</div>');
+		            $mPop.show();
+		            $mPop.getPrimaryBtn().on('click', function () {
+		                window.location.href = "{:U('subsite/set',array('sid'=>$subsite_org['s_id']))}";
+		            });
+		        }
+			</notempty>
+	        // 分站筛选
+	        $('.m-sub-txt-group').on('click', function(){
+	            $('.m-sub-filter-page').toggle();
+	            $('.m-sub-filter-page-complex').toggle();
+	        });
+	        $('.msp-cancel-btn').on('click', function () {
+	            $('.m-sub-filter-page').toggle();
+	            $('.m-sub-filter-page-complex').toggle();
+	        });
+	        <eq name="subsite_choose_type" value="simple">
+	        $('.msg-input-ser').on('keyup', function () {
+	            var tVal = $(this).val();
+	            if (tVal!='') {
+                    $(this).closest('.msp-input-group').addClass('has-inp');
+				} else {
+                    $(this).closest('.msp-input-group').removeClass('has-inp');
+				}
+				$('.m-sub-filter-page').addClass('no-head');
+	            var $subCityArr = $('.m-sub-city-cell');
+	            $('.m-sub-city-box').addClass('h');
+	            $.each($subCityArr, function () {
+	                var eVal = $(this).attr('title');
+	                if (eVal.indexOf(tVal) != -1) {
+	                    $(this).parent().removeClass('h');
+						$('.m-sub-filter-page').removeClass('no-data');
+	                }
+	            })
+				$.each($subCityArr, function () {
+	                var eVal = $(this).attr('alias');
+	                if (eVal.indexOf(tVal) != -1) {
+	                    $(this).parent().removeClass('h');
+						$('.m-sub-filter-page').removeClass('no-data');
+	                }
+	            })
+	            if (!tVal.length) {
+	                $('.m-sub-city-box').removeClass('h');
+					$('.m-sub-filter-page').removeClass('no-head');
+					$('.m-sub-filter-page').removeClass('no-data');
+	            } else {
+					if (!($('.m-sub-city-box').not('.h').length)) {
+						$('.m-sub-filter-page').addClass('no-data');
+					}
+				}
+	        });
+	        <else />
+	        // 搜索关联
+	          $('.msg-input-ser').on('keyup', function() {
+	          	var key = $(this).val();
+	          	if(key!=''){
+                    $(this).closest('.msp-input-group').addClass('has-inp');
+	          		$('#choose-box').hide();
+	          		$.getJSON("{:U('ajaxCommon/subsite_by_keyword')}",{key:key},function(result){
+	                  if (result.status==1) {
+	                      var reArr = result.data;
+	                      if (reArr.length) {
+	                          var reHtml = '';
+	                          var reUrl = "{:U('subsite/set',array('sid'=>'ooo'))}";
+	                          for (var i = 0; i < reArr.length; i++) {
+	                                reHtml += '<li data-key="'+reArr[i].s_id+'"><a href="'+reUrl.replace('ooo',reArr[i].s_id)+'"><span class="searchFont">'+reArr[i].s_sitename+'</span></a></li>';
+	                          }
+	                          $('#search_subsite').html(reHtml);
+	                          $('.search_subsite_ajax').show();
+	                      }
+	                  }else{
+	                  	var reHtml = '<li><a>抱歉，没有找到相关的地区</a></li>';
+	                    $('#search_subsite').html(reHtml);
+                      	$('.search_subsite_ajax').show();
+                      }
+	              });
+	          	}else{
+	          	    $(this).closest('.msp-input-group').removeClass('has-inp');
+                  	$('.search_subsite_ajax').hide();
+                  	$('#choose-box').show();
+	          	}
+	          });
+	        </eq>
+	    </if>
+	    <notempty name="sitegroup">
+	    	// 分站筛选
+	        $('.m-sub-txt-group').on('click', function(){
+	            $('.m-sub-filter-page').toggle();
+	            $('.m-sub-filter-page-complex').toggle();
+	        });
+	        $('.msp-cancel-btn').on('click', function () {
+	            $('.m-sub-filter-page').toggle();
+	            $('.m-sub-filter-page-complex').toggle();
+	        });
+	        // 搜索关联
+	        $('.msg-input-ser').on('keyup', function () {
+	            var tVal = $(this).val();
+	            if (tVal!='') {
+                    $(this).closest('.msp-input-group').addClass('has-inp');
+				} else {
+                    $(this).closest('.msp-input-group').removeClass('has-inp');
+				}
+				$('.m-sub-filter-page').addClass('no-head');
+	            var $subCityArr = $('.m-sub-city-cell');
+	            $('.m-sub-city-box').addClass('h');
+	            $.each($subCityArr, function () {
+	                var eVal = $(this).attr('title');
+	                if (eVal.indexOf(tVal) != -1) {
+	                    $(this).parent().removeClass('h');
+						$('.m-sub-filter-page').removeClass('no-data');
+	                }
+	            })
+				$.each($subCityArr, function () {
+	                var eVal = $(this).attr('alias');
+	                if (eVal.indexOf(tVal) != -1) {
+	                    $(this).parent().removeClass('h');
+						$('.m-sub-filter-page').removeClass('no-data');
+	                }
+	            })
+	            if (!tVal.length) {
+	                $('.m-sub-city-box').removeClass('h');
+					$('.m-sub-filter-page').removeClass('no-head');
+					$('.m-sub-filter-page').removeClass('no-data');
+	            } else {
+					if (!($('.m-sub-city-box').not('.h').length)) {
+						$('.m-sub-filter-page').addClass('no-data');
+					}
+				}
+	        });
+	    </notempty>
+		$('.js-suo-close').on('click', function () {
+            $(this).closest('.msp-input-group').removeClass('has-inp');
+        });
+        
+        function show_recommend_box(type,lng,lat){
+        	$.getJSON("{:U('Mobile/Index/recommend_jobs_index')}",{type:type,lng:lng,lat:lat},function(result){
+                if(result.status==1){
+                    $('#recommend_jobs_box').html(result.data.html);
+                  // 职位亮点随机背景色
+                  function randomsort(a, b) {
+                    return Math.random()>.5 ? -1 : 1;
+                  }
+                  var bgArrBefore = [1,2,3,4];
+                  $('.job-list-item').each(function () {
+                    var $jobTagDom = $(this).find('.job-tag');
+                    if ($jobTagDom.length) {
+                      var bgArray = bgArrBefore.sort(randomsort);
+                      $($jobTagDom).each(function (index, value) {
+                        $(this).addClass('tg' + bgArray[index]);
+                      })
+                    }
+                  })
+                }
+            });
+        }
+        function showError(error)
+		{
+			switch(error.code)
+		    {
+		    case error.PERMISSION_DENIED:
+		    case error.POSITION_UNAVAILABLE:
+		    case error.TIMEOUT:
+		    case error.UNKNOWN_ERROR:
+		    	baiduapi_geolocation();
+		      	break;
+		    }
+		}
+        function getLocation()
+        {
+            if (navigator.geolocation)
+            {
+                navigator.geolocation.getCurrentPosition(showPosition, showError,{
+			        // 指示浏览器获取高精度的位置，默认为false
+			        enableHighAccuracy: true,
+			        // 指定获取地理位置的超时时间，默认不限时，单位为毫秒
+			        timeout: 5000,
+			        // 最长有效期，在重复获取地理位置时，此参数指定多久再次获取位置。
+			        maximumAge: 3000
+			    });
+            }
+            else
+            {
+                baiduapi_geolocation();
+            }
+        }
+        function showPosition(position)
+        {
+	        set_geolocation_cookie(position.coords.latitude,position.coords.longitude,30);
+        }
+        //设置定位cookie
+        function set_geolocation_cookie(lat,lng,min){
+        	var expiresDate= new Date();
+	        expiresDate.setTime(expiresDate.getTime() + (min * 60 * 1000));
+	        $.fn.cookie('cookie_lat', lat,{path : '{:C("qscms_site_dir")}',expires:expiresDate});
+	        $.fn.cookie('cookie_lng', lng,{path : '{:C("qscms_site_dir")}',expires:expiresDate});
+        }
+        //百度地图定位
+        function baiduapi_geolocation(){
+			var geolocation = new BMap.Geolocation();
+			geolocation.getCurrentPosition(function(r){
+				if(this.getStatus() == BMAP_STATUS_SUCCESS)
+				{
+					set_geolocation_cookie(r.point.lat,r.point.lng,30);
+				}
+				else 
+				{
+					set_geolocation_cookie("{:C('qscms_map_center_y')}","{:C('qscms_map_center_x')}",5);
+				}        
+			},{enableHighAccuracy: true})
+        }
+        $(document).ready(function(){
+        	var cookie_lat = $.fn.cookie('cookie_lat');
+		    var cookie_lng = $.fn.cookie('cookie_lng');
+		    if(!cookie_lat && !cookie_lng){
+		    	getLocation();
+		    }
+	        $('.ic-cell').click(function(){
+	        	var alias = $(this).data('alias');
+	        	var url = $(this).data('url');
+	        	if(alias=='nearbyjobs'){
+	        		var cookie_lat = $.fn.cookie('cookie_lat');
+		        	var cookie_lng = $.fn.cookie('cookie_lng');
+		        	if(cookie_lat && cookie_lng){
+		        		$.getJSON("{:U('Index/ajax_jump_nearby')}",{url:url,lat:cookie_lat,lng:cookie_lng},function(result){
+			        		if(result.status==1){
+			        			location.href=result.data;
+			        		}
+			        	});
+		        	}else{
+		        		alert("没有获取到当前位置，请稍等或刷新页面再试");
+		        	}
+	        	}
+	        });
+	        if(eval("{$recommend_jobs_nearby}")==0){
+	            var type = "{$recommend_jobs_type}";
+	            $.getJSON("{:U('Mobile/Index/recommend_jobs_index')}",{type:type},function(result){
+	                if(result.status==1){
+	                    $('#recommend_jobs_box').html(result.data.html);
+	                  // 职位亮点随机背景色
+	                  function randomsort(a, b) {
+	                    return Math.random()>.5 ? -1 : 1;
+	                  }
+	                  var bgArrBefore = [1,2,3,4];
+	                  $('.job-list-item').each(function () {
+	                    var $jobTagDom = $(this).find('.job-tag');
+	                    if ($jobTagDom.length) {
+	                      var bgArray = bgArrBefore.sort(randomsort);
+	                      $($jobTagDom).each(function (index, value) {
+	                        $(this).addClass('tg' + bgArray[index]);
+	                      })
+	                    }
+	                  })
+	                }
+	            });
+	        }else{
+	            var cookie_lat = $.fn.cookie('cookie_lat');
+		        var cookie_lng = $.fn.cookie('cookie_lng');
+	            var type = "{$recommend_jobs_type}";
+		        if(cookie_lat && cookie_lng){
+		            show_recommend_box(type,cookie_lng,cookie_lat);
+		        }
+	        }
+        });
+    </script>
+</html>

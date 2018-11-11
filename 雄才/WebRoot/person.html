@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>登录</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="red">
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="js/mui.min.js"></script>
+
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+	</head>
+	<style>
+	.model-1 .checkbox input:checked + label {background: #009ef0;}
+	.model-1 .checkbox input:checked + label:after {background: #009ef0;}
+	input[type=password],input[type=text],textarea{
+		padding: 0px 0px;
+	}
+	
+	.person-botton{
+	    border-top-left-radius: 30px;
+    	border-top-right-radius: 30px;
+    	border-bottom-right-radius: 30px;
+    	border-bottom-left-radius: 30px;
+    }
+    .person-quit{
+    	border: 1px solid red;
+    }
+	</style>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#back").click(function () {
+				window.location = "login.html";
+        	});
+			$("#quit").click(function () {
+				window.location = "login.html";
+        	});
+
+			$("#sign").click(function () {
+				//window.location = "login.html";
+				mui.toast('敬请期待',{ duration:'long', type:'div' })
+        	});
+			$("#basedata").click(function () {
+				window.location = "person_data.html";
+        	});
+			$("#progress").click(function () {
+				window.location = "person_progress.html";
+        	});
+			$("#check").click(function () {
+				window.location = "person_check.html";
+        	});
+			$("#test").click(function () {
+				window.location = "person_test.html";
+        	});
+		});
+		
+	</script>
+	<body style="background-color: #FFFFFF;">
+		<header class="mui-bar mui-bar-nav">
+			<a id="back" class="mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">个人中心</h1>
+		</header>
+		
+		<div class="mui-content" style="background-color: white;">
+		
+			<div class="mui-card" style="margin:0px">
+				<div class="mui-card-header mui-card-media" style="margin: 0 auto;height:56px;width:56px;background-image:url(images/no_photo_male.png)"></div>
+				<div class="mui-card-content">
+					<div class="mui-card-content-inner">
+						<p style="text-align: center;">秦朗</p>
+						<p style="color: #333;text-align: center;">信息完整度(95%)</p>
+					</div>
+				</div>
+			</div>
+		
+		
+		    <div class="mui-content-padded" style="">
+		        <button id="sign" type="button" class="mui-btn mui-icon mui-icon-compose mui-btn-block person-botton">
+		            网上报名
+		        </button>
+		    </div>
+		    <div class="mui-content-padded" style="">
+		        <button id="basedata" type="button" class="mui-btn mui-icon mui-icon-contact mui-btn-block person-botton">
+		            考生基本信息
+		        </button>
+		    </div>
+		    <div class="mui-content-padded" style="">
+		        <button id="progress" type="button" class="mui-btn mui-icon mui-icon-search mui-btn-block person-botton">
+		            报考进度查询
+		        </button>
+		    </div>
+		    <div class="mui-content-padded" style="">
+		        <button id="check" type="button" class="mui-btn mui-icon mui-icon-search mui-btn-block person-botton">
+		            资格审查和缴费
+		        </button>
+		    </div>
+		    <div class="mui-content-padded" style="">
+		        <button id="test" type="button" class="mui-btn mui-icon mui-icon-search mui-btn-block person-botton">
+		            笔试、面试、体检
+		        </button>
+		    </div>
+		     <div class="mui-content-padded" style="">
+
+		        <button id="quit" type="button" class="mui-btn mui-icon mui-icon-contact mui-btn-block person-botton person-quit">
+		            退出登录
+		        </button>
+		    </div>
+		</div>
+
+	</body>
+</html>

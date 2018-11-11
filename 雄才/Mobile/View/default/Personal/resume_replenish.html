@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+	</head>
+	<body>
+		<include file="public:header"/>
+    <div class="replenishtop">
+	  <div class="rename"><strong id="J_title">{$resume.title}</strong><a href="#J_describeTemp" class="J_titleEdit span"><img src="../public/images/173.png"></a></div>
+      <div class="integrity">完整度：<span>{$resume.complete_percent}%</span></div>
+	</div>
+	<div class="replenishtopbg"></div>
+	
+	<div class="split-block"></div>
+	
+<div class="list_height plist-txt" onClick="javascript:location.href='{:U('personal/resume_edit_basis',array('pid'=>$resume['id'],'news'=>$_GET['news']))}'">
+  <div class="pic"></div>
+  <div class="tit font14">基本资料<span class="asterisk">*</span></div>
+  <div class="describe font12 "><span class="font_green">完整</span></div>
+  <div class="arrow"></div>
+  <div class="clear"></div>
+</div>
+	<div class="list_height plist-txt" onClick="javascript:location.href='{:U('personal/resume_edit_intent',array('pid'=>$resume['id'],'news'=>$_GET['news']))}'">
+  <div class="pic"></div>
+  <div class="tit font14">求职意向<span class="asterisk">*</span></div>
+  <div class="describe font12 "><span class="font_green">完整</span></div>
+  <div class="arrow"></div>
+  <div class="clear"></div>
+</div>
+<div class="list_height plist-txt" onClick="javascript:location.href='{:U('personal/resume_edit_description',array('pid'=>$resume['id'],'news'=>$_GET['news']))}'">
+  <div class="pic"></div>
+  <div class="tit font14">自我描述</div>
+  <div class="describe font12"><if condition="$resume['specialty']"><span class="font_green">完整</span><else/>未填写</if></div>
+  <div class="arrow"></div>
+  <div class="clear"></div>
+</div>
+<div class="list_height plist-txt" onClick="javascript:location.href='{:U('personal/resume_edit_edu',array('pid'=>$resume['id'],'news'=>$_GET['news']))}'">
+  <div class="pic"></div>
+  <div class="tit font14">教育经历</div>
+  <div class="describe font12"><if condition="$resume['education']"><span class="font_green">完整</span><else/>未填写</if></div>
+  <div class="arrow"></div>
+  <div class="clear"></div>
+</div>
+<div class="list_height plist-txt" onClick="javascript:location.href='{:U('personal/resume_edit_work',array('pid'=>$resume['id'],'news'=>$_GET['news']))}'">
+  <div class="pic"></div>
+  <div class="tit font14">工作经历</div>
+  <div class="describe font12"><if condition="$resume['work']"><span class="font_green">完整</span><else/>未填写</if></div>
+  <div class="arrow"></div>
+  <div class="clear"></div>
+</div>
+<div class="list_height plist-txt" onClick="javascript:location.href='{:U('personal/resume_edit_train',array('pid'=>$resume['id'],'news'=>$_GET['news']))}'">
+  <div class="pic"></div>
+  <div class="tit font14">培训经历</div>
+  <div class="describe font12"><if condition="$resume['train']"><span class="font_green">完整</span><else/>未填写</if></div>
+  <div class="arrow"></div>
+  <div class="clear"></div>
+</div>
+<div class="list_height plist-txt" onClick="javascript:location.href='{:U('personal/resume_edit_certificate',array('pid'=>$resume['id'],'news'=>$_GET['news']))}'">
+  <div class="pic"></div>
+  <div class="tit font14">获得证书</div>
+  <div class="describe font12"><if condition="$resume['certificate']"><span class="font_green">完整</span><else/>未填写</if></div>
+  <div class="arrow"></div>
+  <div class="clear"></div>
+</div>
+<div class="list_height plist-txt" onClick="javascript:location.href='{:U('personal/resume_edit_lang',array('pid'=>$resume['id'],'news'=>$_GET['news']))}'">
+  <div class="pic"></div>
+  <div class="tit font14">语言能力</div>
+  <div class="describe font12"><if condition="$resume['lang']"><span class="font_green">完整</span><else/>未填写</if></div>
+  <div class="arrow"></div>
+  <div class="clear"></div>
+</div>
+<div class="list_height plist-txt" onClick="javascript:location.href='{:U('personal/resume_edit_speciality',array('pid'=>$resume['id'],'news'=>$_GET['news']))}'">
+  <div class="pic"></div>
+  <div class="tit font14">特长标签</div>
+  <div class="describe font12"><if condition="$resume['tag']"><span class="font_green">完整</span><else/>未填写</if></div>
+  <div class="arrow"></div>
+  <div class="clear"></div>
+</div>
+<div class="list_height plist-txt last" onClick="javascript:location.href='{:U('personal/resume_edit_img',array('pid'=>$resume['id'],'news'=>$_GET['news']))}'">
+  <div class="pic"></div>
+  <div class="tit font14">照片/作品</div>
+  <div class="describe font12"><if condition="$resume['img']"><span class="font_green">完整</span><else/>未填写</if></div>
+  <div class="arrow"></div>
+  <div class="clear"></div>
+</div>
+ 
+<div class="split-block"></div>
+	
+ <div class="btn-spacing">
+            <div id="contentsBtn" class="qs-btn qs-btn-blue font18" title="预览简历" onClick="javascript:location.href='{:url_rewrite('QS_resumeshow',array('id'=>$resume['id']))}'">预览简历</div>
+        </div>
+		
+		<div class="split-block"></div>
+    <include file="public:footer_min" />
+    <script src="../public/js/popWin.js"></script>
+    <script src="../public/js/qsCategory.js"></script>
+    <script id="J_describeTemp" type="text/html">
+      <div class="headernavfixed">
+          <div class="headernav font18"><div class="title">简历标题<div class="return js-back"></div></div></div>
+      </div>
+      <div class="split-block"></div>
+      <div class="list_height plist-txt notarrow">
+          <div class="pic"></div>
+          <div class="tit font14">简历标题</div>
+          <div class="describe font12">
+              <input type="text" id="tpl_title" value="{$resume.title}" class="font13">
+          </div>
+          <div class="arrow"></div>
+          <div class="clear"></div>
+      </div>
+      <div class="split-block"></div>
+      <div class="btn-spacing">
+          <div id="titleBtn" class="qs-btn qs-btn-blue font18" title="确定">确定</div>
+      </div>
+    </script>
+    <script type="text/javascript">
+      var describeTemp = $('#J_describeTemp').html();
+      $('.J_titleEdit').on('click',function(){
+        var $this = $(this),
+            baseTxt = $this.text();
+        popWin.init({
+            from:"right",
+            html:describeTemp,
+            handle:function(a){
+              $('#tpl_title').val($('#J_title').html());
+              $('#titleBtn').on('click',function(){
+                  var title = $('#tpl_title').val();
+                  if (title == "") {
+                      qsToast({type:2,context: '请填写简历标题'});
+                      return false;
+                  }
+                  if (title != "" && title.length > 12) {
+                    qsToast({type:2,context: '简历标题应在1~12个字内'});
+                    return false;
+                  }
+                  var pid = "{$resume.id}";
+                  $.post("{:U('Personal/resume_edit_title')}",{pid:pid,title:title},function(result){
+                      if(result.status == 1){
+                        $('#J_title').html(title);
+                        qsToast({type:1,context: result.msg});
+                      }else{
+                        qsToast({type:2,context: result.msg});
+                      }
+                      a.close();
+                  },'json');
+              });
+            }
+        })
+      });
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/company.css">
+</head>
+<body>
+<include file="public:header"/>
+     <div class="qs-top-nav x2 list_height">
+          <div class="n-cell" onclick="javascript:location.href='{:U('jobfair_list')}'">近期招聘会<div class="b-line"></div></div>
+          <div class="n-cell active">定展记录<div class="b-line"></div></div>
+          <div class="clear"></div>
+     </div>
+     <div class="split-block"></div>
+
+<volist name="jobfair['list']" id="vo">
+<div class="jobfair-enact-list-item" onclick="javascript:location.href='{:U('jobfair/show',array('id'=>$vo['jobfair_id']))}'">
+    <div class="title font16 substring">{$vo['title']}</div>
+    <div class="pic">展位号：<span>{$vo.position}</span></div>
+    <div class="pic">预定时间：<span>{:date('Y-m-d',$vo['eaddtime'])}</span></div>
+    <if condition="$vo['audit'] eq 1">
+    <div class="status ok">预定成功</div>
+    <else/>
+    <div class="status ing">等待审核</div>
+    </if>
+</div>
+<div class="list-split-block"></div>
+</volist>
+<div class="qspage">{$jobfair['page']}</div>
+
+<include file="public:footer_min" />
+</body>
+</html>

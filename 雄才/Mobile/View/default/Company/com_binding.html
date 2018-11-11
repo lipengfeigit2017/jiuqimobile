@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <include file="public:meta"/>
+        <link rel="stylesheet" href="../public/css/company.css">
+    </head>
+    <body>
+        <include file="public:header"/>
+        <div class="split-block-title">绑定第三方账号后，您可用于快速登录{:C('qscms_site_name')}，便于账号密码记忆。</div>
+        <volist name="oauth_list" id="oauth">
+            <div mod="{$oauth.alias}" class="list_height plist-txt" <empty name="user_bind[$oauth['alias']]">bind-url="{:U('callback/index',array('type'=>'bind','mod'=>$oauth['alias']))}"<else/>relieve-url="{:U('callback/index',array('type'=>'unbind','mod'=>$oauth['alias']))}"</empty> onclick="oauth(this);" name="{$oauth.name}">
+                <div class="pic"></div>
+                <div class="tit font14">{$oauth.name}</div>
+                <div class="describe font13">
+                    <empty name="user_bind[$oauth['alias']]">
+                        未绑定
+                    <else/>
+                        解绑
+                    </empty>
+                </div>
+                <div class="arrow"></div>
+                <div class="clear"></div>
+            </div>
+        </volist>
+        <include file="public:footer_min" />
+        <script type="text/javascript">
+            var qrcode_bind_time,
+                weixin = function(){
+                    clearInterval(qrcode_bind_time);
+                    var popout = new QSpopout('微信绑定');
+                    popout.setBtn(1);
+                    $.getJSON("{:U('Members/get_weixin')}",{type:'bind'},function(result){
+                        if(result.status == 1){
+                            popout.setContent(result.msg);
+                            popout.show();
+                        }else{
+                            popout.setContent(result.msg);
+                            popout.show();
+                        }
+                    });
+                },
+                oauth = function(a){
+                    if($(a).attr('mod') == 'weixin'){
+                        weixin();
+                        return !1;
+                    }
+                    if(!$(a).attr('bind-url')){
+                        var popout = new QSpopout('账号解绑');
+                        popout.setContent('当前账号已绑定<'+$(a).attr('name')+'><br/>确定解绑吗？');
+                        popout.getPrimaryBtn().on('click', function() {
+                            window.location=$(a).attr('relieve-url');
+                        });
+                        popout.show();
+                        return !1;
+                    }
+                    window.location=$(a).attr('bind-url');
+                };
+        </script>
+    </body>
+</html>

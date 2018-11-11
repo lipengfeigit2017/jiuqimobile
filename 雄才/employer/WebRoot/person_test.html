@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>登录</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="red">
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="js/mui.min.js"></script>
+
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+	</head>
+	<style>
+	.model-1 .checkbox input:checked + label {background: #009ef0;}
+	.model-1 .checkbox input:checked + label:after {background: #009ef0;}
+	input[type=password],input[type=text],textarea{
+		padding: 0px 0px;
+	}
+	.pl{
+	  margin-top: 50px;
+	  margin-left: 10px;
+	  margin-right: 10px;
+	  margin-bottom: 10px;
+	}    
+				.mui-control-content {
+				background-color: white;
+				min-height: 215px;
+			}
+			.mui-control-content .mui-loading {
+				margin-top: 50px;
+			}
+			
+	.container { width:100%; margin:0 auto; }
+	.left3 { width:40%; float:left; font-size: 16px;}
+	.left4 { width:60%; float:left;text-align: right; }
+	.person-h5{
+		color: black;
+	}
+	</style>
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			$("#back").click(function () {
+				window.location = "person.html";
+        	});
+			var content = window.screen.height - 130;
+			$(".mui-content").css("height",content+"px");
+			var temp = window.screen.height - 200;
+			$(".mui-slider-group").css("height",temp+"px");
+			mui.init({
+				swipeBack: false
+			});
+			(function($) {
+				$('.mui-scroll-wrapper').scroll({
+					indicators: true //是否显示滚动条
+				});
+				var html2 = '<ul class="mui-table-view"><li class="mui-table-view-cell">第二个选项卡子项-1</li><li class="mui-table-view-cell">第二个选项卡子项-2</li><li class="mui-table-view-cell">第二个选项卡子项-3</li><li class="mui-table-view-cell">第二个选项卡子项-4</li><li class="mui-table-view-cell">第二个选项卡子项-5</li></ul>';
+				var html3 = '<ul class="mui-table-view"><li class="mui-table-view-cell">第三个选项卡子项-1</li><li class="mui-table-view-cell">第三个选项卡子项-2</li><li class="mui-table-view-cell">第三个选项卡子项-3</li><li class="mui-table-view-cell">第三个选项卡子项-4</li><li class="mui-table-view-cell">第三个选项卡子项-5</li></ul>';
+				var item2 = document.getElementById('item2mobile');
+				var item3 = document.getElementById('item3mobile');
+				document.getElementById('slider').addEventListener('slide', function(e) {
+					if (e.detail.slideNumber === 1) {
+						if (item2.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								item2.querySelector('.mui-scroll').innerHTML = html2;
+							}, 500);
+						}
+					} else if (e.detail.slideNumber === 2) {
+						if (item3.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								item3.querySelector('.mui-scroll').innerHTML = html3;
+							}, 500);
+						}
+					}
+				});
+			})(mui);
+		});
+		
+	</script>
+	<body style="background-color: #FFFFFF;">
+		<header class="mui-bar mui-bar-nav">
+			<a id="back" class="mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">笔试、面试、体检</h1>
+		</header>
+		
+		<div class="mui-content">
+			<div id="slider" class="mui-slider">
+				<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<a class="mui-control-item" href="#item1mobile">
+				笔试
+			</a>
+					<a class="mui-control-item" href="#item2mobile">
+				面试
+			</a>
+				<a class="mui-control-item" href="#item3mobile">
+								体检
+							</a>
+				</div>
+				<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-4"></div>
+				<div class="mui-slider-group">
+					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+						<div id="scroll1" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+							
+								<div class="mui-card">
+									<div class="mui-card-header"><h5 class="person-h5">职位名称</h5><h5>土地储备中心综合管理（F0604）</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">单位名称</h5><h5>单位1</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">笔试状态</h5><h5>已参加</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">行测成绩</h5><h5>100</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">申论成绩</h5><h5>100</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">笔试成绩</h5><h5>100</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">通知</h5><h5>无通知</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">操作</h5><h5>操作</h5></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="item2mobile" class="mui-slider-item mui-control-content">
+						<div id="scroll2" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								
+								<div class="mui-card">
+									<div class="mui-card-header"><h5 class="person-h5">职位名称</h5><h5>宣传中心互联网信息行业监管（F0510）</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">单位名称</h5><h5>单位10</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">面试状态</h5><h5>已面试</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">通知</h5><h5>通知</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">成绩</h5><h5>100</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">操作</h5><h5>操作</h5></div>
+								
+								</div>
+								
+							</div>
+						</div>
+					</div>
+					
+					<div id="item3mobile" class="mui-slider-item mui-control-content">
+						<div id="scroll3" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div class="mui-card">
+									<div class="mui-card-header"><h5 class="person-h5">职位名称</h5><h5>宣传中心网络新闻宣传（F0508）</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">单位名称</h5><h5>测试单位</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">体检状态</h5><h5>已体检</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">通知</h5><h5>通知</h5></div>
+									<div class="mui-card-header"><h5 class="person-h5">操作</h5><h5>操作</h5></div>
+									
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+		
+	</body>
+</html>

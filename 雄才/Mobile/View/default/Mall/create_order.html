@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<qscms:goods_show 列表名="info" 商品id="$_GET['id']"/>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/mall.css">
+</head>
+<body>
+<include file="public:header"/>
+
+<div class="split-block"></div>
+
+<div class="goods-info">
+    <div class="pic">
+        <img src="{$info['goods_img']}" border="0" />
+    </div>
+    <div class="info">
+        <div class="name font16">{$info['goods_title']}</div>
+        <div class="row font13">
+            <div class="brand">品牌：{$info['goods_brand']}</div>
+            <div class="reserve">库存: {$info['goods_stock']}</div>
+            <div class="clear"></div>
+        </div>
+        <div class="row font13">编号：{$info['goods_number']}</div>
+        <div class="point">{$info['goods_points']} {:C('qscms_points_byname')}</div>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="order-item">
+    <div class="title num list_height">选择兑换数量
+        <div class="tip font13">每个账号限兑换<if condition="$info['goods_customer'] neq 0">{$info['goods_customer']}<else />无限</if>件</div>
+    </div>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">兑换数量</div>
+        <div class="describe font13">
+            <input type="number" placeholder="请输入兑换数量" value="1" id="ex_number" <if condition="$info['goods_customer'] neq 0">max="{$info['goods_customer']}"</if> min="0">
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt notarrow last">
+        <div class="pic"></div>
+        <div class="tit font14">所需积分</div>
+        <div class="describe link_yellow"><a id="show_points">{$info['goods_points']}</a></div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="order-item">
+    <div class="title contact list_height">联系方式</div>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">联系人</div>
+        <div class="describe font13">
+            <input type="text" name="username" placeholder="请输入联系人姓名" class="font13" value="{$contact_info['contact']}">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">联系手机</div>
+        <div class="describe font13">
+            <input type="text" name="mobile" placeholder="请输入联系手机" class="font13" value="{$contact_info['mobile']}">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt notarrow last">
+        <div class="pic"></div>
+        <div class="tit font14">联系地址</div>
+        <div class="describe font13">
+            <input type="text" id="address" placeholder="请输入联系地址" class="font13" value="{$contact_info['address']}">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="btn-spacing">
+    <div id="doExchange" class="qs-btn qs-btn-blue font18">申请兑换</div>
+</div>
+
+<div class="split-block"></div>
+
+<include file="public:footer_min" />
+<script type="text/javascript">
+    var customer = "{$info['goods_customer']}";
+    $('#ex_number').on('change',function(){
+        var current_val = parseInt($(this).val())?parseInt($(this).val()):1;
+        if(current_val > customer){
+            current_val = customer;
+        }
+        $(this).val(current_val);
+        var points = parseInt("{$info['goods_points']}")*parseInt($(this).val());
+        $('#show_points').html(points?points:0);
+    });
+    // 验证
+    var regularMobile = /^13[0-9]{9}$|14[0-9]{9}|15[0-9]{9}$|18[0-9]{9}|17[0-9]{9}$/; // 验证手机号正则
+    $('#doExchange').on('click',function() {
+        var usernameValue = $.trim($('input[name="username"]').val());
+        var mobileValue = $.trim($('input[name="mobile"]').val());
+        var addressValue = $.trim($('#address').val());
+        if (usernameValue == "") {
+            qsToast({type:2,context: '请填写联系人'});
+            return false;
+        }
+        if (mobileValue == "") {
+            qsToast({type:2,context: '请填写联系手机'});
+            return false;
+        }
+        if (mobileValue != "" && !regularMobile.test(mobileValue)) {
+            qsToast({type:2,context: '手机号码格式不正确'});
+            return false;
+        }
+        if (addressValue == "") {
+            qsToast({type:2,context: '请填写邮寄地址'});
+            return false;
+        }
+        var goods_id = "{$info['id']}";
+        var ex_number = $('#ex_number').val();
+        var url = "{:U('Mall/create_order_save','','','',true)}";
+        $.post(url,{goods_id:goods_id,contact:usernameValue,mobile:mobileValue,address:addressValue,ex_number:ex_number},function(result){
+            if(result.status==1){
+                qsToast({type:1,context: result.msg});
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
+            }else{
+                qsToast({type:2,context: result.msg});
+                return false;
+            }
+        },'json');
+    });
+</script>
+</body>
+</html>

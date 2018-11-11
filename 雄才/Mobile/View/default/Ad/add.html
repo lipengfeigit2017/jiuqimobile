@@ -1,0 +1,142 @@
+<include file="Admin@default/public/header" />
+    <div class="toptip">
+        <div class="toptit">提示：</div>
+        <p>上传大文件建议通过FTP上传在填写远程地址的时候，建议使用“/”或“http:// ”  开头的绝对路径。</p>
+    </div>
+
+<form action="{:U('add')}" method="post" enctype="multipart/form-data">
+    <div class="toptit">新增广告</div>
+    <div class="form_main width150">
+        <div class="fl">广告标题(必填):</div>
+        <div class="fr">
+            <input name="title" type="text" class="input_text_default middle" maxlength="50" value=""/>
+            <label class="no-fl-note">(区分不同广告条目，并不在广告中显示)</label>
+        </div>
+        <div class="fl">显示状态:</div>
+        <div class="fr">
+            <div data-code="0,1" class="imgchecked_small select"><input name="is_display" type="hidden" value="1" /></div>
+            <div class="clear"></div>
+        </div>
+        <div class="fl">选择分类:</div>
+        <div class="fr txt">
+            <select name="category" id="category">
+                <volist name="category_list" id="category">
+                    <option value="{$key}" <if condition="$Think.get.alias==$key">selected="selected"</if>>{$category}</option>
+                </volist>
+            </select>
+            <input name="alias" id="alias" type="hidden" value="QS_mobile_indexfocus" />
+        </div>
+        <div class="fl">显示顺序:</div>
+        <div class="fr">
+            <input name="show_order" type="text" class="input_text_default small" maxlength="3" value="0" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/\D/g,''))"/>
+            <label class="no-fl-note">(数字越大越靠前)</label>
+        </div>
+        <div class="fl">开始时间:</div>
+        <div class="fr">
+            <input name="starttime" type="text" class="input_text_default small date_input" maxlength="10" value="{:date('Y-m-d',time())}"/>
+            <label class="no-fl-note">(设置广告起始时间，格式yyyy-mm-dd，留空为不限制起始时间)</label>
+        </div>
+        <div class="fl">结束时间:</div>
+        <div class="fr">
+            <input name="deadline" type="text" class="input_text_default small date_input" maxlength="10" value=""/>
+            <label class="no-fl-note">(设置广告结束时间，格式yyyy-mm-dd，留空为不限制结束时间)</label>
+        </div>
+        <div class="fl">备注:</div>
+        <div class="fr">
+            <textarea name="note" class="input_text_default middle" style="height: 100px; line-height: 20px;"></textarea>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="toptit">图片广告</div>
+    <div class="form_main width150">
+        <div class="fl">本地上传:</div>
+        <div class="fr J-file-input-box">
+            <div class="file-input-src hid">
+                <div class="img"></div>
+                <div class="del file-input-del" id="" name="attach_file">点击更换</div>
+            </div>
+            <div class="file-input-block" id="J_upload_ad_img" name="attach_file"><span class="o-txt">上传</span>图片</div>
+            <!--<input name="attach_file" type="file" style="width:200px; height:22px; border:1px #DFDFDF solid; font-size:12px;" id="img_file" value=""/>-->
+            <label class="no-fl-note">(允许格式为gif/jpg/bmp/png，文件大小1000KB)</label>
+            <input type="hidden" class="file-input-save-name" name="attach_file" value="">
+        </div>
+        <div class="fl">或图片地址:</div>
+        <div class="fr">
+            <input name="attach_path" type="text" class="input_text_default small" maxlength="250" value=""/>
+            <label class="no-fl-note">(如/images/logo.gif 或 http://www.baidu.com/img/baidu_logo.gif)</label>
+        </div>
+        <div class="fl">图片链接:</div>
+        <div class="fr">
+            <input name="url" type="text" class="input_text_default middle" maxlength="250" value=""/>
+            <label class="no-fl-note">(如:http://www.74cms.com)</label>
+        </div>
+        <div class="fl">图片说明文字:</div>
+        <div class="fr">
+            <input name="explain" type="text" class="input_text_default middle" maxlength="250" value=""/>
+            <label class="no-fl-note">(如:http://www.74cms.com)</label>
+        </div>
+        <div class="fl">会员UID:</div>
+        <div class="fr">
+            <input name="uid" type="text" class="input_text_default small" maxlength="10" value=""/>
+            <label class="no-fl-note">(设置会员UID后，当鼠标移动到图片上将会显示相关的职位和企业信息)</label>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="form_main width150">
+        <div class="fl"></div>
+        <div class="fr">
+            <input type="hidden" name="id" value="{$info.id}">
+            <input type="submit" class="admin_submit" value="保存"/>
+            <input type="button" class="admin_submit" value="返回" onClick="window.location='{:U('index')}'"/>
+        </div>
+        <div class="clear"></div>
+    </div>
+</form>
+
+</div>
+<include file="Admin@default/public/footer" />
+</body>
+<link href="__ADMINPUBLIC__/css/date_input.css" rel="stylesheet" type="text/css" />
+<script src="__ADMINPUBLIC__/js/jquery.date_input.js" type='text/javascript' language="javascript"></script>
+<script type="text/javascript">
+  var uploadUrl = "{:U('Admin/Upload/form_upload')}";
+</script>
+<script src="__ADMINPUBLIC__/js/ajaxfileupload.js"></script>
+<script src="__ADMINPUBLIC__/js/fileupload.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //日期
+        $(function() {
+            $(".date_input").date_input();
+        });
+        $("#category").change(function(){
+            $('#alias').val($(this).val());
+        });
+      // 上传网站首页Logo
+      $.upload('#J_upload_ad_img',{name:'attach_file',dir:'ads'},function(result){
+        if(result.error == 1){
+          var htmlResult = '<img src="'+ result.url.src +'" align=absmiddle>';
+          $('#J_upload_ad_img').closest('.J-file-input-box').find('.file-input-src .img').html(htmlResult);
+          $('#J_upload_ad_img').closest('.J-file-input-box').find('.file-input-save-name').val(result.url.savename);
+          if ($('#J_upload_ad_img').hasClass('file-input-block')) {
+            $('#J_upload_ad_img').closest('.J-file-input-box').find('.file-input-src').removeClass('hid');
+            var $delObj = $('#J_upload_ad_img').closest('.J-file-input-box').find('.file-input-del');
+            $('#J_upload_ad_img').remove();
+            $delObj.attr('id', "J_upload_ad_img_change_btn");
+            $.upload('#J_upload_ad_img_change_btn',{name:'attach_file',dir:'ads'},function(result){
+              if(result.error == 1){
+                var htmlResult = '<img src="'+ result.url.src +'" align=absmiddle>';
+                $('#J_upload_ad_img_change_btn').closest('.J-file-input-box').find('.file-input-src .img').html(htmlResult);
+                $('#J_upload_ad_img_change_btn').closest('.J-file-input-box').find('.file-input-save-name').val(result.url.savename);
+              } else {
+                disapperTooltip("remind", "上传失败："+result.message);
+              }
+            })
+          }
+        } else {
+          disapperTooltip("remind", "上传失败："+result.message);
+        }
+      });
+    });
+</script>
+</html>

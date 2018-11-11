@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+	</head>
+	<body>
+		<include file="public:header"/>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">证书名称<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	            <input type="text" id="name" id="name" placeholder="请输入证书名称" value="{$info['name']}">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt js-actionParent">
+	        <div class="pic"></div>
+	        <div class="tit font14">获得时间<span class="font_red_light">*</span></div>
+	        <div class="describe font13 qs-temp-date js-showActionSheet" data-type="get">
+		        <span class="f-date-txt-get">
+	        	<if condition="$Think.get.id eq ''">
+	        		请选择
+	        	<else/>
+					{$info.year}年-{$info.month}月
+	        	</if>
+		        </span>
+	        	<input type="hidden" class="f-year-code-get" id="year"  value="{$info['year']}">
+				<input type="hidden" class="f-month-code-get" id="month"  value="{$info['month']}">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+		    <!--BEGIN actionSheet-->
+		    <div>
+			    <div class="qs-mask" style="display:none"></div>
+			    <div class="qs-actionsheet js-actionsheet">
+				    <div class="qs-actionsheet-menu">
+					    <div class="con-filter">
+						    <div class="f-selected-group">
+							    <div class="s-bar">
+								    <div class="s-bar-title qs-left">获得时间</div>
+								    <div class="clear"></div>
+							    </div>
+							    <div class="s-list"></div>
+						    </div>
+						    <div class="f-box f-box-date-get"></div>
+					    </div>
+				    </div>
+			    </div>
+		    </div>
+	    </div>
+	    <div class="split-block"></div>
+        <div class="btn-spacing">
+        	<input type="hidden" id="id" value="{$info['id']}">
+            <div id="J_saveresume" class="qs-btn qs-btn-blue font18" title="确定">确定</div>
+        </div>
+        <div class="split-block"></div>
+	    <include file="public:footer_min" />
+	    <script type="text/javascript">
+		    var tempDateArr = $('.qs-temp-date');
+		    $.each(tempDateArr, function() {
+			    var dtype = $(this).data('type');
+			    var experienceDate = new Date();
+			    var eyear = experienceDate.getFullYear();
+			    var eyearMin = eyear - 59;
+			    var dateHtml = '<div class="f-box-inner">';
+			    for (var i = eyear; i >= eyearMin; i--) {
+				    dateHtml += '<li><a class="font12 f-item f-item-year" href="javascript:;" data-code="' + i + '">' + i + '年</a></li>';
+			    }
+			    dateHtml += '</div>';
+			    dateHtml += '<div class="f-box-inner">';
+			    for (var i = 1; i <= 12; i++) {
+				    dateHtml += '<li><a class="font12 f-item f-item-month js-cancelActionSheet" href="javascript:;" data-code="' + i + '">' + i + '月</a></li>';
+			    }
+			    dateHtml += '</div>';
+			    $('.f-box-date-' + dtype).html(dateHtml);
+			    $('.f-box-date-' + dtype + ' .f-item-year').eq(0).addClass('select');
+			    $('.f-box-date-' + dtype + ' .f-item-month').eq(0).addClass('select');
+			
+			    $('.f-box-date-' + dtype + ' .f-item-year').on('click', function() {
+				    $('.f-box-date-' + dtype + ' .f-item-year').removeClass('select');
+				    $(this).addClass('select');
+			    })
+			    $('.f-box-date-' + dtype + ' .f-item-month').on('click', function() {
+				    $('.f-box-date-' + dtype + ' .f-item-month').removeClass('select');
+				    $(this).addClass('select');
+				    // 赋值
+				    $('.f-year-code-' + dtype).val($('.f-box-date-' + dtype + ' .f-item-year.select').data('code'));
+				    $('.f-month-code-' + dtype).val($('.f-box-date-' + dtype + ' .f-item-month.select').data('code'));
+				    $('.f-date-txt-' + dtype).text($('.f-box-date-' + dtype + ' .f-item-year.select').text() + '-' + $('.f-box-date-' + dtype + ' .f-item-month.select').text());
+			    })
+			    $('.js-todate').on('click', function() {
+				    $('#todate').val('1');
+				    $(this).closest('.js-actionParent').find('.f-year-code-end').val('');
+				    $(this).closest('.js-actionParent').find('.f-month-code-end').val('');
+				    $(this).closest('.js-actionParent').find('.f-date-txt-end').text('至今');
+			    })
+		    })
+		    $(function(){
+			    $(".js-showActionSheet").on("click", function(){
+				    var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+				    var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+				    $iosActionsheet.removeClass('qs-actionsheet-toggle');
+				    $iosActionsheet.addClass('qs-actionsheet-toggle');
+				    $iosMask.fadeIn(200);
+				    $iosMask.on('click', hideActionSheet);
+				    $(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+				    $(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+				    function hideActionSheet() {
+					    $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+					    $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+				    }
+			    });
+		    });
+	    	$('#J_saveresume').die().live('click', function() {
+				var credentValue = $.trim($('#name').val());
+				var yearCredentValue = $.trim($('#year').val());
+				var monthCredentValue = $.trim($('#month').val());
+				var id = $.trim($('#id').val());
+				var pid = "{$resume.id}";
+				var news = "{$Think.get.news}";
+				if (credentValue == "") {
+					qsToast({type:2,context: '请填写证书名称'});
+					return false;
+				}
+				if (yearCredentValue == "") {
+					qsToast({type:2,context: '请选择获得证书年份'});
+					return false;
+				}
+				if (monthCredentValue == "") {
+					qsToast({type:2,context: '请选择获得证书月份'});
+					return false;
+				}
+
+				$('#J_saveresume').val('保存中...').addClass('qs-btn-border-disabled');
+	            // 提交表单
+	            $.ajax({
+	                url: "{:U('Personal/resume_edit_certificate')}",
+	                type: 'POST',
+	                dataType: 'json',
+	                data: {id: id, pid: pid, name: credentValue, year: yearCredentValue, month: monthCredentValue,news:news},
+	                success:function(data){
+	                    if (data.status == 1) {
+	                        window.location.href = data.data.url;
+	                    } else {
+	                        qsToast({type:2,context: data.msg});
+	                        $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    }
+	                },
+	                error:function(result){
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    qsToast({type:2,context: result.msg});
+	                }
+	            });
+	        });
+	    </script>
+	</body>
+</html>

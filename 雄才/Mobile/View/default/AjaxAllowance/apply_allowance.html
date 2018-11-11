@@ -1,0 +1,157 @@
+<div class="t-alw-mask"></div>
+<div class="alw-not-meet-dia">
+    <div class="alw-nm-con font13">
+        <div class="remind-txt txt-red">
+            <if condition="$allowance_info['type_alias'] eq 'apply'">
+            此红包为投递红包，投递简历后系统将通过微信转入你的账户。
+            <elseif condition="$allowance_info['type_alias'] eq 'interview'" />
+            此红包为面试红包，参加面试后系统将把红包发放到你的微信账户。
+            <else />
+            此红包为入职红包，成功入职后系统将把红包发放到你的微信账户。
+            </if>
+        </div>
+        <div class="meet-con font12">
+            <div class="meet-con-line">
+                <div class="mcl-1 txt-9">完整度：</div>
+                <div class="mcl-2 txt-3"><eq name="allowance_info['complete_percent']" value="0">不限<else />简历完整度{$allowance_info['complete_percent']}%及以上</eq></div>
+                <div class="mcl-3">
+                    <eq name="tip['tip']['complete_percent']" value="0">
+                    <div class="meet-icon i0">不满足</div>
+                    <else />
+                    <div class="meet-icon i1">满足</div>
+                    </eq>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-line-25"></div>
+            <div class="meet-con-line">
+                <div class="mcl-1 txt-9">学历要求：</div>
+                <div class="mcl-2 txt-3">{$allowance_info['education_cn']}</div>
+                <div class="mcl-3">
+                    <eq name="tip['tip']['education']" value="0">
+                    <div class="meet-icon i0">不满足</div>
+                    <else />
+                    <div class="meet-icon i1">满足</div>
+                    </eq>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-line-25"></div>
+            <div class="meet-con-line">
+                <div class="mcl-1 txt-9">工作经验：</div>
+                <div class="mcl-2 txt-3">{$allowance_info['experience_cn']}</div>
+                <div class="mcl-3">
+                    <eq name="tip['tip']['experience']" value="0">
+                    <div class="meet-icon i0">不满足</div>
+                    <else />
+                    <div class="meet-icon i1">满足</div>
+                    </eq>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-line-25"></div>
+            <div class="meet-con-line">
+                <div class="mcl-1 txt-9">允许意向：</div>
+                <div class="mcl-2 txt-3">{$allowance_info['intention_jobs_cn']}</div>
+                <div class="mcl-3">
+                    <eq name="tip['tip']['intention_jobs']" value="0">
+                    <div class="meet-icon i0">不满足</div>
+                    <else />
+                    <div class="meet-icon i1">满足</div>
+                    </eq>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-line-25"></div>
+            <div class="meet-con-line">
+                <div class="mcl-1 txt-9">手机号归属地：</div>
+                <div class="mcl-2 txt-3">{$mobile_address}</div>
+                <div class="mcl-3">
+                    <eq name="tip['tip']['mobile_address']" value="0">
+                    <div class="meet-icon i0">不满足</div>
+                    <else />
+                    <div class="meet-icon i1">满足</div>
+                    </eq>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-line-25"></div>
+        </div>
+        <div class="sp-line-25"></div>
+        <div class="remind-txt txt-6">您的简历必须满足此职位的要求才能领取红包,您也可以直接投递不领取红包。</div>
+        <div class="sp-line-35"></div>
+        <div class="alw-btn b2 dia_apply_allowance">领取红包并投递</div>
+        <div class="sp-line-20"></div>
+        <div class="alw-btn b1 dia_apply_jobs">不领红包直接投递</div>
+        <div class="sp-line-20"></div>
+    </div>
+    <div class="sp-line-50"></div>
+    <div class="alw-close"></div>
+</div>
+<input type="hidden" id="dia_tip_status" value="{$tip_status}">
+<input type="hidden" id="dia_jid" value="{$jid}">
+<script type="text/javascript">
+    $('.alw-close').click(function(){
+        $('.alw-not-meet-dia').remove();
+        $('.t-alw-mask').remove();
+        $('body').removeClass('for-alw-dia');
+    });
+    $('.dia_apply_allowance').click(function(){
+        var tip_status = $('#dia_tip_status').val();
+        var jid = $('#dia_jid').val();
+        if(tip_status==1){
+            $.getJSON(qscms.root+'?m=Mobile&c=AjaxAllowance&a=apply_allowance_save',{jid:jid,need_check_bind:1},function(r){
+                if(r.status==1){
+                    $('.alw-not-meet-dia').remove();
+                    if(r.data.type_alias=='apply'){
+                        $('body').addClass('for-alw-dia');
+                        $('.alw-yes-meet-dia .ayc-cash-num .amount').html(r.data.per_amount);
+                    }else{
+                        $('.t-alw-mask').remove();
+                        $.getJSON(qscms.root+'?m=Mobile&c=AjaxAllowance&a=apply_allowance_okremind',{type:r.data.type_alias},function(re){
+                                if(re.status==1){
+                                    var $mPop = new QSpopout();
+                                    $mPop.setContent(re.data);
+                                    $mPop.show();
+                                }
+                        });
+                    }
+                }
+                else if(r.status==2){
+                    qsToast({type:2,context: r.msg});
+                    setTimeout(function() {
+                        location.href=qscms.root+"?m=Mobile&c=Personal&a=per_binding";
+                    },2000);
+                }
+                else if(r.status==3){
+                    qsToast({type:2,context: r.msg});
+                    setTimeout(function() {
+                        location.href=qscms.root+"?m=Mobile&c=Personal&a=per_security_tel";
+                    },2000);
+                }
+                else{
+                    qsToast({type:2,context: r.msg});
+                    return false;
+                }
+            });
+        }else{
+            qsToast({type:2,context: '你的简历不满足条件，无法领取红包，你可以直接投递'});
+            return false;
+        }
+    });
+    // 申请职位点击事件绑定
+    $(".dia_apply_jobs").on('click',function(){
+        $('.alw-not-meet-dia').remove();
+        $('.t-alw-mask').remove();
+      var url = "{:U('ajaxPersonal/resume_apply')}";
+      var jid = $('#dia_jid').val();
+        $.getJSON(url,{jid:jid},function(result){
+          if(result.status==1){
+            qsToast({type:1,context: result.msg});
+          } else {
+            qsToast({type:2,context: result.msg});
+            return false;
+          }
+        });
+    });
+</script>

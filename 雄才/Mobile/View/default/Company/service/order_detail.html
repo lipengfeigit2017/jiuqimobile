@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+    <include file="public:header" />
+	<div class="split-block"></div>
+    <div class="ptitle border">
+      <div class="th1">订单概要</div>
+    </div>
+    <div class="detail_head">
+    	<div class="pic p{$order['order_type']}"></div>
+		<div class="txt">
+			<div class="t1">{$order_type[$order['order_type']]}</div>
+			<div class="t2 font_gray6 font12">{$order['service_name']}</div>
+		</div>
+		<if condition="$order['discount']">
+		<div class="price">
+			<div class="t1 font_yellow">{$order['discount']}</div>
+			<div class="t2 font_gray9">原价：￥{$order['old_price']}</div>
+		</div>
+		<else />
+		<div class="price-free">
+			<div class="t1 font_yellow">价格：￥{$order['old_price']}</div>
+		</div>
+		</if>
+		<div class="clear"></div>
+    </div>
+    <div class="pay-info">
+    	<div class="item">
+    		<div class="t1 font_gray9">订单金额：</div>
+    		<div class="t2">￥{$order['amount']}</div>
+			<div class="clear"></div>
+    	</div>
+    	<if condition="$order['pay_type'] neq 2">
+    	<div class="item">
+    		<div class="t1 font_gray9">{:C('qscms_points_byname')}抵扣：</div>
+    		<div class="t2">-￥{$order['discount_money']}（{$order['pay_points']}{:C('qscms_points_byname')}）</div>
+			<div class="clear"></div>
+    	</div>
+    	<div class="item">
+    		<div class="t1 font_gray9">实付金额：</div>
+    		<div class="t2 font_yellow">￥{$order['pay_amount']}</div>
+			<div class="clear"></div>
+    	</div>
+    	</if>
+    </div>
+	<div class="split-block"></div>
+	<div class="time-info font_gray9">
+		<div class="item">订单编号：{$order['oid']}</div>
+		<div class="item">创建时间：{:date('Y-m-d H:i:s',$order['addtime'])}</div>
+		<div class="item">支付时间：
+			<if condition="$order['is_paid'] eq 1">
+			<span class="font_red">未支付</span>
+			<elseif condition="$order['is_paid'] eq 3" />
+			已取消
+			<else />
+			{:date('Y-m-d H:i:s',$order['payment_time'])}
+			</if>
+		</div>
+		<div class="item">资源到期时间：
+			<if condition="$order['order_type'] eq 1">
+				<eq name="my_setmeal['endtime']" value="0">无期限<else />{:date('Y-m-d',$my_setmeal['endtime'])}</eq>
+			<elseif condition="$order['order_type'] eq 2"/>
+				无期限
+			<else />
+				<if condition="$order['is_paid'] eq 1 || $order['is_paid'] eq 3">
+				--
+				<elseif condition="$order['params']['days']"/>
+				{:date('Y-m-d',$order['payment_time']+$order['params']['days']*3600*24)}
+				<else />
+				--
+				</if>
+			</if>
+		</div>
+	</div>
+	<div class="split-block"></div>
+	<if condition="$order['is_paid'] eq 2 && $order['pay_type'] neq 1 && C('qscms_open_invoice') eq 1 && $order['pay_amount'] egt C('qscms_invoice_cash_min')">
+	    <div class="ptitle border">
+            <div class="th1">索取发票</div>
+            <if condition="$order['pay_type'] neq 2">
+                <div class="rtxt">*{:C('qscms_points_byname')}支付部分不可索取发票</div>
+            </if>
+        </div>
+	    <form id="invoice_form" method="post">
+            <div class="list_height plist-txt notarrow <empty name='invoice'>choose-wrap<else />input-wrap</empty>">
+	            <div class="pic"></div>
+	            <div class="tit font14">发票抬头</div>
+	            <div class="describe">
+	            <notempty name="invoice">
+		            <eq name="invoice['title']" value="1">企业</eq>
+		            <eq name="invoice['title']" value="2">个人</eq>
+	                <else />
+		            <div class="radio-list title-list">
+		  		        <div class="radio <if condition="$invoice['title'] eq 1 || !$invoice">active</if>" data-code="1">
+					        <div class="pic"></div>
+					        <div class="txt">企业</div>
+				        </div>
+                        <div class="radio <if condition="$invoice['title'] eq 2">active</if>" data-code="2">
+                            <div class="pic"></div>
+                            <div class="txt">个人</div>
+                        </div>
+				        <div class="clear"></div>
+		  	        </div>
+	            </notempty>
+	            </div>
+	            <div class="arrow"></div>
+	            <input type="hidden" name="title" id="invoice_title" value="{$invoice['title']|default="1"}">
+	            <div class="clear"></div>
+	        </div>
+            <div class="list_height plist-txt <notempty name='invoice'>input-wrap</notempty>">
+	            <div class="pic"></div>
+	            <div class="tit font14">发票内容</div>
+	            <div class="describe font12">
+                <if condition="$invoice">
+                    <eq name="invoice['cid']" value="1">咨询费</eq>
+                    <eq name="invoice['cid']" value="2">咨询服务费</eq>
+                    <eq name="invoice['cid']" value="3">服务费</eq>
+                <else />
+                    <span class="for-select">请选择</span>
+                    <select name="cid" id="invoice_cid">
+                        <option value="1" selected>咨询费</option>
+                        <option value="2">咨询服务费</option>
+                        <option value="3">服务费</option>
+                    </select>
+                </if>
+	            </div>
+                <empty name='invoice'>
+                    <div class="arrow"></div>
+                </empty>
+	            <div class="clear"></div>
+	        </div>
+            <div class="list_height plist-txt input-wrap J_order_info_group">
+	            <div class="pic"></div>
+	            <div class="tit font14">单位名称</div>
+	            <div class="describe font12"><input type="text" name="organization" id="invoice_organization" value="<if condition='$invoice["organization"]'>{$invoice['organization']}<else />{$contact.companyname}</if>" placeholder="请输入"></div>
+	            <div class="clear"></div>
+	        </div>
+            <div class="list_height plist-txt input-wrap J_order_info_group">
+                <div class="pic"></div>
+                <div class="tit font14">税号</div>
+                <div class="describe font12"><input type="text" name="tax_number" id="invoice_tax_number" value="<if condition='$invoice["tax_number"]'>{$invoice['tax_number']}</if>" placeholder="请输入"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="list_height plist-txt input-wrap">
+                <div class="pic"></div>
+                <div class="tit font14">收件人</div>
+                <div class="describe font12"><input type="text" name="addressee" id="invoice_addressee" value="<if condition='$invoice["addressee"]'>{$invoice['addressee']}<else />{$contact.contact}</if>" placeholder="请输入"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="list_height plist-txt input-wrap">
+                <div class="pic"></div>
+                <div class="tit font14">手机号</div>
+                <div class="describe font12"><input type="text" name="mobile" id="invoice_mobile" value="<if condition='$invoice["mobile"]'>{$invoice['mobile']}<else />{$contact.telephone}</if>" placeholder="请输入"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="list_height plist-txt input-wrap">
+                <div class="pic"></div>
+                <div class="tit font14">邮政编码</div>
+                <div class="describe font12"><input type="text" name="postcode" id="invoice_postcode" value="{$invoice['postcode']}" placeholder="请输入"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="list_height plist-txt input-wrap last">
+                <div class="pic"></div>
+                <div class="tit font14">邮寄地址</div>
+                <div class="describe font12"><input type="text" name="address" id="invoice_address" value="<if condition='$invoice["address"]'>{$invoice['address']}<else />{$contact.address}</if>" placeholder="请输入"></div>
+                <div class="clear"></div>
+            </div>
+	        <input type="hidden" name="order_id" value="{$order['id']}">
+	    </form>
+        <if condition="!$invoice && $order['pay_amount'] egt C('qscms_invoice_cash_min')">
+            <div class="btn-spacing"><div class="qs-btn qs-btn-blue font18" id="invoice_submit">索取发票</div></div>
+        </if>
+    </if>
+	<if condition="$order['is_paid'] eq 1">
+	<div class="payment-list">
+		<if condition="$order['payment'] eq 'wxpay'">
+    	<div class="payment last">
+			<div class="pic wxpay"></div>
+			<div class="txt">
+				<div class="payment-name font14">微信支付</div>
+				<div class="payment-intro font12 font_gray9">推荐已在微信中绑定银行卡的用户使用</div>
+			</div>
+		</div>
+		<else />
+		<div class="payment last">
+			<div class="pic alipay"></div>
+			<div class="txt">
+				<div class="payment-name font14">支付宝支付</div>
+				<div class="payment-intro font12 font_gray9">推荐已下载支付宝客户端的用户使用</div>
+			</div>
+		</div>
+		</if>
+    </div>
+	<div class="btn-spacing"><div class="qs-btn qs-btn-blue font18" id="pay_submit">继续支付</div></div>
+	<div class="btn-spacing"><div class="qs-btn qs-btn-border-gray font18" id="cancel">取消订单</div></div>
+	<form id="form1" action="{:U('alipay_submit')}" method="post">
+		<input type="hidden" name="payment_name" id="payment_name" value="{$order['payment']}">
+		<input type="hidden" name="order_id" id="order_id" value="{$order['id']}">
+	</form>
+	</if>
+	<div class="split-block"></div>
+    <include file="public:footer_min" />
+    <script type="text/javascript">
+    	<if condition="$order['is_paid'] eq 1 && $is_weixin && $order['payment']=='wxpay'">
+    	//调用微信JS api 支付
+		  function jsApiCall()
+		  {
+		    WeixinJSBridge.invoke(
+		      'getBrandWCPayRequest',
+		      {$jsApiParameters},
+		      function(res){
+		        WeixinJSBridge.log(res.err_msg);
+		        // console.log(res.err_msg);
+		        if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+		            qsToast({type:1,context: "支付成功！"});
+		            setTimeout(function(){
+		            	window.location.href="{:U('order_list')}";
+		            },2000);
+		        }     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+
+		      }
+		    );
+		  }
+
+		  function callpay()
+		  {
+		    if (typeof WeixinJSBridge == "undefined"){
+		        if( document.addEventListener ){
+		            document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+		        }else if (document.attachEvent){
+		            document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+		            document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+		        }
+		    }else{
+		        jsApiCall();
+		    }
+		  }
+		 </if>
+		if($('#invoice_title').val() == 1){
+			$('.J_order_info_group').show();
+		}else{
+			$('.J_order_info_group').hide();
+		}
+    	$('.title-list .radio').on('click',function(){
+    		$('.title-list .radio').removeClass('active');
+    		$(this).addClass('active');
+    		var code = $(this).data('code');
+    		$('#invoice_title').val(code);
+    		if(code == 1){
+				$('.J_order_info_group').show();
+			}else{
+				$('.J_order_info_group').hide();
+			}
+    	});
+    	$('#cancel').on('click',function(){
+    		var popout = new QSpopout();
+            popout.setContent('确定取消该订单吗？');
+            popout.getPrimaryBtn().on('click', function() {
+                window.location="{:U('order_cancel',array('order_id'=>$order['id']))}";
+            });
+            popout.show();
+    	});
+    	$("#invoice_submit").click(function(){
+			if(!$("#invoice_title").val()){
+				qsToast({type:2,context: "请选择发票抬头！"});
+				return false;
+			}
+			if(!$("#invoice_cid").val()){
+				qsToast({type:2,context: "请选择发票内容！"});
+				return false;
+			}
+			if(!$("#invoice_organization").val() && $("#invoice_title").val()==1){
+				qsToast({type:2,context: "请填写单位名称！"});
+				return false;
+			}
+			if(!$("#invoice_tax_number").val() && $("#invoice_title").val()==1){
+				qsToast({type:2,context: "请填写税号！"});
+				return false;
+			}
+			if(!$("#invoice_addressee").val()){
+				qsToast({type:2,context: "请填写收件人！"});
+				return false;
+			}
+			if(!$("#invoice_mobile").val()){
+				qsToast({type:2,context: "请填写手机号！"});
+				return false;
+			}
+			if(!$("#invoice_address").val()){
+				qsToast({type:2,context: "请填写邮寄地址！"});
+				return false;
+			}
+			if(!$("#invoice_postcode").val()){
+				qsToast({type:2,context: "请填写邮编！"});
+				return false;
+			}
+			$.ajax({
+                cache: true,
+                type: "POST",
+                url:"{:U('invoice_save')}",
+                data:$('#invoice_form').serialize(),
+                async: false,
+                dataType:"json",
+                success: function(result) {
+                    if(result.status==1){
+                    	qsToast({type:1,context: "索取发票成功！"});
+						window.location.reload();
+                    }else{
+                    	disapperTooltip("remind",result.msg);
+						return false;
+                    }
+                }
+            });
+		});
+		$("#pay_submit").on('click',function(){
+			<eq name="points_enough" value="0">
+				qsToast({type:2,context: "你的{:C('qscms_points_byname')}不足，无法完成支付，请重新下单！"});
+		  		return false;
+			</eq>
+			var payment_name = $("#payment_name").val();
+		  	if(payment_name=='wxpay'){
+		  		if("{$is_weixin}"){
+					callpay();
+		  		}else{
+		  			var h5pay_error = "{$h5pay_error}";
+		  			if(h5pay_error==''){
+						window.location.href="{$pay_url}";
+		  			}else{
+		  				qsToast({type:2,context: h5pay_error});
+		  				return false;
+		  			}
+		  		}
+		  	}else{
+		  		$("#form1").submit();
+		  	}
+		  });
+		  <if condition="$order['is_paid'] eq 1 && !$is_weixin && $order['payment']=='wxpay'">
+		  	var check_status_time,
+				waiting_check_status = function(){
+					$.getJSON("{:U('callback/check_h5pay_status')}",{order_id:"{$order['id']}"},function(result){
+						if(result.status==1){
+							window.location.href="{:U('order_list')}";
+						}
+			    	});
+				};
+	    	check_status_time=setInterval(waiting_check_status,2000);
+	    	</if>
+    </script>
+	</body>
+</html>

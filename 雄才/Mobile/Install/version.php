@@ -1,0 +1,1 @@
+<?php	return array ( 'module' => 'Mobile', 'module_name' => '手机触屏端', 'appid' => '1965', 'version' => '4.2.83', 'is_create_table' => 1, 'is_insert_data' => 1, 'is_exe' => 1, 'is_delete_data' => 1, 'update_time' => '2018-02-01 16:45:23', 'explain' => '手机访问可自动切换为手机版网站，手机触屏端包含了人才系统的基础功能。', ); ?>

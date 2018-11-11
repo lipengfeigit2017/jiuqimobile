@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+     <include file="public:header" />
+	<div class="split-block"></div>
+    <div class="ptitle border">
+      <div class="th1">职位刷新</div>
+    </div>
+    <div class="split-block"></div>
+    <div class="list_height plist-txt notarrow">
+	  <div class="pic"></div>
+	  <div class="tit font14">刷新职位</div>
+	  <div class="describe font13">{$jobs_info['jobs_name']}</div>
+		<div class="arrow"></div>
+		<div class="clear"></div>
+	</div>
+    <div class="list_height plist-txt notarrow last">
+	  <div class="pic"></div>
+	  <div class="tit font14">应付金额</div>
+	  <div class="describe font13"><span class="font_yellow" id="total_amount">{$amount}</span> 元</div>
+		<div class="arrow"></div>
+	  <div class="clear"></div>
+	</div>
+    <div class="split-block"></div>
+    <div class="payment-list">
+    	<div class="payment wxpay active">
+			<div class="pic wxpay"></div>
+			<div class="txt">
+				<div class="payment-name font14">微信支付</div>
+				<div class="payment-intro font12 font_gray9">推荐已在微信中绑定银行卡的用户使用</div>
+			</div>
+			<div class="radio active"></div>
+		</div>
+		<div class="payment alipay last">
+			<div class="pic alipay"></div>
+			<div class="txt">
+				<div class="payment-name font14">支付宝支付</div>
+				<div class="payment-intro font12 font_gray9">推荐已下载支付宝客户端的用户使用</div>
+			</div>
+			<div class="radio "></div>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="btn-spacing"><div class="qs-btn qs-btn-blue font18" id="submit_pay">提交订单</div></div>
+	<input name="jobs_id" id="jobs_id" type="hidden" value="{$jobs_id}" />
+	<!--当前选择的支付方式-->
+	<input type="hidden" name="payment" id="payment" value="wxpay">
+     <include file="public:footer_min" />
+	<script type="text/javascript">
+		//选择支付方式（支付宝？微信？）
+		$('.payment-list .payment').on('click',function(){
+			$('.payment-list .payment').removeClass('active');
+			$('.payment-list .payment .radio').removeClass('active');
+			$(this).addClass('active');
+			$(this).children('.radio').addClass('active');
+			$('#payment').val($(this).hasClass('wxpay')?'wxpay':'alipay');
+		});
+
+		//提交订单
+		var lock = 0;
+		$('#submit_pay').on('click',function(){
+			if(!lock){
+				lock = 1;
+                var jobs_id = $('#jobs_id').val();
+				var payment = $('#payment').val();
+				var url = "{:U('service_refresh_jobs_one')}";
+				$.post(url,{jobs_id:jobs_id,payment:payment},function(result){
+					if(result.status==1){
+						location.href=result.data;
+					}else{
+						qsToast({type:2,context: result.msg});
+						lock = 0;
+						return false;
+					}
+				},'json');
+			}
+		});
+		
+	</script>
+	</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/mall.css">
+</head>
+<body>
+<include file="public:header"/>
+
+<div class="index-banner"></div>
+<div class="index-handle">
+    <div class="item my-point link_yellow" onclick="javascript:location.href='{$gold_url}'">{:C('qscms_points_byname')}: <a>{$my_points}</a></div>
+    <div class="item get-point" onclick="javascript:location.href='{$task_url}'">赚取{:C('qscms_points_byname')}</div>
+    <div class="J_order_list item exchange-record">兑换记录</div>
+    <div class="clear"></div>
+</div>
+<div class="roll-record link_blue substring">
+		<ul class="ul-upscroll">
+			<qscms:goods_exchange_list 列表名="ex_list" 显示数目="9" />
+			<volist name="ex_list['list']" id="vo">
+				<li><a>{$vo['username']}</a> 刚兑换了 <a href="{$vo.goods_url}">{$vo['goods_title']}</a></li>
+			</volist>
+		</ul>
+</div>
+
+<div class="split-block"></div>
+
+<div class="goods-list">
+    <div class="title you-like list_height">猜你喜欢
+        <div class="more font12" onclick="javascript:location.href='{:url_rewrite('QS_goods_list')}'">更多>></div>
+    </div>
+    <qscms:goods_list 列表名="favor_list" 排序="ex_time:desc" 显示数目="6" />
+    <volist name="favor_list['list']" id="vo">
+    <div class="item for-event <if condition="$key%2 eq 1">last</if>" onclick="javascript:location.href='{$vo.goods_url}'">
+        <div class="pic"><img src="{$vo['goods_img']}"/></div>
+        <div class="name substring">{$vo['goods_title']}</div>
+        <div class="point">{$vo['goods_points']} {:C('qscms_points_byname')}</div>
+    </div>
+    </volist>
+    <div class="clear"></div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="goods-list">
+    <div class="title recommend list_height">推荐商品
+        <div class="more font12" onclick="javascript:location.href='{:url_rewrite('QS_goods_list')}'">更多>></div>
+    </div>
+    <qscms:goods_list 列表名="recommend_list" 显示数目="6" 推荐="1"/>
+    <volist name="recommend_list['list']" id="vo">
+    <div class="item for-event <if condition="$key%2 eq 1">last</if>" onclick="javascript:location.href='{$vo.goods_url}'">
+        <div class="pic"><img src="{$vo['goods_img']}"/></div>
+        <div class="name substring">{$vo['goods_title']}</div>
+        <div class="point">{$vo['goods_points']} {:C('qscms_points_byname')}</div>
+    </div>
+    </volist>
+    <div class="clear"></div>
+</div>
+
+<div class="split-block"></div>
+
+<include file="public:footer_min" />
+<script src="../public/js/fx.js"></script>
+<script src="../public/js/touch-0.2.14.min.js"></script>
+<script src="../public/js/zepto.textSlider.js"></script>
+<script>
+    var isVisitor = "{:C('visitor.uid')}";
+	$(".ul-upscroll").textSlider({line:1,speed:500,timer:3000});
+    $('.J_order_list').on('click',function(){
+        if ((isVisitor > 0)) {
+            window.location.href="{:url_rewrite('QS_mall_order_list')}";
+        } else {
+            window.location.href="{:U('members/login')}";
+        }
+    });
+</script>
+</body>
+</html>

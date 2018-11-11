@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<qscms:jobfair_show  列表名="info" 招聘会id="$_GET['id']"/>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/jobfair.css">
+</head>
+<body>
+<include file="public:header"/>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element, as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. PhotoSwipe keeps only 3 slides in DOM to save memory. -->
+        <div class="pswp__container">
+            <!-- don't modify these 3 pswp__item elements, data is added later on -->
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="split-block"></div>
+
+<div class="jobfair-info">
+    <div class="title font16">{$info['title']}</div>
+    <div class="pic date">{:date('Y年m月d日',$info['holddate_start'])} - {:date('Y年m月d日',$info['holddate_end'])}</div>
+    <div class="pic contact">{$info['phone']}（{$info['contact']}）</div>
+    <div class="pic district">{$info['address']}</div>
+    <if condition="$info['predetermined_ok'] eq 0">
+    <div class="status"></div>
+    </if>
+</div>
+<div class="statistics font16 link_gray6">
+    <div class="item J_to_comlist" data-num="{$info['booth_count']}" url="{$info.exhibitorsurl}">
+        <span>参会企业</span><br>
+        <span class="font20">{$info['booth_count']}</span>
+    </div>
+    <div class="item">
+        <span>展位数</span><br>
+        <span class="font20">{$info['position_count']}</span>
+    </div>
+    <a class="item last" href="tel:{$info['phone']}">
+        <span>电话咨询</span><br>
+        <span class="call"></span>
+    </a>
+    <div class="clear"></div>
+</div>
+
+<div class="split-block"></div>
+<div class="introduce">
+  <div class="title list_height">
+  展位预定
+  <eq name='has_img' value='1'>
+  <div class="ritle font12" id="show-img">查看展位图</div>
+  </eq>
+  </div>
+</div>
+<if condition="$booth_status eq 1">
+<div class="list_height plist-txt">
+    <div class="pic"></div>
+    <div class="tit font14">选择展区</div>
+    <div class="describe font13 qs-relative">
+        <div class="for-select">请选择</div>
+        <select id="area" name="area">
+            <option value="0">请选择</option>
+            <volist name="area" id="vo">
+            <option value="{$vo['id']}">{$vo['area']}区</option>
+            </volist>
+        </select>
+    </div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+<volist name="position" id="vo">
+  <div class="list_height plist-txt position_block position_{$key}" style="display:none;">
+    <div class="pic"></div>
+    <div class="tit font14">选择展位</div>
+    <div class="describe font13 qs-relative">
+        <div class="for-select">请选择</div>
+        <select class="position_choose">
+            <option value="0">请选择</option>
+            <volist name="vo" id="v">
+            <option value="{$v['id']}">{$v['position']}</option>
+            </volist>
+        </select>
+    </div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+</volist>
+<input type="hidden" id="position_id" value="0">
+<div class="split-block-footnav"></div>
+<div class="refootnav">
+    <div class="btns link_gray6">
+      <div class="qs-btn qs-btn-medium qs-btn-blue b-big qs-btn-inline" id="submit">预定展位</div>
+    </div>
+</div>
+<else />
+<div class="list_height plist-txt">
+    <div class="pic"></div>
+    <div class="tit font14">已预定展位</div>
+    <div class="describe font13 qs-relative">
+        <div class="for-select">{$booth_info['position']}</div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="split-block-footnav"></div>
+<div class="refootnav">
+    <div class="btns link_gray6">
+    <if condition="$booth_status eq 2">
+      <div class="qs-btn qs-btn-medium qs-btn-orange b-big qs-btn-inline">预定成功，请及时参会</div>
+    <else />
+      <div class="qs-btn qs-btn-medium qs-btn-gray b-big qs-btn-inline">已预定，等待审核</div>
+    </if>
+    </div>
+</div>
+</if>
+<include file="public:footer_min" />
+<script type="text/javascript" charset="utf-8" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<link rel="stylesheet" href="../public/css/dist/photoswipe.css"> 
+<!-- Skin CSS file (styling of UI - buttons, caption, etc.)
+     In the folder of skin CSS file there are also:
+     - .png and .svg icons sprite, 
+     - preloader.gif (for browsers that do not support CSS animations) -->
+<link rel="stylesheet" href="../public/css/dist/default-skin/default-skin.css"> 
+<!-- Core JS file -->
+<script src="../public/css/dist/photoswipe.min.js"></script> 
+<!-- UI JS file -->
+<script src="../public/css/dist/photoswipe-ui-default.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  var current_area = $('#area').val();
+  $('.position_block').hide();
+  $('.position_'+current_area).show();
+  $('#area').change(function(){
+    var val = $(this).val();
+    $('.position_block').hide();
+    $('.position_'+val).show();
+  });
+  $('.position_choose').change(function(){
+    var val = $(this).val();
+    $('#position_id').val(val);
+  });
+  $('#submit').click(function(){
+    var jobfair_id = "{$info['id']}";
+    var position_id = $('#position_id').val();
+    $.post("{:U('Jobfair/reserve_save','','','',true)}",{jobfair_id:jobfair_id,position_id:position_id},function(result){
+      if(result.status==1){
+        qsToast({type: 1, context: '预定成功'});
+        window.location.href="{:url_rewrite('QS_jobfairshow',array('id'=>$info['id']))}";
+      }else{
+        qsToast({type: 2, context: result.msg});
+      }
+    },'json');
+  });
+});
+    $('.more').on('click',function(){
+        var prev = $(this).prev();
+        var child = $(this).children('.showbtn');
+        if(prev.hasClass('desc')){
+          prev.removeClass('desc');
+          child.addClass('topbtn');
+          child.html('收起信息');
+        }else{
+          prev.addClass('desc');
+          child.removeClass('topbtn');
+          child.html('展开信息');
+        }
+      });
+    $('.J_to_comlist').on('click',function(){
+        var com_num = parseInt($(this).data('num'));
+        if(com_num==0){
+            qsToast({type: 2, context: '当前还没有企业参会'});
+            return false;
+        }else{
+            window.location.href=$(this).attr('url');
+        }
+    });
+    wx.config({
+    // debug: true,
+    appId: '{$signPackage.appId}',
+    timestamp: '{$signPackage.timestamp}',
+    nonceStr: '{$signPackage.nonceStr}',
+    signature: '{$signPackage.signature}',
+    jsApiList: [
+      // 所有要调用的 API 都要加到这个列表中
+      "onMenuShareTimeline",
+      "onMenuShareAppMessage",
+      "onMenuShareQQ",
+      "onMenuShareWeibo"
+    ]
+  });
+  wx.ready(function () 
+  {
+      var linkUrl = "{:build_mobile_url(array('c'=>'Jobfair','a'=>'show','params'=>'id='.$info['id']))}";//放链接
+      var title = "{$info['title']}-{:C('qscms_site_name')} 举办时间：{:date('m月d日',$info['holddate_start'])} - {:date('m月d日',$info['holddate_end'])}  举办地址：{$info['address']}";
+      var desc = "{$info['title']}-{:C('qscms_site_name')} 举办时间：{:date('m月d日',$info['holddate_start'])} - {:date('m月d日',$info['holddate_end'])}  举办地址：{$info['address']}"; 
+      var imgUrl="{:C('qscms_site_domain')}{:C('qscms_site_dir')}{$info['thumb']}";//图片链接
+      
+      wx.onMenuShareTimeline({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareAppMessage({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          type: '', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareQQ({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareWeibo({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+  });
+var openPhotoSwipe = function() {
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+
+    // build items array
+    var items = {$position_img};
+    
+    // define options (if needed)
+    var options = {
+             // history & focus options are disabled on CodePen        
+        history: false,
+        focus: false,
+        captionAndToolbarHide:false,
+        showAnimationDuration: 0,
+        hideAnimationDuration: 0
+        
+    };
+    
+    var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+    gallery.init();
+};
+
+document.getElementById('show-img').onclick = openPhotoSwipe;
+</script>
+</body>
+</html>

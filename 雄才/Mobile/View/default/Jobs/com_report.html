@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/jobs.css">
+    <link rel="stylesheet" href="../public/css/nprogress.css">
+</head>
+<body>
+<include file="public:header"/>
+<div class="report-head">
+    <div class="h1 font20">企业实地认证报告</div>
+    <div class="com-name font16">{$info.com_name}</div>
+    <div class="time"><span style="color: #999999">认证时间</span>&nbsp;&nbsp;{$info.addtime|date='Y-m-d',###}</div>
+    <img src="../public/images/290.png" class="badge">
+</div>
+<div class="split-block"></div>
+<div class="report-tit">
+    <div class="th1">工商登记信息</div>
+</div>
+<div class="report-item">
+    <div class="key">名称</div>
+    <div class="value">{$info.com_name}</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="key">法人</div>
+    <div class="value">{$info.corporate}</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="key">主体类型</div>
+    <div class="value">{$info.com_type}</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="key">创立时间</div>
+    <div class="value">{$info.reg_time|date='Y-m-d',###}</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="key">注册资本</div>
+    <div class="value">{$info.reg_capital} 万元</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="key">注册地址</div>
+    <div class="value">{$info.reg_address}</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="pic"></div>
+    <div class="key">办公地点</div>
+    <div class="value">{$info.office_address}</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="key">登记机关</div>
+    <div class="value">{$info.registrar}</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="key">经营范围</div>
+    <div class="value">{$info.scope}</div>
+    <div class="clear"></div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="report-tit">
+    <div class="th1">人力资源师实地认证情况</div>
+</div>
+<div class="report-item">
+    <div class="key">办公面积</div>
+    <div class="value">{$info.office_area} 平方米</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="key">办公环境</div>
+    <div class="value">
+        <switch name="$info.office_env">
+            <case value="1">一般</case>
+            <case value="3">优美</case>
+            <default />良好
+        </switch>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="key">办公场所</div>
+    <div class="value">{$info.workplace}</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="key">员工人数</div>
+    <div class="value">{$info.number}</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="key">男女比例</div>
+    <div class="value">{$info.sex_ratio}</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="key">平均年龄</div>
+    <div class="value">{$info.average_age} 岁左右</div>
+    <div class="clear"></div>
+</div>
+<div class="report-item">
+    <div class="pic"></div>
+    <div class="key">乘车路线</div>
+    <div class="value">{$info.route}</div>
+    <div class="clear"></div>
+</div>
+<notempty name="info.img_arr">
+    <div class="split-block"></div>
+    <div class="comshowimg">
+        <div class="report-tit"><div class="th1">实地认证照片</div></div>
+        <div class="scrollbox">
+            <volist name="info.img_arr" id="vo">
+                <div class="imgbox"><img src="{:attach($vo,'images')}"></div>
+            </volist>
+        </div>
+        <div class="clear"></div>
+    </div>
+</notempty>
+<div class="split-block"></div>
+<div class="report-tit">
+    <div class="th1">认证师评价</div>
+</div>
+<div class="report-evaluation">{$info.evaluation}<span style="color: #999999;">（认证师：{$info.certifier}）</span></div>
+<div class="split-block"></div>
+
+<include file="public:footer_min"/>
+<script src="../public/js/nprogress.js"></script>
+<script src="../public/js/imageScrool.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var scrollImg = $.mggScrollImg('.scrollbox',{
+            loop : true,//循环切换
+            auto : true//自动切换
+        });
+    });
+</script>
+</body>
+</html>

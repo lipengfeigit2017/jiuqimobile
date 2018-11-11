@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+    <include file="public:header" />
+    	<div class="my-setmeal-top">
+    		<div class="txt">
+    			当前套餐：<if condition="$my_setmeal['setmeal_id'] gt 1"><img src="../public/images/63.png"></if> {$my_setmeal['setmeal_name']}<span class="tip font_gray9">（<if condition="$my_setmeal['endtime'] eq 0">永久有效<else />{:date('Y-m-d',$my_setmeal['endtime'])} 到期</if>）</span>
+    		</div>
+    	</div>
+     	<div class="split-block"></div>
+    	<div class="ptitle border">
+	      <div class="th1">套餐余量</div>
+	      <div class="rtxt link_gray9" onClick="javascript:location.href='{:U('CompanyService/setmeal_detail')}'"><a>使用明细</a></div>
+	    </div>
+	    <div class="my-setmeal-count">
+	    	<div class="count-item">
+	    		<div class="ico count-job"></div>
+	    		<div class="text font_gray9">职位数：<span class="num font_yellow">{$my_setmeal['surplus_jobs']}</span></div>
+	    	</div>
+	    	<div class="count-item">
+	    		<div class="ico count-resume"></div>
+	    		<div class="text font_gray9">简历数：<span class="num font_yellow">{$my_setmeal['download_resume']}</span></div>
+	    	</div>
+	    	<div class="count-item">
+	    		<div class="ico count-sms"></div>
+	    		<div class="text font_gray9">短信数：<span class="num font_yellow">{$my_userinfo['sms_num']}</span></div>
+	    	</div>
+	    </div>
+     	<div class="split-block"></div>
+    	<div class="ptitle border">
+	      <div class="th1">会员特权</div>
+	      <div class="rtxt link_yellow" onClick="javascript:location.href='{:U('CompanyService/setmeal_add')}'"><a>升级套餐</a></div>
+	    </div>
+	    <div class="priv">
+	    	<div class="item">
+    			<div class="pic p1"></div>
+    			<div class="t1">简历优惠特权</div>
+    			<div class="t2 font_gray9">开通VIP会员，尊享超低简历优惠特权</div>
+	    	</div>
+	    	<div class="item">
+    			<div class="pic p2"></div>
+    			<div class="t1">职位发布特权</div>
+    			<div class="t2 font_gray9">开通VIP会员，增加同时可发布职位数</div>
+	    	</div>
+	    	<div class="item">
+    			<div class="pic p3"></div>
+    			<div class="t1">职位有限展示</div>
+    			<div class="t2 font_gray9">开通VIP会员，将被优先展示在职位列表</div>
+	    	</div>
+	    	<div class="item">
+    			<div class="pic p4"></div>
+    			<div class="t1">职位刷新特权</div>
+    			<div class="t2 font_gray9">开通VIP会员，增加职位每天可刷新次数</div>
+	    	</div>
+	    	<div class="item">
+    			<div class="pic p5"></div>
+    			<div class="t1">短信增值包优惠</div>
+    			<div class="t2 font_gray9">开通VIP会员，尊享超低短信优惠特权</div>
+	    	</div>
+	    	<div class="item">
+    			<div class="pic p6"></div>
+    			<div class="t1">金牌客服优惠</div>
+    			<div class="t2 font_gray9">开通VIP会员，尊享私人级一对一专属服务</div>
+	    	</div>
+	    	<div class="clear"></div>
+	    </div>
+		<include file="public:footer_min" />
+	</body>
+</html>

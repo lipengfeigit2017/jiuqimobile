@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<div class="jobs-manager-top-nav list_height">
+			<div class="n-cell <if condition="$Think.get.type eq 0 or $Think.get.type eq ''">active</if>" onclick="window.location='{:U('company/jobs_list')}'">全部职位<if condition="$Think.get.type eq 0 or $Think.get.type eq ''"><div class="b-line"></div></if></div>
+			<div class="n-cell <if condition="$Think.get.type eq 1">active</if>" onclick="window.location='{:U('company/jobs_list',array('type'=>1))}'">发布中的<if condition="$Think.get.type eq 1 or $Think.get.type eq ''"><div class="b-line"></div></if></div>
+			<div class="n-cell <if condition="$Think.get.type eq 2">active</if>" onclick="window.location='{:U('company/jobs_list',array('type'=>2))}'">未显示的<if condition="$Think.get.type eq 2"><div class="b-line"></div></if></div>
+			<div class="clear"></div>
+		</div>
+		<div class="split-block"></div>
+		<notempty name="jobs_list['list']">
+			<volist name="jobs_list['list']" id="list">
+				<div class="job js-actionParent">
+					<div class="info" onclick="window.location='{$list.jobs_url}'">
+						<div class="line-one">
+							<div class="job-name substring">{$list.jobs_name}</div>
+					        <if condition="$list['allowance_id'] gt 0 && C('apply.Allowance')">
+							<div class="j-n-money">
+				                <div class="j-m-l jm<eq name="list['allowance']['type_alias']" value="apply">2</eq><eq name="list['allowance']['type_alias']" value="interview">3</eq><eq name="list['allowance']['type_alias']" value="entry">1</eq>"></div>
+				                <div class="j-m-r"><span class="font9">￥</span><span class="font12">{$list['allowance']['per_amount']}</span></div>
+				                <div class="clear"></div>
+				            </div>
+				            </if>
+							<div class="job-status font12 <if condition="$list['_audit'] eq 2">font_yellow<elseif condition="$list['_audit'] eq 3 || $list['display'] eq 2" />font_red</if>">{$list.status_cn}</div>
+							<div class="clear"></div>
+						</div>
+						<div class="line-two font12">{$list.district_cn} | {$list.nature_cn} | 经验{$list.experience_cn} | {$list.wage_cn}</div>
+						<div class="line-three font12">
+							<div class="pic apply">投递{$list.applys|default="0"}次</div>
+							<div class="pic browse">浏览{$list.views|default="0"}次</div>
+							<div class="pic refresh">{:date('Y-m-d H:i',$list['refreshtime'])}</div>
+							<div class="clear"></div>
+						</div>
+					</div>
+					<div class="handler font14">
+						<div class="item" onclick="window.location='{:U('company/jobs_apply',array('stop'=>1,'jobs_id'=>$list['id']))}'"><span>简历</span></div>
+						<div class="J_refresh item" yid="{$list.id}"><span>刷新</span></div>
+						<div class="item js-showActionSheet" data-index="1" data-audit="{$list['_audit']}" data-display="{$list['display']}"><span>推广</span></div>
+						<div class="item js-showActionSheet" data-index="0"><span class="last">更多</span></div>
+						<div class="clear"></div>
+					</div>
+					<!--BEGIN actionSheet-->
+					<div>
+						<div class="qs-mask" style="display: none"></div>
+						<div class="qs-actionsheet js-actionsheet">
+							<div class="qs-actionsheet-menu" jid="{$list.id}">
+								<div class="qs-actionsheet-cell" onclick="window.location='{:U('company/jobs_edit',array('id'=>$list['id']))}'">修改</div>
+								<if condition="$list['_audit'] eq 1">
+                                    <if condition="$list['display'] eq 2">
+                                        <div class="J_manage qs-actionsheet-cell" type="jobs_display" url="{:U('company/jobs_display',array('id'=>$list['id']))}">恢复</div>
+                                    <else />
+                                        <div class="J_manage qs-actionsheet-cell" type="jobs_close" url="{:U('company/jobs_close',array('id'=>$list['id']))}">关闭</div>
+                                    </if>
+								</if>
+								<div class="J_manage qs-actionsheet-cell" type="jobs_delete" url="{:U('company/jobs_delete',array('id'=>$list['id']))}">删除</div>
+								<if condition="$list['allowance_id'] eq 0 && C('apply.Allowance')">
+								<div class="qs-actionsheet-cell" onclick="javascript:location.href='{:U('Company/set_allowance_job',array('jobsid'=>$list['id']))}'">红包打赏</div>
+								</if>
+							</div>
+							<div class="qs-actionsheet-action">
+								<div class="qs-actionsheet-cell js-cancelActionSheet">取消</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="qs-mask-dig" style="display: none"></div>
+						<div class="qs-actionsheet js-actionsheet">
+							<div class="qs-actionsheet-menu" jid="{$list.id}">
+								<if condition="$list['stick']">
+								<div class="J_dig qs-actionsheet-cell J_unable" data-msg="<strong>已购买【职位置顶】服务</strong><br /><span class='time'>开始时间：{:date('Y-m-d',$list['promotion']['stick']['starttime'])}<br />结束时间：{:date('Y-m-d',$list['promotion']['stick']['endtime'])}</span>">职位置顶</div>
+								<else />
+								<div class="J_dig qs-actionsheet-cell" onclick="window.location='{:U('companyService/service_stick',array('jobs_id'=>$list['id']))}'">职位置顶</div>
+								</if>
+								<if condition="$list['emergency']">
+								<div class="J_dig qs-actionsheet-cell J_unable" data-msg="<strong>已购买【紧急招聘】服务</strong><br /><span class='time'>开始时间：{:date('Y-m-d',$list['promotion']['emergency']['starttime'])}<br />结束时间：{:date('Y-m-d',$list['promotion']['emergency']['endtime'])}</span>">紧急招聘</div>
+								<else />
+								<div class="J_dig qs-actionsheet-cell" onclick="window.location='{:U('companyService/service_emergency',array('jobs_id'=>$list['id']))}'">紧急招聘</div>
+								</if>
+								<if condition="$list['auto_refresh'] eq 1">
+								<div class="J_dig qs-actionsheet-cell J_unable" data-msg="<strong>已购买【智能刷新】服务</strong><br /><span class='time'>开始时间：{$list['auto_refresh_starttime']}<br />结束时间：{$list['auto_refresh_endtime']}</span>">智能刷新</div>
+								<else />
+								<div class="J_dig qs-actionsheet-cell" onclick="window.location='{:U('companyService/service_refresh',array('jobs_id'=>$list['id']))}'">智能刷新</div>
+								</if>
+							</div>
+							<div class="qs-actionsheet-action">
+								<div class="qs-actionsheet-cell js-cancelActionSheet">取消</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="split-block"></div>
+			</volist>
+			<div class="qspage">{$jobs_list['page']}</div>
+			<div class="btn-spacing">
+				<a class="qs-btn qs-btn-blue font18" id="J_jobs_add">发布职位</a>
+			</div>
+            <div class="split-block"></div>
+		<else/>
+			<if condition="$hasget">
+				<div class="list-empty">
+					抱歉，没有找到相关职位！
+				</div>
+			<else />
+				<div class="list-empty link_blue">
+					亲爱的HR，您还没有发布的职位！<br>
+					想要快速找到合适的人才，就赶紧 <a id="J_jobs_add">发布职位</a> 吧~
+				</div>
+			</if>
+		</notempty>
+		<include file="public:footer_min" />
+		<script type="text/javascript">
+        $(function(){
+			$(".js-showActionSheet").on("click", function(){
+				var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+				var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+				var thisIndex = $(this).data('index');
+				if (thisIndex) {
+					var _audit = $(this).data('audit');
+					var display = $(this).data('display');
+					var popout = new QSpopout('职位推广');
+					if(_audit == 2){
+						popout.setContent('审核中的职位不能推广！');
+						popout.show();
+						return false;
+					}
+					if(_audit == 3){
+						popout.setContent('审核未通过的职位不能推广！');
+						popout.show();
+						return false;
+					}
+					if(display == 2){
+						popout.setContent('已关闭的职位不能推广！');
+						popout.show();
+						return false;
+					}
+				}
+				$iosActionsheet.removeClass('qs-actionsheet-toggle');
+				$iosActionsheet.eq(thisIndex).addClass('qs-actionsheet-toggle');
+				$iosMask.fadeIn(200);
+				$iosMask.on('click', hideActionSheet);
+				$(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+				$(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+				function hideActionSheet() {
+					$(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+					$(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+				}
+			});
+      	});
+        var tip = {
+            jobs_display : '职位恢复后将会对外公开招聘，您确定要恢复选中的职位吗？',
+            jobs_close : '职位关闭后将会暂停招聘，您确定要关闭选中的职位吗？',
+            jobs_delete : '被删除后将无法恢复，您确定要删除选中的职位吗？'
+        };
+        $('.J_manage').on('click',function(){
+            var type = $(this).attr('type'),
+            	url = $(this).attr('url');
+            $(this).closest('.js-actionParent').find('.qs-mask').click();
+            var popout = new QSpopout('职位管理');
+            popout.setContent(tip[type]);
+            popout.getPrimaryBtn().on('click', function () {
+	            $.getJSON(url,function(result){
+	                if(result.status==1){
+	                    qsToast({type: 1, context: result.msg});
+	                    setTimeout(function(){
+	                        window.location.href = result.data;
+	                    },2000);
+	                }else if(result.status==2){
+	                    var dialog = new QSpopout();
+	                    dialog.setContent('<div class="dialog_notice">当前显示的职位已超过最大限制，建议您立即升级服务套餐或将暂时不招聘的职位设为关闭！</div>');
+	                    dialog.show();
+	                    dialog.setBtn(2, ['取消', '升级套餐']);
+	                    dialog.getPrimaryBtn().on('click', function () {
+	                        window.location.href = "{:U('CompanyService/setmeal_add')}";
+	                    });
+	                }else{
+	                    qsToast({type: 2, context: result.msg});
+	                    return false;
+	                }
+	            });
+        	});
+        	popout.show();
+        });
+		$('.J_refresh').on('click',function(){
+            var obj = $(this);
+            $.getJSON("{:U('Company/jobs_refresh_confirm')}",{yid:obj.attr('yid')},function(data){
+                if(data.status==1){
+                	var dialog = new QSpopout();
+                    dialog.setContent(data.msg);
+                    if(data.data=='mix')
+                    {
+                        dialog.setBtn(1,'取消');
+                    }else{
+                        dialog.getPrimaryBtn().on('click', function () {
+	                        $.getJSON("{:U('Company/jobs_refresh')}",{yid:obj.attr('yid')},function(result){
+	                            if (result.status == 1) {
+	                                qsToast({type: 1, context: result.msg});
+	                                setTimeout(function () {
+										window.location.reload();
+									}, 1000);
+	                            }else {
+	                                qsToast({type: 2, context: result.msg});
+	                                return false;
+	                            }
+	                        });
+                    	});
+                    }
+                    dialog.show();
+                }else{
+                    /*qsToast({type: 2, context: data.msg});
+                    return false;*/
+					var popout = new QSpopout('职位刷新');
+					popout.setContent(data.msg);
+					popout.show();
+					return false;
+                }
+            });
+		});
+        $('#J_jobs_add').on('click',function(){
+            $.getJSON("{:U('Company/check_jobs_num')}",function(result){
+                if(result.status == 1){
+                    var dialog = new QSpopout();
+                    var free = parseInt("{$setmeal['is_free']}");
+                    if(free==1){
+                        dialog.setContent('<div class="dialog_notice">您当前是免费会员，发布中的职位数已超过最大限制，升级VIP会员后可继续发布职位，建议您立即升级VIP会员！</div>');
+                    }else{
+                        dialog.setContent('<div class="dialog_notice">当前显示的职位已超过最大限制，建议您立即升级服务套餐或将暂时不招聘的职位设为关闭！</div>');
+                    }
+                    dialog.show();
+                    dialog.setBtn(2, ['取消', '升级套餐']);
+                    dialog.getPrimaryBtn().on('click', function () {
+                        window.location.href = "{:U('CompanyService/setmeal_add')}";
+                    });
+                }else{
+                    window.location.href='{:U("Company/jobs_add")}';
+                }
+            });
+        });
+        $('.J_unable').on('click',function(){
+	    	var msg = $(this).data('msg');
+	    	var dialog = new QSpopout();
+		        dialog.setContent(msg);
+		        dialog.setBtn(1);
+		        dialog.show();
+	    });
+		</script>
+	</body>
+</html>

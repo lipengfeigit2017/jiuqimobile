@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+     <include file="public:header" />
+     <div class="qs-top-nav x2 list_height">
+          <div class="n-cell active">未完成<div class="b-line"></div></div>
+          <div class="n-cell">已完成<div class="b-line"></div></div>
+          <div class="clear"></div>
+     </div>
+     <div class="split-block"></div>
+     <div class="tabshow">
+          <volist name="task" id="vo">
+          <if condition="(!isset($done_task[$vo['id']]) || $done_task[$vo['id']] gt 0) && $task_url[$vo['t_alias']]['type'] neq 'nourl'">
+          <div class="task-line">
+          	<div class="line-wrap pic {$vo['t_alias']}"></div>
+          	<div class="line-wrap txt">
+          		<div class="t1">{$vo['title']}</div>
+          		<div class="t2 font12 font_gray9">获得：{$vo['points']} {:C('qscms_points_quantifier')}{:C('qscms_points_byname')}</div>
+          	</div>
+          	<div class="line-wrap btn">
+          		<div data-type="{$vo['t_alias']}" <if condition="$task_url[$vo['t_alias']]['type'] eq 'ajax'" >data="{$vo['t_alias']}" class="upload ajax_do"<else />class="upload jump"</if>  url="{$task_url[$vo['t_alias']]['url']}">去完成</div>
+          	</div>
+     	  	<div class="clear"></div>
+          </div>
+          <div class="split-block"></div>
+          </if>
+          </volist>
+     </div>
+     <div class="tabshow" style="display:none;">
+          <volist name="task" id="vo">
+          <if condition="isset($done_task[$vo['id']]) && ($done_task[$vo['id']] eq $vo['times'] || $vo['id'] eq 18) && $task_url[$vo['t_alias']]['type'] neq 'nourl'">
+          <div class="task-line">
+          	<div class="line-wrap pic {$vo['t_alias']}"></div>
+          	<div class="line-wrap txt">
+          		<div class="t1">{$vo['title']}</div>
+          		<div class="t2 font12 font_gray9">获得：{$vo['points']} {:C('qscms_points_quantifier')}{:C('qscms_points_byname')}</div>
+          	</div>
+          	<!--已完成的任务加done-->
+          	<div class="line-wrap btn done">
+          		<div class="ico"></div>
+          	</div>
+     	  	<div class="clear"></div>
+          </div>
+          <div class="split-block"></div>
+          </if>
+          </volist>
+     </div>
+     <include file="public:footer_min" />
+     <script type="text/javascript">
+          $('.n-cell').on('click',function(event) {
+               $(this).addClass('active').siblings().removeClass('active');
+               var positionValue = $('.n-cell').index(this);
+               $('.tabshow').eq(positionValue).show().siblings('.tabshow').hide();
+          });
+          $('.jump').on('click',function(){
+               location.href=$(this).attr('url');
+          });
+          $(".ajax_do").on('click',function(){
+               var type = $(this).attr('data-type');
+               var url = $(this).attr('url');
+               if(type=='sign'){
+                    $.getJSON(url,function(result){
+                         if(result.status == 1){
+                              qsToast({type:1,context: '每天签到增加'+result.data+'{:C('qscms_points_byname')}'});
+                              setTimeout(function () {
+                                   window.location.reload();
+                              }, 2000);
+                         }else{
+                              qsToast({type:2,context: result.msg});
+                         }
+                    });
+               }
+          });
+     </script>
+	</body>
+</html>

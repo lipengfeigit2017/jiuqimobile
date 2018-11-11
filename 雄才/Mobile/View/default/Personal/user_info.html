@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+		<link rel="stylesheet" href="../public/css/nprogress.css">
+        <qscms:load type="category" search="1"/>
+	</head>
+	<body>
+		<include file="public:header"/>
+		<div class="list_height plist-txt qs-relative">
+	        <div class="pic"></div>
+	        <div class="tit font14">个人头像</div>
+	        <div class="describe font13">
+	        	<div class="avatar">
+	            	<img id="avatars" src="{$visitor.avatars}">
+	            </div>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+					<input type="file" id="browseFile" class="browseFile">
+	    </div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">姓名<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	            <input type="text" id="fullname" placeholder="请输入姓名" value="{$user_info['realname']}">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">性别<span class="font_red_light">*</span></div>
+	        <div id="sex" class="describe font13">
+		        <div class="radio-group x2">
+			        <div class="radio-cell">
+				        <label for="radio4">男</label>
+				        <input id="radio4" name="sex" type="radio" value="1" title="男" <if condition="$user_info['sex'] eq 1">checked="checked"</if>>
+			        </div>
+			        <div class="radio-cell">
+				        <label for="radio5">女</label>
+				        <input id="radio5" name="sex" type="radio" value="2" title="女" <if condition="$user_info['sex'] eq 2">checked="checked"</if>>
+			        </div>
+			        <div class="clear"></div>
+		        </div>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">出生年份<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	        <span class="for-select"></span>
+	            <select id="birthday" name="birthday">
+	                <option value="">请选择</option>
+	                <volist name="birthdate_arr" id="birthdate">
+	                    <option value="{$birthdate}" <if condition="$user_info['birthday'] eq $birthdate">selected</if>>{$birthdate}年</option>
+	                </volist>
+	            </select>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">最高学历<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	        <span class="for-select"></span>
+	    		<select id="education" name="education">
+	    		    <volist name="education" id="education">
+	                    <option value="{$key}" <if condition="$user_info['education'] eq $key">selected</if>>{$education}</option>
+	    			</volist>
+	    		</select>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt js-actionParent">
+	        <div class="pic"></div>
+	        <div class="tit font14">专业</div>
+	        <div class="describe font13 qs-temp-level-major js-showActionSheet" data-type="major" data-base="QS_major_parent" data-source="QS_major" data-multiple="false" data-num="0" data-link="false">
+		        <span class="qs-temp-txt-major" data-otxt="请选择">{$user_info.major_cn|default="请选择专业"}</span>
+	    		<input class="qs-temp-code-major" name="major" id="major" type="hidden" value="{$user_info.major}" />
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+			    <!--BEGIN actionSheet-->
+			    <div>
+				    <div class="qs-mask" style="display: none"></div>
+				    <div class="qs-actionsheet js-actionsheet">
+					    <div class="qs-actionsheet-menu">
+						    <div class="con-filter">
+							    <div class="f-selected-group f-selected-group-major">
+								    <div class="s-bar">
+									    <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-gray qs-left js-cancelActionSheet">取消</div>
+									    <div class="clear"></div>
+								    </div>
+								    <div class="s-list qs-hidden"></div>
+							    </div>
+							    <div class="f-box f-box-major"></div>
+						    </div>
+					    </div>
+				    </div>
+			    </div>
+	    </div>
+		<div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">工作经验<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	        <span class="for-select"></span>
+			    <select id="experience" name="experience">
+	    		    <volist name="experience" id="experience">
+	                    <option value="{$key}" <if condition="$user_info['experience'] eq $key">selected</if>>{$experience}</option>
+	    			</volist>
+			    </select>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="split-block"></div>
+	    <div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">现居住地</div>
+	        <div class="describe font13">
+	            <input type="text" id="residence" id="residence" placeholder="请输入现居住地" value="{$user_info['residence']}">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">手机号码<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	            <if condition="$visitor['mobile_audit']">
+	                <a class="mui-navigate-right">
+	                    <i class="mui-pull-right update font14">{$visitor.mobile}</i>
+	                </a>
+	            <else/>
+	                <input type="text" id="telephone" placeholder="请输入手机号码" value="{$user_info['phone']}">
+	            </if>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">邮箱<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	            <if condition="$visitor['email_audit']">
+	                <a class="mui-navigate-right">
+	                    <i class="mui-pull-right update font14">{$visitor.email}</i>
+	                </a>
+	            <else/>
+	                <input id="email" name="email" type="text" placeholder="请输入邮箱" value="{$user_info.email}">
+	            </if>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="split-block"></div>
+		<div class="J_more list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">选填信息</div>
+	        <div class="describe font13">
+	            点开选填信息，填写更加分
+	        </div>
+	        <div class="arrow arrow_bottom"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="J_select qs-hidden">
+			<div class="list_height plist-txt notarrow">
+		        <div class="pic"></div>
+		        <div class="tit font14">身高</div>
+		        <div class="describe font13">
+		            <input id="height" name="height" type="text" placeholder="请输入身高" value="<if condition="$user_info['height']">{$user_info.height}</if>">
+		            CM
+		        </div>
+		        <div class="arrow"></div>
+		        <div class="clear"></div>
+		    </div>
+		    <div class="list_height plist-txt notarrow">
+		        <div class="pic"></div>
+		        <div class="tit font14">籍贯</div>
+		        <div class="describe font13">
+		            <input id="householdaddress" name="householdaddress" type="text" placeholder="请输入籍贯" value="{$user_info.householdaddress}">
+		        </div>
+		        <div class="arrow"></div>
+		        <div class="clear"></div>
+		    </div>
+		    <div class="list_height plist-txt notarrow">
+		        <div class="pic"></div>
+		        <div class="tit font14">婚姻状况</div>
+		        <div class="describe font13">
+			        <div class="radio-group x3">
+				        <div class="radio-cell">
+					        <label for="radio1">未婚</label>
+					        <input id="radio1" name="marriage" type="radio" value="1" title="未婚" <if condition="$user_info['marriage'] eq 1">checked="checked"</if>>
+				        </div>
+				        <div class="radio-cell">
+					        <label for="radio2">已婚</label>
+					        <input id="radio2" name="marriage" type="radio" value="2" title="已婚" <if condition="$user_info['marriage'] eq 2">checked="checked"</if>>
+				        </div>
+				        <div class="radio-cell">
+					        <label for="radio3">保密</label>
+					        <input id="radio3" name="marriage" type="radio" value="3" title="保密" <if condition="$user_info['marriage'] eq 3">checked="checked"</if>>
+				        </div>
+				        <div class="clear"></div>
+			        </div>
+		        </div>
+		        <div class="arrow"></div>
+		        <div class="clear"></div>
+		    </div>
+		    <div class="list_height plist-txt notarrow">
+		        <div class="pic"></div>
+		        <div class="tit font14">QQ</div>
+		        <div class="describe font13">
+		            <input id="qq" name="qq" type="text" placeholder="请输入QQ号码" value="{$user_info.qq}">
+		        </div>
+		        <div class="arrow"></div>
+		        <div class="clear"></div>
+		    </div>
+		    <div class="list_height plist-txt notarrow">
+		        <div class="pic"></div>
+		        <div class="tit font14">微信号</div>
+		        <div class="describe font13">
+		            <input id="weixin" name="weixin" type="text" placeholder="请输入微信号" value="{$user_info.weixin}">
+		        </div>
+		        <div class="arrow"></div>
+		        <div class="clear"></div>
+		    </div>
+		</div>
+
+		<div class="btn-spacing">
+		  <a id="J_saveresume"  href="javascript:;" class="qs-btn qs-btn-blue font18">保存</a>
+		</div>
+	    <div class="split-block"></div>
+	    <include file="public:footer_min" />
+		<!--<script src="../public/js/inobounce.js"></script>-->
+		<script src="../public/js/qsCategory.js"></script>
+	    <script src="../public/js/mobileBUGFix.mini.js"></script>
+		<script src="../public/js/LocalResizeIMG.js"></script>
+		<script src="../public/js/nprogress.js"></script>
+	    <script type="text/javascript">
+		    $(function(){
+			    $(".js-showActionSheet").on("click", function(){
+				    var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+				    var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+				    $iosActionsheet.removeClass('qs-actionsheet-toggle');
+				    $iosActionsheet.addClass('qs-actionsheet-toggle');
+				    $iosMask.fadeIn(200);
+				    $iosMask.on('click', hideActionSheet);
+				    $(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+				    $(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+				    function hideActionSheet() {
+					    $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+					    $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+				    }
+			    });
+		    });
+	        // 验证表单并提交
+	        var regularMobile = /^13[0-9]{9}$|14[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/; // 验证手机号正则
+	        var regularEmail = /^[_\.0-9a-zA-Z-]+[_0-9a-zA-Z-]@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,3}$/; // 
+	        var regularHeight = /^1[2-9][0-9]$|^2[0-2][0-9]$|^230$/; // 验证身高正则
+	        $('#J_saveresume').die().live('click', function() {
+	            var pid = "{$user_info.id}";
+	            var fullnameValue = $.trim($('#fullname').val());
+	            var sexValue = $.trim($('#sex input[name="sex"]:checked').val());
+	            var birthdateValue = $.trim($('#birthday').val());
+	            var experienceValue = $.trim($('#experience').val());
+	            var residenceValue = $.trim($('#residence').val());
+	            var telephoneValue = $.trim($('#telephone').val());
+	            var educationValue = $.trim($('#education').val());
+	            var emailValue = $.trim($('#email').val());
+	            var majorValue = $.trim($('#major').val());
+				var heightValue = $.trim($('#height').val());
+				var householdaddressValue = $.trim($('#householdaddress').val());
+				var marriageValue = $.trim($('input[name="marriage"]:checked').val());
+				var qq = $.trim($('#qq').val());
+				var weixin = $.trim($('#weixin').val());
+	            if (fullnameValue == "") {
+	                qsToast({type:2,context: '请填写姓名'});
+	                return false;
+	            }
+	            if (sexValue == "") {
+	                qsToast({type:2,context: '请选择性别'});
+	                return false;
+	            }
+	            if (birthdateValue == "") {
+	                qsToast({type:2,context: '请选择出生年份'});
+	                return false;
+	            }
+				if (residenceValue != "" && residenceValue.length > 20) {
+					qsToast({type:2,context: '现居住地应在1~20个字内'});
+					return false;
+				}
+	            if (educationValue == "") {
+	                qsToast({type:2,context: '请选择学历'});
+	                return false;
+	            }
+	            if (experienceValue == "") {
+	                qsToast({type:2,context: '请选择工作经验'});
+	                return false;
+	            }
+	            <if condition="!$visitor['mobile_audit']">
+	                if (telephoneValue == "") {
+	                    qsToast({type:2,context: '请填写手机'});
+	                    return false;
+	                }
+	                if (telephoneValue != "" && !regularMobile.test(telephoneValue)) {
+	                    qsToast({type:2,context: '手机号码格式不正确'});
+	                    return false;
+	                }
+	            </if>
+	            <if condition="!$visitor['email_audit']">
+	                if (emailValue == "") {
+	                    qsToast({type:2,context: '请填写邮箱'});
+	                    return false;
+	                }
+	                if (emailValue != "" && !regularEmail.test(emailValue)) {
+	                    qsToast({type:2,context: '邮箱格式不正确'});
+	                    return false;
+	                }
+	            </if>
+	            if (heightValue != "" && !regularHeight.test(heightValue)) {
+					qsToast({type:2,context: '请输入正确的身高（120-230）CM'});
+					return false;
+				}
+				if (householdaddressValue != "" && householdaddressValue.length > 20) {
+					qsToast({type:2,context: '籍贯应在1~20个字内'});
+					return false;
+				}
+	            $('#J_saveresume').val('保存中...').addClass('qs-btn-border-disabled');
+	            // 提交表单
+	            $.ajax({
+	                url: "{:U('Personal/user_info')}",
+	                type: 'POST',
+	                dataType: 'json',
+	                data: {pid:pid,realname: fullnameValue,sex: sexValue, birthday: birthdateValue,residence: residenceValue,education: educationValue, experience: experienceValue, phone: telephoneValue, email: emailValue, major: majorValue,height: heightValue, householdaddress: householdaddressValue,marriage: marriageValue,qq:qq,weixin:weixin},
+	                success:function(data){
+	                    if (data.status == 1) {
+	                        qsToast({type:1,context: data.msg});
+	                    } else {
+	                        qsToast({type:2,context: data.msg});
+	                    }
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                },
+	                error:function(result){
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    qsToast({type:2,context: result.msg});
+	                }
+	            });
+	        });
+	        $('.J_more').on('click',function(){
+	        	$(this).toggleClass('select');
+	        	if($(this).hasClass('select')){
+	        		$('.J_select').show();
+	        	}else{
+	        		$('.J_select').hide();
+	        	}
+	        });
+	        $('#browseFile').localResizeIMG({
+				width: 400,
+				quality: 1,
+				success: function (result) {  
+					var submitData={
+						base64_string:result.clearBase64, 
+					};
+					NProgress.start();
+					$.ajax({
+						type: "POST",
+						url: "{:U('upload/avatar')}",
+						data: submitData,
+						dataType:"json",
+						success: function(result){
+							NProgress.done();
+							if(result.status == 1){
+								$('#tpl_avatars').val(result.data.img);
+								$('#avatars').attr('src',result.data.path);
+							}else{
+								qsToast({type:2,context:result.msg});
+							}
+						}, 
+						complete :function(XMLHttpRequest, textStatus){},
+						error:function(XMLHttpRequest, textStatus, errorThrown){ //上传失败 
+							qsToast({type:2,context: '头像上传失败！'});
+						}
+					}); 
+				}
+			});
+	    </script>
+	</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/members.css">
+	</head>
+	<body>
+		<include file="public:header" />
+        <if condition="C('qscms_sms_open') eq 1">
+            <div class="qs-top-nav x2 list_height">
+                <div class="n-cell" onclick="javascript:location.href='{:U('Members/user_getpass',array('type'=>1))}'">已验证手机找回<div class="b-line"></div></div>
+                <div class="n-cell active">已绑定邮箱找回<div class="b-line"></div></div>
+                <div class="clear"></div>
+            </div>
+        </if>
+        <div class="split-block"></div>
+        <form action="post" id="form1">
+            <div class="loging-input-group">
+                <div class="group-list email">
+                    <input id="email" name="email" type="text" class="l-input font14" placeholder="请输入您注册的电子邮箱" autocomplete="off">
+                </div>
+            </div>
+            <div class="l-tool-bar list_height">
+                <div class="for-pwd link_gray6"><a href="{:U('Members/appeal_user')}">账号申诉</a></div>
+                <div class="clear"></div>
+            </div>
+            <input type="hidden" name="token" value="{$token}" />
+            <input type="hidden" name="type" value="2" />
+            <div id="pop" style="display:none"></div>
+        </form>
+        <div class="btn-spacing"><a id="sendEmailBtn" href="javascript:;" class="qs-btn qs-btn-blue font18">发送验证邮件</a></div>
+        <include file="public:footer" />
+        <include file="public:footer_min" />
+	</body>
+    <script>
+        var regularEmail = /^[_\.0-9a-zA-Z-]+[_0-9a-zA-Z-]@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,3}$/;
+        /**
+         * 发送验证邮件
+         */
+        $('#sendEmailBtn').on('click', function() {
+            var emailValue = $.trim($('input[name=email]').val());
+            if (emailValue == '') {
+                qsToast({type:2,context: '请输入邮箱'});
+                return false;
+            }
+            if (emailValue != "" && !regularEmail.test(emailValue)) {
+                qsToast({type:2,context: '邮箱格式不正确'});
+                return false;
+            }
+            $.ajax({
+                url: "{:U('Members/ajax_check')}",
+                cache: false,
+                async: false,
+                type: 'post',
+                dataType: 'json',
+                data: { type: 'email', param: emailValue },
+                success: function(json) {
+                    if (json && json.status) {
+                        qsToast({type:2,context: '该邮箱没有注册账号'});
+                        $('#email').focus();
+                        return false;
+                    } else {
+                        var url = "{:U('members/user_getpass')}";
+                        $.ajax({
+                            url: url,
+                            type: 'POST',
+                            dataType: 'json',
+                            data: $('#form1').serialize(),
+                            success: function (data) {
+                                if(data.status==1){
+                                    window.location.href = data.data.url;
+                                }else{
+                                    qsToast({type:2,context: data.msg});
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        })
+    </script>
+</html>

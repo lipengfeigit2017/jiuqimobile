@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+	</head>
+	<body>
+		<include file="public:header"/>	
+	<div class="add_success">
+	
+	  <div class="pic"><img src="../public/images/97.png" ></div>
+	  
+	  <div class="tipb font20">简历创建成功！</div>
+	  <div class="tip font14">您的简历完整度较低，90%的企业更愿意联系完整的简历，完善后可提高8倍的求职效果！</div>
+	  
+	  <div class="btnsbox">
+	    <div class="btnli"><div  class="qs-btn qs-btn-orange font18" onClick="javascript:location.href='{:U('personal/resume_edit',array('pid'=>$resume['id']))}'">继续完善简历</div></div>
+		<div class="btnli"><div class="qs-btn qs-btn-border-blue font18" onClick="javascript:location.href='{:url_rewrite('QS_jobslist')}'">立即搜索职位</div></div>
+		<div class="clear"></div>
+	  </div>
+	</div>
+<notempty name="jobslist['list']">
+	<div class="split-block"></div>
+
+	<div class="add_successrec">
+		<div class="eattitle list_height">
+			你可能感兴趣的职位
+			<div class="ritle font12 link_gray9"><a href="{:U('Jobs/index')}">更多</a></div>
+		</div>
+		<volist name="jobslist['list']" id="jobs">
+			<div class="jobslist"  onClick="javascript:location.href='{$list.jobs_url}'">
+				<div class="jname font15 link_gray6"><a href="{$list.jobs_url}">{$list.jobs_name}</a></div>
+				<div class="cname font12">{$district_cn} | {$list.nature_cn} | {$list.experience_cn}</div>
+				<div class="wage font13">{$list.wage_cn}</div>
+				<div class="time font12">{:fdate($list['refreshtime'])}</div>
+			</div>
+		</volist>
+	</div>
+	<div class="add_successrecso link_blue">没有找到满意的职位? <a href="{:U('Jobs/index')}">立即搜索</a></div>
+
+	<div class="split-block"></div>
+</notempty>
+
+</body>
+	<include file="public:footer_min" />
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<include file="public:meta" />
+<link rel="stylesheet" href="../public/css/company.css">
+<link rel="stylesheet" href="../public/css/nprogress.css">
+</head>
+<body>
+<include file="public:header"/>
+<div class="split-block"></div>
+<if condition="($Think.get.anew eq 1 AND $company_profile['audit'] neq '1') OR $company_profile['audit'] eq '0'">
+	<form id="authentication_form" action="{:U('company/com_auth')}" method="post">
+		<div class="list_height plist-txt notarrow">
+			<div class="pic"></div>
+			<div class="tit font14">企业名称</div>
+			<div class="describe font12">
+				<input name="companyname" type="text" readonly="readonly" value="{$company_profile.companyname}">
+			</div>
+			<div class="arrow"></div>
+			<div class="clear"></div>
+		</div>
+		<div class="list_height plist-txt notarrow">
+			<div class="pic"></div>
+			<div class="tit font14">营业执照</div>
+			<div class="describe com_auth_add_btn font13">
+				<div class="qs-btn qs-btn-inline qs-btn-green qs-btn-medium mt125">
+					<span class="js-up-txt">上传营业执照</span>
+					<input type="file" id="browseFile" class="browseFile">
+				</div>
+				<input type="hidden" id="certificate_img_up" name="certificate_img_up" value="">
+			</div>
+			<div class="arrow"></div>
+			<div class="clear"></div>
+		</div>
+		<div class="split-block"></div>
+	</form>
+<else/>
+	<switch name="company_profile['audit']">
+		<case value="1">
+			<!--审核通过-->
+			<div class="set-success-tip-box qs-center">
+				<div class="set-success-tip success font16">审核通过!</div>
+			</div>
+			<div class="qs-center font13 txt-color-9 mt2">恭喜您，您提交的营业执照通过审核了！</div>
+		</case>
+		<case value="2">
+			<!--等待审核-->
+			<div class="set-success-tip-box qs-center">
+				<div class="set-success-tip wait font16">认证资料已提交，等待审核中!</div>
+			</div>
+			<div class="qs-center">
+				<div class="m-auth-img-box">
+					<img src="{:attach($company_profile['certificate_img'],'certificate_img')}">
+				</div>
+			</div>
+			<div class="qs-center font13 txt-color-9 mt2 link_blue">我们会在1个工作日内进行审核，如需修改请 <a href="{:U('company/com_auth',array('anew'=>1))}">[重新上传]</a></div>
+		</case>
+		<case value="3">
+			<!--审核不通过-->
+			<div class="set-success-tip-box qs-center">
+				<div class="set-success-tip failure font16">审核不通过!</div>
+			</div>
+			<div class="qs-center font13 txt-color-9 mt2 link_blue">
+				您好，您提交的营业执照未通过审核<br>
+				原因：{$reason}
+			</div>
+			<div class="btn-spacing mt10"><a href="{:U('company/com_auth',array('anew'=>1))}" class="qs-btn qs-btn-blue font18">重新认证</a></div>
+		</case>
+	</switch>
+</if>
+<include file="public:footer_min" />
+<script src="../public/js/mobileBUGFix.mini.js"></script>
+<script src="../public/js/LocalResizeIMG.js"></script>
+<script src="../public/js/nprogress.js"></script>
+<script type="text/javascript">
+	$('#browseFile').localResizeIMG({
+		width: 800,
+		quality: 1,
+		success: function (result) {
+			var submitData={
+				base64_string:result.clearBase64
+			};
+			NProgress.start();
+			$.ajax({
+				type: "POST",
+				url: "{:U('upload/certificate_img')}",
+				data: submitData,
+				dataType:"json",
+				success: function(result){
+					NProgress.done();
+					if(result.status == 1){
+						$('input[name="certificate_img_up"]').val(result.data.img);
+						$('#authentication_form').submit();
+					}else{
+						qsToast({type:2,context:result.msg});
+					}
+				},
+				complete :function(XMLHttpRequest, textStatus){},
+				error:function(XMLHttpRequest, textStatus, errorThrown){ //上传失败
+					qsToast({type:2,context: '营业执照上传失败！'});
+				}
+			});
+		}
+	});
+</script>
+</body>
+</html>

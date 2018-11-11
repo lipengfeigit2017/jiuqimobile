@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/personal.css">
+</head>
+<body>
+    <include file="public:header"/>
+    <div class="filter-group x3 filter-outer">
+        <div id="f-mask"></div>
+        <div class="filter-outer">
+            <div class="filter-list js-filter" data-tag="0">
+                <div class="filter-cell">
+                    <div class="filter-cell-txt">
+                        <eq name="member_turn" value="2">待处理<else />不限</eq>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-list js-filter" data-tag="1">
+                <div class="filter-cell">
+                    <div class="filter-cell-txt">
+                        <if condition="$type eq ''">红包类型<else />{$type_list[$type]}</if>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-list js-filter" data-tag="2">
+                <div class="filter-cell">
+                    <div class="filter-cell-txt">
+                        <if condition="$status eq ''">状态不限<else />{$status_list[$status]}</if>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--待处理下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item" href="{:P(array('member_turn'=>0))}">不限</a></li>
+                    <li><a class="f-item" href="{:P(array('member_turn'=>2))}">待处理</a></li>
+                </div>
+            </div>
+        </div>
+        <!--红包类型下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item" href="{:P(array('type'=>''))}">全部</a></li>
+                    <volist name="type_list" id="vo">
+                    <li><a class="f-item" href="{:P(array('type'=>$key))}">{$vo}</a></li>
+                    </volist>
+                </div>
+            </div>
+        </div>
+        <!--红包状态下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item" href="{:P(array('status'=>''))}">全部</a></li>
+                    <volist name="status_list" id="vo">
+                    <li><a class="f-item" href="{:P(array('status'=>$key))}">{$vo}</a></li>
+                    </volist>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="split-block"></div>
+    <div class="my-alw-list-group">
+    <notempty name="record['list']">
+        <volist name="record['list']" id="vo">
+        <div class="my-alw-list">
+            <div class="mal-h" onclick="javascript:location.href='{:U('Personal/allowance_detail',array('id'=>$vo['id']))}'">
+                <div class="mal-h-icon <if condition="$vo['apply'] eq 1">mh2<elseif condition="$vo['interview'] eq 1" />mh1<else />mh3</if>"></div>
+                <div class="mal-h-txt link_blue"><a href="{:url_rewrite('QS_jobsshow',array('id'=>$info_list[$vo['info_id']]['jobsid']))}">{$info_list[$vo['info_id']]['jobsname']}</a></div>
+                <div class="mal-h-sta txt-red">{$vo['status_cn']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-39"></div>
+            <!--投递红包-->
+            <eq name="vo['apply']" value="1">
+            <div class="mal-line font15">
+                <div class="c-l">红包已发放</div>
+                <div class="c-r txt-o">￥{$info_list[$vo['info_id']]['per_amount']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-32"></div>
+            <div class="mal-line txt-9">{:date('m-d H:i',$vo['updatetime'])} 领取红包</div>
+            </eq>
+            <!--面试红包-->
+            <eq name="vo['interview']" value="1">
+                <if condition="$vo['step'] eq 10">
+                <div class="mal-line font15">
+                    <div class="c-l">等待企业同意面试</div>
+                    <div class="c-r txt-o">￥{$info_list[$vo['info_id']]['per_amount']}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="sp-h-32"></div>
+                <div class="mal-line txt-9">{:date('m-d H:i',$vo['updatetime'])} 领取红包</div>
+                </if>
+                <if condition="$vo['step'] eq 20">
+                <div class="mal-line font15 c-btn">
+                    <div class="c-l">
+                        <div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-blue font14" onclick="javascript:location.href='{:U('Personal/ever_interview',array('record_id'=>$vo['id'],'company_uid'=>$vo['company_uid']))}'">我已面试</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="c-r txt-o">￥{$info_list[$vo['info_id']]['per_amount']}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="sp-h-32"></div>
+                <div class="mal-line txt-9 link_blue">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 企业同意面试 <a href="{:U('Personal/allowance_interview_detail',array('record_id'=>$vo['id']))}">[详情]</a></div>
+                </if>
+                <if condition="$vo['step'] eq 30">
+                <div class="mal-line font15">
+                    <div class="c-l">企业拒绝面试</div>
+                    <div class="c-r txt-o">￥{$info_list[$vo['info_id']]['per_amount']}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="sp-h-32"></div>
+                <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 企业拒绝面试</div>
+                </if>
+                <if condition="$vo['step'] eq 40">
+                <div class="mal-line font15">
+                    <div class="c-l">等待企业确认</div>
+                    <div class="c-r txt-o">￥{$info_list[$vo['info_id']]['per_amount']}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="sp-h-32"></div>
+                <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 我已面试</div>
+                </if>
+                <if condition="$vo['step'] eq 50">
+                <div class="mal-line font15">
+                    <div class="c-l">红包已发放</div>
+                    <div class="c-r txt-o">￥{$info_list[$vo['info_id']]['per_amount']}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="sp-h-32"></div>
+                <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 企业已确认</div>
+                </if>
+                <if condition="$vo['step'] eq 60">
+                <div class="mal-line font15">
+                    <div class="c-l">判定缺席</div>
+                    <div class="c-r txt-o">￥{$info_list[$vo['info_id']]['per_amount']}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="sp-h-32"></div>
+                <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 企业判定缺席</div>
+                </if>
+            </eq>
+            <!--入职红包-->
+            <eq name="vo['entry']" value="1">
+                <if condition="$vo['step'] eq 70">
+                <div class="mal-line font15 c-btn">
+                    <div class="c-l">
+                        <div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-blue font14" onclick="javascript:location.href='{:U('Personal/ever_entry',array('record_id'=>$vo['id']))}'">我已入职</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="c-r txt-o">￥{$info_list[$vo['info_id']]['per_amount']}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="sp-h-32"></div>
+                <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 领取红包</div>
+                </if>
+                <if condition="$vo['step'] eq 71">
+                <div class="mal-line font15">
+                    <div class="c-l">等待企业确认入职</div>
+                    <div class="c-r txt-o">￥{$info_list[$vo['info_id']]['per_amount']}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="sp-h-32"></div>
+                <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 申请入职</div>
+                </if>
+                <if condition="$vo['step'] eq 80">
+                <div class="mal-line font15">
+                    <div class="c-l">红包已发放</div>
+                    <div class="c-r txt-o">￥{$info_list[$vo['info_id']]['per_amount']}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="sp-h-32"></div>
+                <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 企业确认入职</div>
+                </if>
+                <if condition="$vo['step'] eq 90">
+                <div class="mal-line font15">
+                    <div class="c-l">判定缺席</div>
+                    <div class="c-r txt-o">￥{$info_list[$vo['info_id']]['per_amount']}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="sp-h-32"></div>
+                <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 企业判定缺席</div>
+                </if>
+            </eq>
+            <div class="sp-h-50"></div>
+        </div>
+        <div class="split-block"></div>
+        </volist>
+        <div class="qspage">{$record['page']}</div>
+    <else />
+        <if condition="$hasget">
+            <div class="list-empty">
+                抱歉，没有找到符合您条件的记录！
+            </div>
+            <else />
+            <div class="list-empty link_blue">
+                你目前还没有领取过红包<br />
+                建议您主动出击 <a href="{:url_rewrite('QS_jobslist')}">找工作</a>
+            </div>
+        </if>
+    </notempty>
+    </div>
+    <div class="split-block"></div>
+    <include file="public:footer_min" />
+    <script>
+        $('.js-filter').on('click', function() {
+            var filter = new QSfilter($(this));
+        });
+    </script>
+</body>
+</html>

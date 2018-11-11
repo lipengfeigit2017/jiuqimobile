@@ -1,0 +1,42 @@
+<div id="select_color_box">
+	<div class="color_title">选择标题颜色：</div>
+	<div class="color_box_close" onclick="color_box_display()">关闭</div>
+	<div class="clear"></div>
+	<a onclick="set_color('');color_box_display()" href="javascript:void(0);" style="background-image:url(__ADMINPUBLIC__/images/color_box_bg.gif)"></a>
+	<a onclick="set_color('#3382f9');color_box_display()" href="javascript:void(0);" style=" background-color:#3382f9"></a>
+	<a onclick="set_color('#ba40d4');color_box_display()" href="javascript:void(0);" style=" background-color:#ba40d4"></a>
+	<a onclick="set_color('#c22626');color_box_display()" href="javascript:void(0);" style=" background-color:#c22626"></a>
+	<a onclick="set_color('#f23b3b');color_box_display()" href="javascript:void(0);" style=" background-color:#f23b3b"></a>
+	<a onclick="set_color('#fe611c');color_box_display()" href="javascript:void(0);" style=" background-color:#fe611c"></a>
+	<a onclick="set_color('#6f9e0f');color_box_display()" href="javascript:void(0);" style=" background-color:#6f9e0f"></a>
+	<a onclick="set_color('#28a7b2');color_box_display()" href="javascript:void(0);" style=" background-color:#28a7b2"></a>
+	<input id="select_color_input" type="text" placeholder="输入16进制色值" style="margin-left: 10px;">
+	<span onclick="btn_set_color()">确定</span>
+	<div class="clear"></div>
+</div>
+<script type="text/javascript">
+	function set_color(x){
+		var rgb=x;
+		if (rgb==""){
+			document.getElementById('color_box').style.background='url(__ADMINPUBLIC__/images/color_box_bg.gif)';
+		}else{
+			document.getElementById('color_box').style.background=rgb;
+		}
+		//alert(rgb);
+		document.getElementById('tit_color').value= rgb;
+	}
+	function color_box_display(){
+		target=document.getElementById('select_color_box');
+		if (target.style.display=="block"){
+			target.style.display="none";
+		} else {
+			target.style.display="block";
+		}
+		//document.bgColor =rgb;
+	}
+	function btn_set_color() {
+        var color = document.getElementById('select_color_input').value;
+        set_color('#' + color);
+        color_box_display();
+    }
+</script>

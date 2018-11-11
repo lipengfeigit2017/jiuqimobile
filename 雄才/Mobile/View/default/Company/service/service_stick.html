@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+     <include file="public:header" />
+     <div class="order-top">
+		<div class="txt">
+			 增值包有效期与您的套餐到期时间一致，购买后请尽快使用。当前套餐到期时间：<span class="font_yellow"><if condition="$my_setmeal['endtime'] eq '0'">无期限<else />{:date('Y-m-d',$my_setmeal['endtime'])}</if></span>
+		</div>
+	</div>
+	<div class="split-block"></div>
+    <div class="list_height plist-txt last">
+	    <div class="pic"></div>
+	    <div class="tit font14">选择职位</div>
+	    <div class="describe font13">
+	    <if condition="$jobs_arr">
+	    	<span class="for-select"></span>
+	        <select id="jobs_choose">
+		    	<volist name="jobs_arr" id="job">
+		    	<option value="{$job['id']}-{$job['stick']}" <if condition="$jobs_id eq $job['id']">selected</if>>{$job['jobs_name']}</option>
+		    	</volist>
+		    </select>
+		<else />
+			<span id="no_jobs_choose">没有可选择的职位</span>
+		</if>
+	    </div>
+	    <div class="arrow"></div>
+	    <div class="clear"></div>
+	</div>
+	<div class="clear"></div>
+    <div class="split-block"></div>
+    <div class="ptitle border">
+      <div class="th1">选择置顶增值包</div>
+    </div>
+    <volist name="increment_arr" id="vo">
+    <div class="list_height plist-txt order-service-item <if condition="$key eq count($increment_arr)-1">last</if> <if condition="$key eq '0'">active</if>" service_id="{$vo['id']}" service_price="{$vo['service_price']}" service_points="{$vo['service_points']}" service_name="{$vo['name']}">
+	  <div class="pic"></div>
+	  <div class="tit font14">{$vo['name']}，<span class="font_yellow">{$vo['service_price']}元</span><span class="font_gray9">（VIP价：{$vo['vip_price']}元）</span></div>
+	  <div class="clear"></div>
+	</div>
+	</volist>
+	<div class="clear"></div>
+    <div class="split-block"></div>
+    <div class="list_height plist-txt notarrow">
+	  <div class="pic"></div>
+	  <div class="tit font14">订单金额</div>
+	  <div class="describe font13"><if condition="C('qscms_mobile_setmeal_increment_discount_value') gt 0"><span class="discount_notice font12">触屏版专享优惠价</span></if><span class="font_yellow" id="total_amount">{$increment_arr[0]['service_price']}</span>元</div>
+		<div class="arrow"></div>
+		<div class="clear"></div>
+	</div>
+	<if condition="$setmeal_increment_pay_points_rule['stick'] eq 1">
+    <div class="list_height plist-txt notarrow pay-type">
+	  <div class="pic"></div>
+	  <div class="tit font14">支付方式</div>
+	  <div class="describe font12">
+	  	<div class="radio-list pay-type-list">
+	  		<div class="radio points active">
+				<div class="pic"></div>
+				<div class="txt">{:C('qscms_points_byname')}支付</div>
+			</div>
+	  		<div class="radio cash">
+				<div class="pic"></div>
+				<div class="txt">现金支付</div>
+			</div>
+			<div class="clear"></div>
+	  	</div>
+	  </div>
+		<div class="arrow"></div>
+	  <div class="clear"></div>
+	</div>
+    <div class="list_height plist-txt notarrow points-pay-relation last">
+	  <div class="pic"></div>
+	  <div class="tit font14">所需{:C('qscms_points_byname')}</div>
+	  <div class="describe font13"><span class="font_yellow" id="total_points">{$increment_arr[0]['service_points']}</span></div>
+		<div class="arrow"></div>
+		<div class="clear"></div>
+	</div>
+    <div class="list_height plist-txt notarrow cash-pay-relation">
+	  <div class="pic"></div>
+	  <div class="tit font14">{:C('qscms_points_byname')}抵扣</div>
+	  <div class="describe font13"><input type="number" value="" placeholder="当前共有{$my_points}{:C('qscms_points_byname')}" id="deductible_val"></div>
+		<div class="arrow"></div>
+		<div class="clear"></div>
+	</div>
+    <div class="list_height plist-txt notarrow cash-pay-relation last">
+	  <div class="pic"></div>
+	  <div class="tit font14">应付金额</div>
+	  <div class="describe font13"><span class="font_yellow" id="need_amount">{$increment_arr[0]['service_price']}</span></div>
+		<div class="arrow"></div>
+		<div class="clear"></div>
+	</div>
+	</if>
+    <div class="split-block"></div>
+    <div class="payment-list cash-pay-relation" style="display:none;">
+    	<div class="payment wxpay active">
+			<div class="pic wxpay"></div>
+			<div class="txt">
+				<div class="payment-name font14">微信支付</div>
+				<div class="payment-intro font12 font_gray9">推荐已在微信中绑定银行卡的用户使用</div>
+			</div>
+			<div class="radio active"></div>
+		</div>
+		<div class="payment alipay last">
+			<div class="pic alipay"></div>
+			<div class="txt">
+				<div class="payment-name font14">支付宝支付</div>
+				<div class="payment-intro font12 font_gray9">推荐已下载支付宝客户端的用户使用</div>
+			</div>
+			<div class="radio "></div>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="btn-spacing"><div class="qs-btn qs-btn-blue font18" id="submit_pay">提交订单</div></div>
+	<if condition="$jobs_id">
+	<input name="jobs_id" id="jobs_id" type="hidden" value="{$jobs_id}" />
+	<input name="buy" id="buy" type="hidden" value="{$jobs_buy}" />
+	<else />
+	<input name="jobs_id" id="jobs_id" type="hidden" value="{$jobs_arr[0]['id']|default=0}" />
+	<input name="buy" id="buy" type="hidden" value="{$jobs_arr[0]['stick']|default=0}" />
+	</if>
+	 <div class="split-block"></div>
+	<!--当前用户的积分数-->
+	<input type="hidden" name="my_points" id="my_points" value="{$my_points}">
+	<!--当前服务类型id-->
+	<input type="hidden" name="service_id" id="service_id" value="{$increment_arr[0]['id']}">
+	<!--当前服务类型所需积分数-->
+	<input type="hidden" name="service_points" id="service_points" value="{$increment_arr[0]['service_points']}">
+	<!--当前服务类型所需人民币-->
+	<input type="hidden" name="service_price" id="service_price" value="{$increment_arr[0]['service_price']}">
+	<!--当前选择的支付方式-->
+	<input type="hidden" name="payment" id="payment" value="wxpay">
+	<!--当前需要支付的金额-->
+	<input type="hidden" name="pay_amount" id="pay_amount" value="{$increment_arr[0]['service_price']}">
+     <include file="public:footer_min" />
+	<script type="text/javascript">
+		//定义当前用户的积分数
+		var my_points = parseInt($('#my_points').val());
+		// 是否允许使用积分抵现
+		var setmeal_by_points = "{$setmeal_increment_pay_points_rule['stick']}";
+		//设置支付方式
+		function set_payment(){
+			if($('.pay-type-list .radio.points').hasClass('active')){
+				$('#payment').val('points');
+			}else{
+				$('#payment').val($('.payment-list .payment.active').hasClass('wxpay')?'wxpay':'alipay');
+			}
+		}
+		// 不允许使用积分抵现时，页面初始化
+		function init_pay_cash(){
+			$('.payment-list').show();
+			$('#submit_pay').addClass('enable');
+			$('#submit_pay').addClass('qs-btn-blue');
+			$('#submit_pay').removeClass('qs-btn-border-gray');
+			$('#submit_pay').html("提交订单");
+		}
+		//初始化界面显示
+		function init_shows(choose_pay_type){
+			$('#submit_pay').addClass('enable');
+			$('#submit_pay').addClass('qs-btn-blue');
+			$('#submit_pay').removeClass('qs-btn-border-gray');
+			$('#submit_pay').html("提交订单");
+			//定义当前服务类型所需积分数
+			var service_points = parseFloat($('#service_points').val());
+			if(choose_pay_type){
+				//定义当前所选支付类型
+				var pay_type = $('.pay-type-list .radio.points').hasClass('active')?'points':'cash';
+				if(pay_type=='points'){
+					$('.cash-pay-relation').hide();
+					$('.points-pay-relation').show();
+					if(my_points<service_points){
+						$('#submit_pay').removeClass('enable');
+						$('#submit_pay').addClass('qs-btn-border-gray');
+						$('#submit_pay').removeClass('qs-btn-blue');
+						$('#submit_pay').html("{:C('qscms_points_byname')}不足，无法完成支付");
+					}
+				}else{
+					$('.cash-pay-relation').show();
+					$('.points-pay-relation').hide();
+				}
+			}else{
+				if(my_points>=service_points){
+					$('.cash-pay-relation').hide();
+					$('.points-pay-relation').show();
+					$('.pay-type-list .radio').removeClass('active');
+					$('.pay-type-list .radio.points').addClass('active');
+				}else{
+					$('.cash-pay-relation').show();
+					$('.points-pay-relation').hide();
+					$('.pay-type-list .radio').removeClass('active');
+					$('.pay-type-list .radio.cash').addClass('active');
+				}
+			}
+		}
+		if(setmeal_by_points == 1){
+			init_shows(false);
+		} else {
+			init_pay_cash();
+		}
+		set_payment();
+		//选择服务类型
+		$('.order-service-item').on('click',function(){
+			$('.order-service-item').removeClass('active');
+			$(this).addClass('active');
+			$('#service_id').val($(this).attr('service_id'));
+			$('#service_points').val($(this).attr('service_points'));
+			$('#service_price').val($(this).attr('service_price'));
+			//订单金额显示
+			$('#total_amount').html($(this).attr('service_price'));
+			//应付金额显示
+			$('#need_amount').html($(this).attr('service_price'));
+			//所需积分显示
+			$('#total_points').html($(this).attr('service_points'));
+			if(setmeal_by_points == 1){
+				init_shows(false);
+			} else {
+				init_pay_cash();
+			}
+			after_deductible();
+			set_payment();
+		});
+		//选择支付类型（积分？现金？）
+		$('.pay-type-list .radio').on('click',function(){
+			$('.pay-type-list .radio').removeClass('active');
+			$(this).addClass('active');
+			init_shows(true);
+			set_payment();
+		});
+		//选择支付方式（支付宝？微信？）
+		$('.payment-list .payment').on('click',function(){
+			$('.payment-list .payment').removeClass('active');
+			$('.payment-list .payment .radio').removeClass('active');
+			$(this).addClass('active');
+			$(this).children('.radio').addClass('active');
+			$('#payment').val($(this).hasClass('wxpay')?'wxpay':'alipay');
+		});
+		//填写抵扣积分数
+		$('#deductible_val').on('keyup',function(){
+			var input_val = parseInt($(this).val());
+			var service_points = parseInt($('#service_points').val());
+			var max_val = my_points<service_points?my_points:service_points;
+			if(input_val>max_val){
+				$(this).val(max_val);
+			}
+			after_deductible();
+		});
+		//计算抵扣后的金额
+		function after_deductible(){
+			var return_val = 0.0;
+			var service_points = parseInt($('#service_points').val());
+			if(setmeal_by_points == 1){
+				var deductible = $('#deductible_val').val()==''?0:parseInt($('#deductible_val').val());
+			} else {
+				var deductible = 0;
+			}
+			var rate = parseInt("{$payment_rate}");
+			var minus_val = service_points-deductible;
+			if(minus_val>0){
+				return_val = parseFloat(minus_val/rate);
+			}
+			$('#need_amount').html(return_val);
+			$('#pay_amount').val(return_val);
+		}
+		//没有职位的提示
+		$('#no_jobs_choose').on('click',function(){
+			qsToast({type:2,context: "没有可选择的职位！"});
+			return false;
+		});
+		//选择职位赋值
+		$("#jobs_choose").on('change',function(){
+			var val_str = $(this).val();
+			var val_arr = val_str.split('-');
+			$("#jobs_id").val(val_arr[0]);
+			$("#buy").val(val_arr[1]);
+		});
+		//提交订单
+		var lock = 0;
+		$('#submit_pay').on('click',function(){
+			if($(this).hasClass('enable') && !lock){
+				lock = 1;
+				var jobs_id = $('#jobs_id').val();
+				var payment = $('#payment').val();
+				var service_id = $('#service_id').val();
+				var deductible_val = $('#deductible_val').val();
+				var url = "{:U('service_stick')}";
+				if(jobs_id == 0){
+					qsToast({type:2,context: "请选择职位！"});
+					lock = 0;
+					return false;
+				}
+				if(parseInt($("#buy").val())!=0){
+					qsToast({type:2,context: "该职位已置顶，不能重复购买！"});
+					lock = 0;
+					return false;
+				}
+          		
+				$.post(url,{jobs_id:jobs_id,payment:payment,service_id:service_id,deductible_val:deductible_val},function(result){
+					if(result.status==1){
+						location.href=result.data;
+					}else{
+						qsToast({type:2,context: result.msg});
+						lock = 0;
+						return false;
+					}
+				},'json');
+			}
+		});
+		
+	</script>
+	</body>
+</html>

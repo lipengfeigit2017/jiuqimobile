@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/mall.css">
+</head>
+<body>
+<include file="public:header"/>
+
+<div class="filter-group x2 filter-outer">
+    <div id="f-mask"></div>
+    <div class="filter-outer">
+        <div class="filter-list js-filter" data-tag="0">
+            <div class="filter-cell"><div class="filter-cell-txt"><if condition="$Think.get.settr gt 0">{$Think.get.settr}天内<else />订单日期</if></div></div>
+        </div>
+        <div class="filter-list js-filter" data-tag="1">
+            <div class="filter-cell"><div class="filter-cell-txt"><if condition="$Think.get.status eq 1">待审核<elseif condition="$Think.get.status eq 2"/>已完成<elseif condition="$Think.get.status eq 3"/>审核未通过<else />订单状态</if></div></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="con-filter">
+        <div class="f-box qs-hidden">
+            <div class="f-box-inner">
+                <li><a class="f-item <if condition="$Think.get.settr eq '' || $Think.get.settr eq '0'">select</if>" href="{:P(array('settr'=>0))}">全部</a></li>
+                <li><a class="f-item <if condition="$Think.get.settr eq 3">select</if>" href="{:P(array('settr'=>3))}">3天内</a></li>
+                <li><a class="f-item <if condition="$Think.get.settr eq 7">select</if>" href="{:P(array('settr'=>7))}">7天内</a></li>
+                <li><a class="f-item <if condition="$Think.get.settr eq 15">select</if>" href="{:P(array('settr'=>15))}">15天内</a></li>
+                <li><a class="f-item <if condition="$Think.get.settr eq 30">select</if>" href="{:P(array('settr'=>30))}">30天内</a></li>
+            </div>
+        </div>
+        <div class="f-box qs-hidden">
+            <div class="f-box-inner">
+                <li><a class="f-item <if condition="$Think.get.status eq '' || $Think.get.status eq '0'">select</if>" href="{:P(array('status'=>0))}">全部</a></li>
+                <li><a class="f-item <if condition="$Think.get.status eq 1">select</if>" href="{:P(array('status'=>1))}">待审核</a></li>
+                <li><a class="f-item <if condition="$Think.get.status eq 2">select</if>" href="{:P(array('status'=>2))}">已完成</a></li>
+                <li><a class="f-item <if condition="$Think.get.status eq 3">select</if>" href="{:P(array('status'=>3))}">审核未通过</a></li>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="split-block"></div>
+<notempty name="order['list']">
+<volist name="order['list']" id="vo">
+<div class="order-list-item" onclick="javascript:location.href='{:url_rewrite('QS_Mall_order_show',array('id'=>$vo['id']))}'">
+    <div class="item-header font12">
+        <div class="txt oid font_gray9">订单时间：{:date('Y-m-d H:i',$vo['addtime'])}</div>
+        <if condition="$vo['status'] eq 1">
+        <div class="txt status font_yellow">
+        待审核
+        </div>
+        <elseif condition="$vo['status'] eq 2" />
+        <div class="txt status font_green">
+        已完成
+        </div>
+        <elseif condition="$vo['status'] eq 3" />
+        <div class="txt status font_red">
+        未通过
+        </div>
+        </if>
+        <div class="clear"></div>
+    </div>
+    <div class="item-content">
+        <div class="pic">
+            <img src="{$pic_arr[$vo['goods_id']]}" border="0" />
+        </div>
+        <div class="txt">
+            <div class="t1 substring">{$vo['goods_title']}</div>
+            <div class="t2">
+                <div class="num font_gray9 font12">{$vo['goods_points']}{:C('qscms_points_byname')}*{$vo['goods_num']}件</div>
+                <div class="price font_yellow">{$vo['order_points']}{:C('qscms_points_byname')}</div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="split-block"></div>
+</volist>
+<div class="qspage">{$order['page']}</div>
+<else />
+<div class="list-empty">
+    抱歉，没有符合条件的兑换记录！
+</div>
+</notempty>
+<div class="split-block"></div>
+<include file="public:footer_min" />
+<script type="text/javascript">
+    $('.js-filter').on('click',function(){
+        var filter = new QSfilter($(this));
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/nprogress.css">
+</head>
+<body class="up-page">
+    <div class="up-page-logo"><div class="logo-img">
+        <img src="<if condition="$info['logo']">{:attach($info['logo'],'company_logo')}<else/>{:attach('no_logo_mob.png','resource')}</if>?{:time()}" border="0"/>
+    </div></div>
+    <div class="up-sp-37"></div>
+    <div class="up-txt-line font_3 font16 qs-center">{$info['companyname']}</div>
+    <div class="up-sp-45"></div>
+    <div class="up-txt-line font_3 font14 qs-center link_blue">
+        <if condition="$Think.get.anew eq 1 OR $info.audit eq 0">
+            请点击下方区域上传您的企业 <span class="font_green">营业执照</span>
+            <else/>
+            <switch name="info['audit']">
+                <case value="1">
+                    <!--审核通过-->
+                    恭喜您，您提交的营业执照 <span class="font_green">审核通过</span> 了！
+                </case>
+                <case value="2">
+                    <!--等待审核-->
+                    您的营业执照已提交，<span class="font_yellow">等待审核中</span>...
+                </case>
+                <case value="3">
+                    <!--审核未通过-->
+                    您提交的营业执照 <span class="font_red">审核未通过</span>，请 <a href="javascript:;" id="re-upload">重新上传</a>
+                </case>
+            </switch>
+        </if>
+    </div>
+    <div class="up-sp-40"></div>
+    <if condition="($Think.get.anew eq 1 AND $info['audit'] neq '1') OR $info['audit'] eq '0'">
+        <div class="up-input-box">
+            <input type="file" class="file-input">
+            <div class="icon-add"></div>
+            <div class="up-sp-29"></div>
+            <div class="up-txt-line font_gray9">点击此区域上传</div>
+            <div class="up-sp-29"></div>
+            <div class="up-txt-line font12 font_yellow">图片大小2M以内</div>
+        </div>
+        <elseif condition="$info['audit'] neq '1'"/>
+        <div class="img-box">
+            <div class="img-cell">
+                <img src="{:attach($info['certificate_img'],'certificate_img')}">
+                <eq name="info.audit" value="2">
+                    <div class="img-del J_delete" data-uname="{$Think.get.uname}" data-pwd="{$Think.get.pwd}"></div>
+                </eq>
+            </div>
+        </div>
+    </if>
+    <div class="up-sp-39"></div>
+    <div class="block-sp2"></div>
+    <include file="public:footer_min" />
+</body>
+<script src="../public/js/mobileBUGFix.mini.js"></script>
+<script src="../public/js/LocalResizeIMG.js"></script>
+<script src="../public/js/nprogress.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var uname = '{$Think.get.uname}', pwd = '{$Think.get.pwd}';
+        var url = qscms.root + '?m=Mobile&c=ScanUpload&a=certificate_img&uname=' + uname + '&pwd=' + pwd;
+        // 选择文件上传
+        $('.file-input').localResizeIMG({
+            width: 800,
+            quality: 1,
+            success: function (result) {
+                var submitData={
+                    base64_string:result.clearBase64,
+                };
+                NProgress.start();
+                $.ajax({
+                    type: "POST",
+                    url: "{:U('upload/certificate_img')}",
+                    data: submitData,
+                    dataType:"json",
+                    success: function(result){
+                        NProgress.done();
+                        if(result.status == 1){
+                            var img = result.data.img;
+                            // 提交表单
+                            $.ajax({
+                                url: "{:U('Company/com_auth')}",
+                                type: 'POST',
+                                dataType: 'json',
+                                data: {certificate_img_up:img},
+                                success:function(data){
+                                    if (data.status == 1) {
+                                        window.location.href = url;
+                                        //window.location.reload();
+                                    } else {
+                                        qsToast({type:2,context: data.msg});
+                                    }
+                                },
+                                error:function(data){
+                                    qsToast({type:2,context: data.msg});
+                                }
+                            });
+                        }else{
+                            qsToast({type:2,context:result.msg});
+                        }
+                    },
+                    complete :function(XMLHttpRequest, textStatus){},
+                    error:function(XMLHttpRequest, textStatus, errorThrown){ //上传失败
+                        qsToast({type:2,context: '图片上传失败！'});
+                    }
+                });
+            }
+        });
+        // 删除
+        $('.J_delete').live('click', function () {
+            var popout = new QSpopout('重新上传');
+            popout.setContent('您确定要重新上传营业执照吗?');
+            popout.getPrimaryBtn().on('click', function () {
+                window.location.href = url + '&anew=1';
+            });
+            popout.show();
+        });
+        // 重新上传
+        $('#re-upload').live('click', function() {
+            window.location.href = url + '&anew=1';
+        });
+    });
+</script>
+</html>

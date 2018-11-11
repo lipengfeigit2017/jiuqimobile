@@ -1,0 +1,7 @@
+<volist name="list" id="list">
+	<div class="langmod <if condition="$count eq $i">last</if>" type="language" pid="{$pid}" sid="{$list['id']}">
+		<div class="expedit" onClick="javascript:location.href='{:U('personal/resume_edit_lang',array('pid'=>$pid,'id'=>$list['id']))}'"></div>
+		<div class="J_delete expdel"></div>
+		<div class="tagli">{$list.language_cn}<span>{$list.level_cn}</span></div>
+	</div>
+</volist>

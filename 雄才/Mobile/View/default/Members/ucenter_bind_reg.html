@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <include file="public:meta" />
+        <link rel="stylesheet" href="../public/css/members.css">
+	</head>
+	<body>
+        <include file="public:header" />
+        <div class="split-block"></div>
+        <div class="bind-top-box qs-center">
+            <img src="<if condition="$user_bind_info['keyavatar_big']">{$user_bind_info.keyavatar_big}<else/>{:attach('no_photo_male.png','resource')}</if>" alt="{$user_bind_info.username}" class="b-img">
+            <div class="b-nickname">{$user_bind_info.username}</div>
+            <div class="font12 txt-color-9">您已登录{$third_name}账号</div>
+        </div>
+        <div class="split-block"></div>
+        <form action="" method="post" id="registerForm">
+            <div class="list-group b-list-group">
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">选择身份</div>
+                    <div class="describe font12">
+                        <input class="p-radio" name="utype" type="radio" value="2" title="个人会员" checked="checked"/>&nbsp;&nbsp;个人会员&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input class="p-radio" name="utype" type="radio" value="1" title="企业会员" onclick="window.location='{:U('members/ucenter_bind_reg_com',array('openid'=>$openid),true,false,true)}'"/>&nbsp;&nbsp;企业会员
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">账户名</div>
+                    <div class="describe font12"><input type="text" name="username" id="username" placeholder="请输入用户名" value="{$user_bind_info.username}" readonly="readonly"></div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">邮箱</div>
+                    <div class="describe font12"><input type="text" name="email" id="email" placeholder="请输入常用邮箱" value="{$user_bind_info.email}" readonly="readonly"></div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <input type="hidden" name="reg_type" value="2" />
+            <input type="hidden" name="utype" value="2">
+            <input name="ucenter" type="hidden" value="bind">
+            <input type="hidden" name="openid" value="{$openid}">
+            <div id="pop" style="display:none"></div>
+            <input type="hidden" id="btnCheck">
+            <input type="hidden" id="J_captcha_open" value="{:C('qscms_mobile_captcha_open')}" />
+            <input type="hidden" name="geetest_challenge" class="J_gee_cha" value="">
+            <input type="hidden" name="geetest_validate" class="J_gee_val" value="">
+            <input type="hidden" name="geetest_seccode" class="J_gee_sec" value="">
+            <div class="btn-spacing mt4"><a id="bindRegBtn" href="javascript:;" class="qs-btn qs-btn-blue font18">注册并绑定</a></div>
+        </form>
+        <include file="public:footer" />
+        <include file="public:footer_min" />
+        <script src="https://static.geetest.com/static/tools/gt.js"></script>
+	</body>
+    <script>
+        // 图片验证码
+        var verifyPhoto = false;
+
+        /**
+         * ajax 提交注册信息
+         */
+        function doAjax() {
+            var url = "{:U('mobile/members/register','',true,false,true)}";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: $('#registerForm').serialize(),
+                success: function (data) {
+                    if(data.status==1){
+                        window.location.href = data.data.url;
+                    }else{
+                        qsToast({type:2,context: data.msg});
+                    }
+                }
+            });
+        }
+
+        // 图片验证码
+        function verifyPhotoDialog() {
+            var verifyCodePop = new QSpopout('请输入下图中的文字或字母');
+            verifyCodePop.setContent([
+                '<div class="dia-captcha-item">',
+                '<img src="' + qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime() + '" class="dia-captcha-img">',
+                '<input type="text" name="captcha-solution" class="dia-captcha-solution font16" maxlength="10">',
+                '</div>'
+            ].join(''));
+            verifyCodePop.setBtn(1);
+            verifyCodePop.show();
+            verifyCodePop.setClose(false);
+            $('.dia-captcha-img').on('click', function() {
+                $(this).attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+            })
+            // 确定按钮事件
+            verifyCodePop.getPrimaryBtn().on('click', function () {
+                var currentPhotoVal = $.trim($('.dia-captcha-solution').val());
+                if (currentPhotoVal.length) {
+                    $.ajax({
+                        url: qscms.root + '?m=Home&c=captcha&a=captchaCode',
+                        cache: false,
+                        async: false,
+                        type: 'post',
+                        dataType: 'json',
+                        data: { postcaptcha: currentPhotoVal },
+                        success: function(result) {
+                            if (result.status) {
+                                verifyCodePop.hide();
+                                doAjax();
+                            } else {
+                                qsToast({type:2,context: '验证码输入错误'});
+                                $('.dia-captcha-img').attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+                            }
+                        }
+                    });
+                } else {
+                    $('.dia-captcha-solution').focus();
+                    qsToast({type:2,context: '请输入文字或字母'});
+                }
+            });
+        }
+
+        var captcha_open = eval($('#J_captcha_open').val());
+
+        /**
+         * 注册验证
+         */
+        $('#bindRegBtn').on('click', function() {
+            if (captcha_open) {
+                doAjax();
+            } else {
+                doAjax();
+            }
+        })
+    </script>
+</html>

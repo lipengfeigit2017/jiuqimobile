@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/personal.css">
+</head>
+<body>
+    <include file="public:header"/>
+    <div class="alw-detail-box">
+        <div class="sp-h-41"></div>
+        <div class="alw-deb-line">
+        <if condition="$record_info['apply'] eq 1">
+        <div class="alw-deb-icon de2">投递红包</div>
+        <elseif condition="$record_info['interview'] eq 1" />
+        <div class="alw-deb-icon de1">面试红包</div>
+        <else />
+        <div class="alw-deb-icon de3">入职红包</div>
+        </if>
+        </div>
+        <div class="sp-h-38"></div>
+        <div class="alw-deb-line txt-o font24">￥{$record_info['amount']}</div>
+        <div class="sp-h-38"></div>
+        <div class="alw-deb-line txt-9 font13">{$record_info['status_cn']}</div>
+        <div class="sp-h-39"></div>
+        <div class="alw-deb-line-c">
+            <div class="alc-l">打赏职位</div>
+            <div class="alc-r link_blue">{$base_info['jobsname']}<a href="#">[打赏详情]</a></div>
+            <div class="clear"></div>
+        </div>
+        <div class="sp-h-48"></div>
+        <div class="alw-deb-line-c">
+            <div class="alc-l">申请人</div>
+            <div class="alc-r txt-blue">{$resume_info['fullname']} ({$resume_info['age']}岁/{$resume_info['sex_cn']}/{$resume_info['education_cn']}/{$resume_info['experience_cn']})</div>
+            <div class="clear"></div>
+        </div>
+        <div class="sp-h-48"></div>
+        <if condition="$record_info['apply'] eq 1">
+        <!--投递红包-->
+        <div class="alw-sch-line as1">
+            <div class="asl-l">打赏进度</div>
+            <div class="asl-c current">领取红包</div>
+            <div class="asl-r">{:date('m-d H:i',$record_info['updatetime'])}</div>
+            <div class="clear"></div>
+        </div>
+        <div class="alw-sch-line as2">
+            <div class="asl-l"> </div>
+            <div class="asl-c current">简历投递成功</div>
+            <div class="asl-r">{:date('m-d H:i',$record_info['updatetime'])}</div>
+            <div class="clear"></div>
+        </div>
+        <div class="alw-sch-line as4">
+            <div class="asl-l"> </div>
+            <div class="asl-c current">红包发放</div>
+            <div class="asl-r"></div>
+            <div class="clear"></div>
+        </div>
+        </if>
+        <if condition="$record_info['interview'] eq 1">
+        <!--面试红包-->
+        <div class="alw-sch-line as1">
+            <div class="asl-l">打赏进度</div>
+            <div class="asl-c current">领取红包</div>
+            <div class="asl-r">{:date('m-d H:i',$record_info['log'][10]['addtime'])}</div>
+            <div class="clear"></div>
+        </div>
+            <eq name="record_info['step']" value="10">
+            <div class="alw-sch-line as2">
+                <div class="asl-l"> </div>
+                <div class="asl-c">企业同意面试</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as3">
+                <div class="asl-l"> </div>
+                <div class="asl-c">确认个人面试</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as4">
+                <div class="asl-l"> </div>
+                <div class="asl-c">红包发放</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            </eq>
+            <eq name="record_info['step']" value="20">
+            <div class="alw-sch-line as2">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">企业同意面试</div>
+                <div class="asl-r">{:date('m-d H:i',$record_info['log'][$record_info['step']]['addtime'])}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as3">
+                <div class="asl-l"> </div>
+                <div class="asl-c">确认个人面试</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as4">
+                <div class="asl-l"> </div>
+                <div class="asl-c">红包发放</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            </eq>
+            <eq name="record_info['step']" value="30">
+            <div class="alw-sch-line as2">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">企业拒绝面试</div>
+                <div class="asl-r">{:date('m-d H:i',$record_info['log'][$record_info['step']]['addtime'])}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as3">
+                <div class="asl-l"> </div>
+                <div class="asl-c">确认个人面试</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as4">
+                <div class="asl-l"> </div>
+                <div class="asl-c">红包发放</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            </eq>
+            <eq name="record_info['step']" value="40">
+            <div class="alw-sch-line as2">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">企业同意面试</div>
+                <div class="asl-r">{:date('m-d H:i',$record_info['log'][20]['addtime'])}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as3">
+                <div class="asl-l"> </div>
+                <div class="asl-c">确认个人面试</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as4">
+                <div class="asl-l"> </div>
+                <div class="asl-c">红包发放</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            </eq>
+            <eq name="record_info['step']" value="50">
+            <div class="alw-sch-line as2">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">企业同意面试</div>
+                <div class="asl-r">{:date('m-d H:i',$record_info['log'][20]['addtime'])}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as3">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">确认个人面试</div>
+                <div class="asl-r">{:date('m-d H:i',$record_info['log'][$record_info['step']]['addtime'])}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as4">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">红包发放</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            </eq>
+            <eq name="record_info['step']" value="60">
+            <div class="alw-sch-line as2">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">企业同意面试</div>
+                <div class="asl-r">{:date('m-d H:i',$record_info['log'][20]['addtime'])}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as3">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">确认个人缺席</div>
+                <div class="asl-r">{:date('m-d H:i',$record_info['log'][$record_info['step']]['addtime'])}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as4">
+                <div class="asl-l"> </div>
+                <div class="asl-c">红包发放</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            </eq>
+        </if>
+        <if condition="$record_info['entry'] eq 1">
+        <!--入职红包-->
+        <div class="alw-sch-line as1">
+            <div class="asl-l">打赏进度</div>
+            <div class="asl-c">领取红包</div>
+            <div class="asl-r">{:date('m-d H:i',$record_info['log'][70]['addtime'])}</div>
+            <div class="clear"></div>
+        </div>
+            <eq name="record_info['step']" value="70">
+            <div class="alw-sch-line as2">
+                <div class="asl-l"> </div>
+                <div class="asl-c">个人申请入职</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as3">
+                <div class="asl-l"> </div>
+                <div class="asl-c">确认个人入职</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as4">
+                <div class="asl-l"> </div>
+                <div class="asl-c">红包发放</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            </eq>
+            <eq name="record_info['step']" value="71">
+            <div class="alw-sch-line as2">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">个人申请入职</div>
+                <div class="asl-r">{:date('m-d H:i',$record_info['log'][$record_info['step']]['addtime'])}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as3">
+                <div class="asl-l"> </div>
+                <div class="asl-c">确认个人入职</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as4">
+                <div class="asl-l"> </div>
+                <div class="asl-c">红包发放</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            </eq>
+            <eq name="record_info['step']" value="80">
+            <div class="alw-sch-line as2">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">个人申请入职</div>
+                <div class="asl-r">{:date('m-d H:i',$record_info['log'][71]['addtime'])}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as3">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">确认个人入职</div>
+                <div class="asl-r">{:date('m-d H:i',$record_info['log'][$record_info['step']]['addtime'])}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as4">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">红包发放</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            </eq>
+            <eq name="record_info['step']" value="90">
+            <div class="alw-sch-line as2">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">个人申请入职</div>
+                <div class="asl-r">{:date('m-d H:i',$record_info['log'][71]['addtime'])}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as3">
+                <div class="asl-l"> </div>
+                <div class="asl-c current">确认个人缺席</div>
+                <div class="asl-r">{:date('m-d H:i',$record_info['log'][$record_info['step']]['addtime'])}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="alw-sch-line as4">
+                <div class="asl-l"> </div>
+                <div class="asl-c">红包发放</div>
+                <div class="asl-r"></div>
+                <div class="clear"></div>
+            </div>
+            </eq>
+        </if>
+        <div class="sp-h-40"></div>
+    </div>
+    <eq name="record_info['step']" value="20">
+    <div class="det-com-btn-box">
+        <div class="dcb-l">确认面试</div>
+        <div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-blue font14" onclick="javascript:location.href='{:U('Personal/ever_interview',array('record_id'=>$record_info['id'],'company_uid'=>$record_info['company_uid']))}'">我已面试</div>
+        <div class="clear"></div>
+    </div>
+    </eq>
+    <eq name="record_info['step']" value="70">
+    <div class="det-com-btn-box">
+        <div class="dcb-l">确认入职</div>
+        <div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-blue font14" onclick="javascript:location.href='{:U('Personal/ever_entry',array('record_id'=>$record_info['id']))}'">我已入职</div>
+        <div class="clear"></div>
+    </div>
+    </eq>
+    <div class="split-block"></div>
+    <div class="det-remind-box">
+        <span class="txt-o">如虚假求职将会被列入黑名单，失去本平台领取打赏职位红包的特权</span>
+    </div>
+    <include file="public:footer_min" />
+</body>
+</html>

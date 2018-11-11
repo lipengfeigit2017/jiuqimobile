@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<div class="pmslist-img for-event last" onClick="javascript:location.href='{:url_rewrite('QS_companyshow',array('id'=>$company_profile['id']))}'">
+				<div class="pic">
+					<img src="<if condition="$company_profile['logo']">{:attach($company_profile['logo'],'company_logo')}<else/>{:attach('no_logo.png','resource')}</if>">
+				</div>
+				<div class="describe font12">
+					<div class="tit font14 substring">{$company_profile.companyname}<span class="font12">({$company_profile.nature_cn}&nbsp;|&nbsp;{$company_profile.scale_cn}&nbsp;|&nbsp;{$company_profile.trade_cn})</span>
+				</div>
+				<div class="txt substring">{$company_profile.address}</div>
+		   </div>		   
+	       <div class="arrow"></div>
+		   <div class="clear"></div>
+		</div>
+		<div class="split-block"></div>
+		<volist name="msg_list" id="msg">
+			<if condition="$msg['fromuid'] eq $visitor['uid']">
+				<div class="pmsshow-right">
+					<div class="txt">{$msg.message}
+						<div class="times font10">{:fdate($msg['addtime'])}</div>
+						<div class="arrow"></div>
+					</div>
+					<div class="pic">
+						<img src="{$visitor.avatars}">
+					</div>
+					<div class="clear"></div>
+				</div>
+			<else/>
+				<div class="pmsshow-left">
+					<div class="pic">
+						<img src="{$msg.from_avatars}">
+					</div>
+					<div class="txt">{$msg.message}
+						<div class="times font10">{:fdate($msg['addtime'])}</div>
+						<div class="arrow"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</if>
+			<div class="split-block"></div>
+		</volist>
+		<if condition="$company_profile">
+			<div id="send" class="pmsreply">
+				<div class="replybox">
+					<div class="inputbox">
+						<input id="J_val" type="text"  placeholder="请输入咨询内容">
+					</div>
+					<div class="btnbox">
+						<div id="J_btn" class="qs-btn qs-btn-medium qs-btn-blue">发送</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</if>
+        <include file="public:footer_min" />
+        <script src="../public/js/qscrollTo.js"></script>
+        <script type="text/javascript">
+        	$('#J_btn').on('click',function(){
+        		var t = $.trim($('#J_val').val()),
+					pid = "{$msg_list[0]['id']}",
+					touid = "{$company_profile['uid']}";
+        		if(t == ''){
+					alert('回复内容不能为空！');
+					return !1;
+				}
+				$.post("{:U('Company/pms_feedback_send')}",{pid:pid,touid:touid,message:t},function(result){
+					if(result.status == 1){
+						var h = '<div class="pmsshow-right"><div class="txt">'+result.data.message+'<div class="times font10">刚刚</div><div class="arrow"></div></div><div class="pic"><img src="{$visitor.avatars}"></div><div class="clear"></div></div><div class="split-block"></div>';
+						$('html,body').animate({'scrollTop':$(document).height()},500);
+						$('#send').before(h);
+						$('#J_val').val('');
+						$('body').scrollTo({
+							toT : $('body').height(),
+							durTime: 500
+						})
+						qsToast({type:1,context: result.msg});
+					}else{
+						qsToast({type:2,context: result.msg});
+					}
+				},'json');
+        	});
+        </script> 
+	</body>
+</html>

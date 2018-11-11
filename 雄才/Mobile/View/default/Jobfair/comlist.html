@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<qscms:jobfair_show 列表名="info" 招聘会id="$_GET['id']"/>
+<qscms:jobfair_exhibitors_list 列表名="list" 招聘会id="$_GET['id']" 显示数目="10" 分页显示="1"/>
+    <include file="public:meta" />
+    <link rel="stylesheet" href="../public/css/personal.css">
+    <link rel="stylesheet" href="../public/css/jobfair.css">
+</head>
+<body>
+<include file="public:header" />
+
+<div class="split-block"></div>
+<div class="jobfair-info">
+    <div class="title font16">{$info['title']}</div>
+    <div class="pic date">{:date('Y年m月d日',$info['holddate_start'])} - {:date('Y年m月d日',$info['holddate_end'])}</div>
+    <div class="pic contact">{$info['phone']}（{$info['contact']}）</div>
+    <div class="pic district">{$info['address']}</div>
+    <if condition="$info['predetermined_ok'] eq 0">
+    <div class="status"></div>
+    </if>
+</div>
+
+<div class="split-block-title">
+    <if condition="$info['predetermined_ok'] eq 1">
+    目前已有 <strong>{$list['total']}</strong> 家企业参会，正在陆续增加中.....
+    <else />
+    共有 <strong>{$list['total']}</strong> 家企业参会
+    </if>
+</div>
+<notempty name="list['list']">
+<volist name="list['list']" id="vo">
+<div class="com-list-item" onclick="javascript:location.href='{$vo.url}'">
+    <div class="com-info">
+        <div class="logo">
+            <img src="<if condition="$vo['logo']">{:attach($vo['logo'],'company_logo')}<else/>{:attach('no_logo.png','resource')}</if>?{:time()}" border="0" />
+        </div>
+        <div class="info">
+            <div class="line-one font15 substring">{$vo['companyname']}</div>
+            <div class="line-two font14 substring">展位号：<strong>{$vo['position']}</strong></div>
+            <if condition="$vo['tag_cn']">
+            <div class="line-three font12">
+                <volist name="vo['tag_cn']" id="tag" offset="0" length="4">
+                <div class="tag">{$tag}</div>
+                </volist>
+                <div class="clear"></div>
+            </div>
+            <else />
+            <div class="line-four font14">{$vo['trade_cn']} | {$vo['nature_cn']}</div>
+            </if>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="com-district font13">
+        <div class="district substring">{$vo['address']}</div>
+        <div class="more-jobs link_yellow"><a href="{$vo.url}">共{:count($vo['jobslist'])}个在招职位>></a></div>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="list-split-block"></div>
+</volist>
+<div class="qspage">{$list['page']}</div>
+<else />
+    <div class="list-empty link_blue">
+        暂无企业参会！
+    </div>
+</notempty>
+<include file="public:footer_min" />
+<script type="text/javascript" charset="utf-8" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+    wx.config({
+    // debug: true,
+    appId: '{$signPackage.appId}',
+    timestamp: '{$signPackage.timestamp}',
+    nonceStr: '{$signPackage.nonceStr}',
+    signature: '{$signPackage.signature}',
+    jsApiList: [
+      // 所有要调用的 API 都要加到这个列表中
+      "onMenuShareTimeline",
+      "onMenuShareAppMessage",
+      "onMenuShareQQ",
+      "onMenuShareWeibo"
+    ]
+  });
+  wx.ready(function () 
+  {
+      var linkUrl = "{:build_mobile_url(array('c'=>'Jobfair','a'=>'show','params'=>'id='.$info['id']))}";//放链接
+      var title = "{$info['title']}-{:C('qscms_site_name')} 举办时间：{:date('m月d日',$info['holddate_start'])} - {:date('m月d日',$info['holddate_end'])}  举办地址：{$info['address']}";
+      var desc = "{$info['title']}-{:C('qscms_site_name')} 举办时间：{:date('m月d日',$info['holddate_start'])} - {:date('m月d日',$info['holddate_end'])}  举办地址：{$info['address']}"; 
+      var imgUrl="{:C('qscms_site_domain')}{:C('qscms_site_dir')}{$info['thumb']}";//图片链接
+      
+      wx.onMenuShareTimeline({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareAppMessage({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          type: '', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareQQ({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareWeibo({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+  });
+</script>
+</body>
+</html>

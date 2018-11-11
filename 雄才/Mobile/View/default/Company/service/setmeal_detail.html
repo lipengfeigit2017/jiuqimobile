@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+    <include file="public:header" />
+    <div class="split-block"></div>
+    <notempty name="log['list']">
+        <volist name="log['list']" id="vo">
+        <div class="setmeal-detail-item <if condition="$key eq count($log['list'])-1">last</if>">
+            <div class="title">{$vo['log_value']}</div>
+            <div class="leave font_gray9 font12">套餐余量：{$vo['log_leave']}</div>
+            <div class="time font_gray9 font12">{:date('Y-m-d H:i:s',$vo['log_addtime'])}</div>
+            <div class="clear"></div>
+        </div>
+        </volist>
+        <div class="split-block"></div>
+        <div class="qspage">{$log['page']}</div>
+    <else />
+        <div class="list-empty">
+            您暂时没有套餐使用记录！
+        </div>
+    </if>
+    </notempty>
+    <include file="public:footer_min" />
+	</body>
+</html>

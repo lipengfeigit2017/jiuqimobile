@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/company.css">
+</head>
+<body>
+<include file="public:header"/>
+
+<div class="split-block"></div>
+<div class="list_height plist-txt">
+    <div class="pic"></div>
+    <div class="tit font14">意见类型</div>
+    <div class="describe font13">
+    <span class="for-select">请选择</span>
+        <select id="infotype" name="infotype">
+            <option value="1">建议</option>
+            <option value="2">意见</option>
+            <option value="3">求助</option>
+            <option value="4">投诉</option>
+        </select>
+    </div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+
+<div class="list_height plist-txt last notarrow">
+    <div class="pic"></div>
+    <div class="tit font14">联系方式</div>
+    <div class="describe">
+        <input name="tel" type="text" placeholder="请输入您的联系方式" class="font13" value="{$company_profile.telephone|default=$company_profile['landline_tel']}">
+    </div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+<div class="split-block"></div>
+<div class="textarea-txt">
+    <textarea id="suggest_feedback" name="feedback" placeholder="请详细描述您遇到的问题，有助于我们快速定位并解决问题。" class="font13"></textarea>
+</div>
+
+<div class="bottom_txt">
+    <div class="llt">最多可输入200字</div>
+    <div class="rlt clear-content">清空</div>
+</div>
+<div id="pop" style="display:none"></div>
+<input type="hidden" id="btnCheck">
+<div class="btn-spacing">
+    <input type="hidden" id="J_suggest_verify" value="{$varify_suggest}" />
+    <a id="J_suggest_submit" href="javascript:;" class="qs-btn qs-btn-blue font18">提 交</a>
+</div>
+<include file="public:footer_min"/>
+<script src="https://static.geetest.com/static/tools/gt.js"></script>
+<script type="text/javascript">
+    // 图片验证码
+    var verifyPhoto = false;
+    //清空内容
+    $('.clear-content').on('click',function(){
+        $('#suggest_feedback').val('');
+    });
+    // 提交验证
+    $('#J_suggest_submit').on('click', function(event) {
+        var typeValue = $.trim($('#infotype').val());
+        var telValue = $.trim($('input[name="tel"]').val());
+        var feedbackValue = $.trim($('#suggest_feedback').val());
+        if (typeValue == "") {
+            qsToast({type:2,context: '请选择意见类型'});
+            return false;
+        }
+        if (telValue == "") {
+            qsToast({type:2,context: '请填写联系方式'});
+            return false;
+        }
+        if (telValue != "" && telValue.length > 30) {
+            qsToast({type:2,context: '联系方式不能超出30个字'});
+            return false;
+        }
+        if (feedbackValue == "") {
+            qsToast({type:2,context: '请填写反馈内容'});
+            return false;
+        }
+        if (eval($('#J_suggest_verify').val())) {
+            if (verifyPhoto) {
+                // 图片验证码
+                verifyPhotoDialog();
+            } else {
+                $('.geetest_panel').remove();
+                $.ajax({
+                    url: qscms.root+'?m=Mobile&c=captcha&type=mobile&t=' + (new Date()).getTime(),
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(config) {
+                        initGeetest({
+                            gt: config.gt,
+                            challenge: config.challenge,
+                            offline: !config.success,
+                            new_captcha: config.new_captcha,
+                            product: 'bind'
+                        }, function(captchaObj) {
+                            captchaObj.appendTo("#pop");
+                            captchaObj.onSuccess(function() {
+                                var captChaResult = captchaObj.getValidate();
+                                $('#pop').hide();
+                                var typeValue = $.trim($('#infotype').val());
+                                var telValue = $.trim($('input[name="tel"]').val());
+                                var feedbackValue = $.trim($('#suggest_feedback').val());
+                                // 提交表单
+                                $.ajax({
+                                    url: "{:U('Company/feedback')}",
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    data: {infotype: typeValue, tel: telValue, feedback: feedbackValue,geetest_challenge: captChaResult.geetest_challenge,geetest_validate: captChaResult.geetest_validate,geetest_seccode: captChaResult.geetest_seccode},
+                                    success:function(data){
+                                        if (parseInt(data.status)) {
+                                            qsToast({type:1,context: data.msg});
+                                            setTimeout(function () {
+                                                window.location.reload();
+                                            }, 2000);
+                                        } else {
+                                            $('#J_suggest_submit').val('提 交').removeClass('qs-btn-border-disabled');
+                                            qsToast({type:2,context: data.msg});
+                                        }
+                                    },
+                                    error:function(){
+                                        $('#J_suggest_submit').val('提 交').removeClass('qs-btn-border-disabled');
+                                        qsToast({type:2,context: data.msg});
+                                    }
+                                });
+                            })
+                            captchaObj.onReady(function () {
+                                captchaObj.verify();
+                            });
+                            $('#btnCheck').on('click', function () {
+                                captchaObj.verify();
+                            })
+                            window.captchaObj = captchaObj;
+                        });
+                    }
+                });
+            }
+        } else {
+            $('#J_suggest_submit').val('提 交 中...').addClass('qs-btn-border-disabled');
+            doSuggestFun();
+        }
+    });
+    function doSuggestFun() {
+        var typeValue = $.trim($('#infotype').val());
+        var telValue = $.trim($('input[name="tel"]').val());
+        var feedbackValue = $.trim($('#suggest_feedback').val());
+        // 提交表单
+        $.ajax({
+            url: "{:U('Company/feedback')}",
+            type: 'POST',
+            dataType: 'json',
+            data: {infotype: typeValue, tel: telValue, feedback: feedbackValue},
+            success:function(data){
+                if (parseInt(data.status)) {
+                    qsToast({type:1,context: data.msg});
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    $('#J_suggest_submit').val('提 交').removeClass('qs-btn-border-disabled');
+                    qsToast({type:2,context: data.msg});
+                }
+            },
+            error:function(){
+                $('#J_suggest_submit').val('提 交').removeClass('qs-btn-border-disabled');
+                qsToast({type:2,context: data.msg});
+            }
+        });
+    }
+
+    // 图片验证码
+    function verifyPhotoDialog() {
+        var verifyCodePop = new QSpopout('请输入下图中的文字或字母');
+        verifyCodePop.setContent([
+            '<div class="dia-captcha-item">',
+            '<img src="' + qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime() + '" class="dia-captcha-img">',
+            '<input type="text" name="captcha-solution" class="dia-captcha-solution font16" maxlength="10">',
+            '</div>'
+        ].join(''));
+        verifyCodePop.setBtn(1);
+        verifyCodePop.show();
+        verifyCodePop.setClose(false);
+        $('.dia-captcha-img').on('click', function() {
+            $(this).attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+        })
+        // 确定按钮事件
+        verifyCodePop.getPrimaryBtn().on('click', function () {
+            var currentPhotoVal = $.trim($('.dia-captcha-solution').val());
+            if (currentPhotoVal.length) {
+                $.ajax({
+                    url: qscms.root + '?m=Home&c=captcha&a=captchaCode',
+                    cache: false,
+                    async: false,
+                    type: 'post',
+                    dataType: 'json',
+                    data: { postcaptcha: currentPhotoVal },
+                    success: function(result) {
+                        if (result.status) {
+                            verifyCodePop.hide();
+                            doSuggestFun();
+                        } else {
+                            qsToast({type:2,context: '验证码输入错误'});
+                            $('.dia-captcha-img').attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+                        }
+                    }
+                });
+            } else {
+                $('.dia-captcha-solution').focus();
+                qsToast({type:2,context: '请输入文字或字母'});
+            }
+        });
+    }
+</script>
+</body>
+</html>

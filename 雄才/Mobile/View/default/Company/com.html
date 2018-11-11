@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/company.css">
+</head>
+<body>
+<include file="public:header"/>
+<div class="split-block"></div>
+<div class="list_height plist-txt" onClick="javascript:location.href='{:U('Company/com_info')}'">
+    <div class="pic"></div>
+    <div class="tit font14">企业资料</div>
+    <div class="describe font13">企业logo、基本信息</div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+<div class="list_height plist-txt" onClick="javascript:location.href='{:U('Company/com_img')}'">
+    <div class="pic"></div>
+    <div class="tit font14">企业风采</div>
+    <div class="describe font13">增强企业招聘魅力</div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+<div class="list_height plist-txt last" onClick="javascript:location.href='{:U('Company/com_auth')}'">
+    <div class="pic"></div>
+    <div class="tit font14">企业认证</div>
+    <div class="describe font13">
+        <switch name="company_profile['audit']">
+            <case value="0">未认证</case>
+            <case value="1">认证通过</case>
+            <case value="2">审核中</case>
+            <case value="3">审核不通过</case>
+        </switch>
+    </div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="list_height plist-txt" onClick="javascript:location.href='{:U('Company/com_security')}'">
+    <div class="pic"></div>
+    <div class="tit font14">账号安全</div>
+    <div class="describe font13">手机认证、修改密码</div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+<div class="list_height plist-txt" onClick="javascript:location.href='{:U('Company/com_binding')}'">
+    <div class="pic"></div>
+    <div class="tit font14">账号绑定</div>
+    <div class="describe font13">QQ、微博、淘宝账号绑定</div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+<div class="list_height plist-txt last" onClick="javascript:location.href='{:U('Company/pms_list')}'">
+    <div class="pic"></div>
+    <div class="tit font14">消息提醒</div>
+    <div class="describe font13">求职者咨询、系统消息</div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+<div class="split-block"></div>
+<include file="public:footer_min" />
+</body>
+</html>

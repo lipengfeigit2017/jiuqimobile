@@ -1,0 +1,373 @@
+<include file="Admin@default/public/header" />
+<div class="toptip">
+    <div class="toptit">提示：</div>
+    <p>触屏版支持https，但是需要提前配置好证书。具体配置方法请咨询证书服务商。</p>
+    <p><font color="red">修改https之后，请注意同步修改其他第三方（如微信支付）等授权URL。</font></p>
+</div>
+
+<div class="toptit">触屏端配置</div>
+<form action="{:U('edit')}" method="post" name="FormData" enctype="multipart/form-data">
+    <div class="form_main width200">
+        <div class="fl">触屏版域名:</div>
+        <div class="fr">
+            <input name="wap_domain" type="text" class="input_text_default middle" maxlength="100" value="{:C('qscms_wap_domain')}"/>
+            <label class="no-fl-note">(结尾不要加"/"，如：http://m.74cms.com)</label>
+        </div>
+        <div class="fl">职位统计基数:</div>
+        <div class="fr">
+            <input name="jobs_base" type="text" class="input_text_default middle" maxlength="10" value="{:C('qscms_jobs_base')}" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/\D/g,''))"/> 条
+        </div>
+        <div class="fl">简历统计基数:</div>
+        <div class="fr">
+            <input name="resume_base" type="text" class="input_text_default middle" maxlength="10" value="{:C('qscms_resume_base')}" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/\D/g,''))"/> 条
+        </div>
+        <if condition="C('apply.Subsite')">
+            <div class="fl">分站选择样式:</div>
+            <div class="fr link_green">
+                <div class="imgradio">
+                    <input name="mobile_subsite_choose_type" type="hidden" value="{:C('qscms_mobile_subsite_choose_type')}">
+                    <div class="radio <eq name='Think.config.qscms_mobile_subsite_choose_type' value='simple'>select</eq>" data="simple" title="简易模式">
+                        简易模式 <a class="vtip" href="javascript:;" title="<img src=../public/images/244.png width=270 height=480 border=0 align=absmiddle>">[预览]</a>
+                    </div>
+                    <div class="radio <eq name='Think.config.qscms_mobile_subsite_choose_type' value='complex'>select</eq>" data="complex" title="高级模式">
+                        高级模式 <a class="vtip" href="javascript:;" title="<img src=../public/images/243.png width=270 height=480 border=0 align=absmiddle>">[预览]</a>
+                    </div>
+                    <label class="note-radio">(分站不多时推荐使用简易模式，反之使用高级模式)</label>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </if>
+        <div class="fl">底部导航是否开启:</div>
+        <div class="fr">
+            <div class="imgradio">
+                <input name="footer_nav_status" type="hidden" value="{:C('qscms_footer_nav_status')}">
+                <div class="radio <eq name='Think.config.qscms_footer_nav_status' value='1'>select</eq>" data="1" title="是">是</div>
+                <div class="radio <eq name='Think.config.qscms_footer_nav_status' value='0'>select</eq>" data="0" title="否">否</div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="fl">页面是否全屏显示:</div>
+        <div class="fr">
+            <div class="imgradio">
+                <input name="page_full_screen" type="hidden" value="{:C('qscms_page_full_screen')}">
+                <div class="radio <eq name='Think.config.qscms_page_full_screen' value='1'>select</eq>" data="1" title="是">是</div>
+                <div class="radio <eq name='Think.config.qscms_page_full_screen' value='0'>select</eq>" data="0" title="否">否</div>
+                <label class="note-radio">(部分浏览器不支持全屏显示)</label>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="fl">关闭会员注册:</div>
+        <div class="fr">
+            <div class="imgradio">
+                <input name="mobile_closereg" type="hidden" value="{:C('qscms_mobile_closereg')}">
+                <div class="radio mobile_closereg <eq name='Think.config.qscms_mobile_closereg' value='1'>select</eq>" data="1" title="是">是</div>
+                <div class="radio mobile_closereg <eq name='Think.config.qscms_mobile_closereg' value='0'>select</eq>" data="0" title="否">否</div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="fl">暂时关闭触屏版:</div>
+        <div class="fr">
+            <div class="imgradio">
+                <input name="mobile_isclose" type="hidden" value="{:C('qscms_mobile_isclose')}">
+                <div class="radio <eq name='Think.config.qscms_mobile_isclose' value='1'>select</eq>" data="1" title="是">是</div>
+                <div class="radio <eq name='Think.config.qscms_mobile_isclose' value='0'>select</eq>" data="0" title="否">否</div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="mobile_close_reason" <eq name='Think.config.qscms_mobile_isclose' value='0'>style="display:none"</eq>>
+            <div class="fl">关闭原因:</div>
+            <div class="fr">
+                <textarea name="mobile_close_reason" class="input_text_default middle" style="height: 80px; line-height: 180%;">{:C('qscms_mobile_close_reason')}</textarea>
+            </div>
+        </div>
+        <div class="fl">客服微信二维码：</div>
+        <div class="fr J-file-input-box">
+            <if condition="C('qscms_weixin_service_img')">
+                <div class="file-input-src">
+                    <div class="img"><img src="{:attach(C('qscms_weixin_service_img'),'resource')}?_t={:time()}" align=absmiddle></div>
+                    <div class="del file-input-del" id="J_upload_weixin_img_btn" name="weixin_service_img">点击更换</div>
+                </div>
+            <else/>
+                <div class="file-input-src hid">
+                    <div class="img"></div>
+                    <div class="del file-input-del" id="" name="weixin_service_img">点击更换</div>
+                </div>
+                <div class="file-input-block" id="J_upload_weixin_img_btn" name="weixin_service_img"><span class="o-txt">上传</span>客服微信二维码图片</div>
+            </if>
+            <input type="hidden" class="file-input-save-name" name="weixin_service_img" value="{:C('qscms_weixin_service_img')}">
+        </div>
+        <div class="fl">顶部Logo：</div>
+        <div class="fr J-file-input-box">
+            <if condition="C('qscms_logo_mobile')">
+                <div class="file-input-src">
+                    <div class="img"><img src="{:attach(C('qscms_logo_mobile'),'resource')}?_t={:time()}" align=absmiddle></div>
+                    <div class="del file-input-del" id="J_upload_logo_mobile_btn" name="logo_mobile">点击更换</div>
+                    <div class="r-note">(建议尺寸190*45)</div>
+                </div>
+            <else/>
+                <div class="file-input-src hid">
+                    <div class="img"></div>
+                    <div class="del file-input-del" id="" name="logo_mobile">点击更换</div>
+                    <div class="r-note">(建议尺寸190*45)</div>
+                </div>
+                <div class="file-input-block" id="J_upload_logo_mobile_btn" name="logo_mobile"><span class="o-txt">上传</span>顶部Logo<span class="re-txt">(建议尺寸190*45)</span></div>
+            </if>
+            <input type="hidden" class="file-input-save-name" name="logo_mobile" value="{:C('qscms_logo_mobile')}">
+        </div>
+        <div class="fl">顶部背景色：</div>
+        <div class="fr">
+            <div class="n-form">
+                <div class="color_layer" style="display: inline-block;">
+                    <div id="color_box" onclick="color_box_display()" style="background-color: {:C('qscms_mobile_top_color')};"></div>
+                    <input type="hidden" name="mobile_top_color" id="tit_color" value="{:C('qscms_mobile_top_color')}">
+                    <include file="select_color" />
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="fl">首页职位推荐类型：</div>
+        <div class="fr" style="width:722px;">
+            <div class="imgradio">
+                <input name="mobile_index_jobs_type" type="hidden" value="{:C('qscms_mobile_index_jobs_type')}">
+                <div class="radio mobile_index_jobs_type <eq name='Think.config.qscms_mobile_index_jobs_type' value='new'>select</eq>" data="new" title="最新职位">最新职位</div>
+                <div class="radio mobile_index_jobs_type <eq name='Think.config.qscms_mobile_index_jobs_type' value='nearby'>select</eq>" data="nearby" title="附近职位">附近职位</div>
+                <if condition="C('apply.Allowance')">
+                <div class="radio mobile_index_jobs_type <eq name='Think.config.qscms_mobile_index_jobs_type' value='allowance'>select</eq>" data="allowance" title="红包职位">红包职位</div>
+                </if>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="fl">登录开启千人千面：</div>
+        <div class="fr">
+            <div data-code="0,1" class="imgchecked_small <if condition="C('qscms_mobile_index_login_recommend') eq 1">select</if>"><input name="mobile_index_login_recommend" type="hidden" value="{:C('qscms_mobile_index_login_recommend')}" /></div>
+            <label class="note">(开启后，用户登录状态时，在首页推荐符合用户求职意向的职位，否则按设置的推荐类型显示)</label>
+            <div class="clear"></div>
+        </div>
+        <div class="fl"></div>
+        <div class="fr">
+            <input type="submit" class="admin_submit" value="保存"/>
+            <input type="button" class="admin_submit" value="返回" onClick="history.go(-1)"/>
+        </div>
+        <div class="clear"></div>
+    </div>
+</form>
+
+<div class="toptit">触屏端优惠设置</div>
+<form action="{:U('edit')}" method="post">
+    <div class="form_main width200">
+        <div class="fl">购买套餐优惠类型:</div>
+        <div class="fr">
+            <div class="imgradio">
+                <input name="mobile_setmeal_discount_type" type="hidden" value="{:C('qscms_mobile_setmeal_discount_type')}">
+                <div class="radio mobile_setmeal_discount_type <eq name='Think.config.qscms_mobile_setmeal_discount_type' value='1'>select</eq>" data="1" title="折扣">折扣</div>
+                <div class="radio mobile_setmeal_discount_type <eq name='Think.config.qscms_mobile_setmeal_discount_type' value='0'>select</eq>" data="0" title="减免">减免</div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="fl">购买套餐优惠:</div>
+        <div class="fr">
+            <input name="mobile_setmeal_discount_value" type="text" class="input_text_default small" maxlength="30" value="{:C('qscms_mobile_setmeal_discount_value')}" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/\D/g,''))"/>
+            <span class="no-fl-note">(请输入折扣或者减免金额，如7折请输入70，0为不优惠)</span>
+        </div>
+        <div class="fl">购买增值服务优惠类型:</div>
+        <div class="fr">
+            <div class="imgradio">
+                <input name="mobile_setmeal_increment_discount_type" type="hidden" value="{:C('qscms_mobile_setmeal_increment_discount_type')}">
+                <div class="radio mobile_setmeal_increment_discount_type <eq name='Think.config.qscms_mobile_setmeal_increment_discount_type' value='1'>select</eq>" data="1" title="折扣">折扣</div>
+                <div class="radio mobile_setmeal_increment_discount_type <eq name='Think.config.qscms_mobile_setmeal_increment_discount_type' value='0'>select</eq>" data="0" title="减免">减免</div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="fl">购买增值服务优惠:</div>
+        <div class="fr">
+            <input name="mobile_setmeal_increment_discount_value" type="text" class="input_text_default small" maxlength="30" value="{:C('qscms_mobile_setmeal_increment_discount_value')}" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/\D/g,''))"/>
+            <span class="no-fl-note">(请输入折扣或者减免金额，如7折请输入70，0为不优惠)</span>
+        </div>
+        <div class="fl">优惠引导二维码url:</div>
+        <div class="fr">
+            <input name="mobile_discount_qrcode_url" type="text" class="input_text_default" maxlength="30" value="{:C('qscms_mobile_discount_qrcode_url')}"/>
+        </div>
+        <div class="fl">刷新职位额外次数:</div>
+        <div class="fr">
+            <input name="refresh_jobs_more" type="text" class="input_text_default small" maxlength="30" value="{:C('qscms_refresh_jobs_more')}" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/\D/g,''))"/>
+            <span class="no-fl-note">(触屏版中免费刷新职位次数达到上限后可用额外次数刷新)</span>
+        </div>
+        <div class="fl"></div>
+        <div class="fr">
+            <input type="submit" class="admin_submit" value="保存"/>
+            <input type="button" class="admin_submit" value="返回" onClick="history.go(-1)"/>
+        </div>
+        <div class="clear"></div>
+    </div>
+</form>
+<div class="toptit">触屏端极验设置</div>
+<form action="{:U('edit')}" method="post">
+    <div class="form_main width200">
+        <div class="fl">开启验证:</div>
+        <div class="fr">
+            <div class="imgradio">
+                <input name="mobile_captcha_open" type="hidden" value="{:C('qscms_mobile_captcha_open')}">
+                <div class="radio mobile_captcha <eq name='Think.config.qscms_mobile_captcha_open' value='1'>select</eq>" data="1" title="开启">开启</div>
+                <div class="radio mobile_captcha <eq name='Think.config.qscms_mobile_captcha_open' value='0'>select</eq>" data="0" title="关闭">关闭</div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="fl"></div>
+        <div class="fr">
+            <input type="submit" class="admin_submit" value="保存"/>
+            <input type="button" class="admin_submit" value="返回" onClick="history.go(-1)"/>
+        </div>
+        <div class="clear"></div>
+    </div>
+</form>
+
+<div class="verify_options_show" <eq name='Think.config.qscms_mobile_captcha_open' value='0'>style="display:none"</eq>>
+    <div class="toptit">验证项目</div>
+    <form action="{:U('edit')}" method="post">
+        <div class="form_main width200">
+            <div class="fl">手机验证:</div>
+            <div class="fr">
+                <div class="imgradio">
+                    <input name="wap_captcha_config[varify_mobile]" type="hidden" value="{:C('qscms_wap_captcha_config.varify_mobile')}">
+                    <div class="radio <if condition="C('qscms_wap_captcha_config.varify_mobile') eq 1">select</if>" data="1" title="开启">开启</div>
+                    <div class="radio <if condition="C('qscms_wap_captcha_config.varify_mobile') eq 0">select</if>" data="0" title="关闭">关闭</div>
+                    <label class="note-radio">(开启后，用户在获取短信验证码时需要验证)</label>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="fl">意见/建议:</div>
+            <div class="fr">
+                <div class="imgradio">
+                    <input name="wap_captcha_config[varify_suggest]" type="hidden" value="{:C('qscms_wap_captcha_config.varify_suggest')}">
+                    <div class="radio <if condition="C('qscms_wap_captcha_config.varify_suggest') eq 1">select</if>" data="1" title="开启">开启</div>
+                    <div class="radio <if condition="C('qscms_wap_captcha_config.varify_suggest') eq 0">select</if>" data="0" title="关闭">关闭</div>
+                    <label class="note-radio">(开启后，用户在提交意见建议时需要验证)</label>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="fl">会员登录:</div>
+            <div class="fr">
+                <input name="wap_captcha_config[user_login]" type="text" class="input_text_default small" maxlength="10" value="{:C('qscms_wap_captcha_config.user_login')}" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/\D/g,''))"/> 次
+                <label class="no-fl-note">(0为开启验证码，如设置为3，则错误3次才需要验证)</label>
+            </div>
+            <div class="fl"></div>
+            <div class="fr">
+                <input type="submit" class="admin_submit" value="保存"/>
+                <input type="button" class="admin_submit" value="返回" onClick="history.go(-1)"/>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </form>
+</div>
+
+<div class="toptit">APP下载设置</div>
+<form action="{:U('edit')}" method="post">
+    <div class="form_main width200">
+        <div class="fl">Android下载链接:</div>
+        <div class="fr">
+            <input name="android_download" type="text" class="input_text_default middle" maxlength="100" value="{:C('qscms_android_download')}"/>
+        </div>
+        <div class="fl">IOS下载链接:</div>
+        <div class="fr">
+            <input name="ios_download" type="text" class="input_text_default middle" maxlength="100" value="{:C('qscms_ios_download')}"/>
+        </div>
+        <div class="fl"></div>
+        <div class="fr">
+            <input type="submit" class="admin_submit" value="保存"/>
+            <input type="button" class="admin_submit" value="返回" onClick="history.go(-1)"/>
+        </div>
+        <div class="clear"></div>
+    </div>
+</form>
+
+</div>
+<include file="Admin@default/public/footer" />
+<script type="text/javascript">
+  var uploadUrl = "{:U('Admin/Upload/form_upload')}";
+</script>
+<script src="__ADMINPUBLIC__/js/ajaxfileupload.js"></script>
+<script src="__ADMINPUBLIC__/js/fileupload.js"></script>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // 是否关闭触屏版
+        $(".mobile_isclose").live('click', function () {
+            if($(this).attr('data') == 0){
+                $(".mobile_close_reason").hide();
+            } else {
+                $(".mobile_close_reason").show();
+            }
+        });
+        // 极验是否开启
+        $(".mobile_captcha").live('click', function () {
+            if($(this).attr('data') == 0){
+                $(".captcha_show").hide();
+                $(".verify_options_show").hide();
+            } else {
+                $(".captcha_show").show();
+                $(".verify_options_show").show();
+            }
+        });
+        // 微信二维码图片
+      $.upload('#J_upload_weixin_img_btn',{name:'weixin_service_img',dir:'resource'},function(result){
+        if(result.error == 1){
+          var htmlResult = '<img src="'+ result.url.src +'" align=absmiddle>';
+          $('#J_upload_weixin_img_btn').closest('.J-file-input-box').find('.file-input-src .img').html(htmlResult);
+          $('#J_upload_weixin_img_btn').closest('.J-file-input-box').find('.file-input-save-name').val(result.url.savename);
+          if ($('#J_upload_weixin_img_btn').hasClass('file-input-block')) {
+            $('#J_upload_weixin_img_btn').closest('.J-file-input-box').find('.file-input-src').removeClass('hid');
+            var $delObj = $('#J_upload_weixin_img_btn').closest('.J-file-input-box').find('.file-input-del');
+            $('#J_upload_weixin_img_btn').remove();
+            $delObj.attr('id', "J_upload_weixin_img_change_btn");
+            $.upload('#J_upload_weixin_img_change_btn',{name:'weixin_service_img',dir:'resource'},function(result){
+              if(result.error == 1){
+                var htmlResult = '<img src="'+ result.url.src +'" align=absmiddle>';
+                $('#J_upload_weixin_img_change_btn').closest('.J-file-input-box').find('.file-input-src .img').html(htmlResult);
+                $('#J_upload_weixin_img_change_btn').closest('.J-file-input-box').find('.file-input-save-name').val(result.url.savename);
+              } else {
+                disapperTooltip("remind", "上传失败："+result.message);
+              }
+            })
+          }
+        } else {
+          disapperTooltip("remind", "上传失败："+result.message);
+        }
+      })
+        // 上传Logo
+        $.upload('#J_upload_logo_mobile_btn',{name:'logo_mobile',dir:'resource'},function(result){
+            if(result.error == 1){
+                var htmlResult = '<img src="'+ result.url.src +'" align=absmiddle>';
+                $('#J_upload_logo_mobile_btn').closest('.J-file-input-box').find('.file-input-src .img').html(htmlResult);
+                $('#J_upload_logo_mobile_btn').closest('.J-file-input-box').find('.file-input-save-name').val(result.url.savename);
+                if ($('#J_upload_logo_mobile_btn').hasClass('file-input-block')) {
+                  $('#J_upload_logo_mobile_btn').closest('.J-file-input-box').find('.file-input-src').removeClass('hid');
+                  var $delObj = $('#J_upload_logo_mobile_btn').closest('.J-file-input-box').find('.file-input-del');
+                  $('#J_upload_logo_mobile_btn').remove();
+                  $delObj.attr('id', "J_upload_logo_mobile_change_btn");
+                  $.upload('#J_upload_logo_mobile_change_btn',{name:'logo_mobile',dir:'resource'},function(result){
+                    if(result.error == 1){
+                      var htmlResult = '<img src="'+ result.url.src +'" align=absmiddle>';
+                      $('#J_upload_logo_mobile_change_btn').closest('.J-file-input-box').find('.file-input-src .img').html(htmlResult);
+                      $('#J_upload_logo_mobile_change_btn').closest('.J-file-input-box').find('.file-input-save-name').val(result.url.savename);
+                    } else {
+                      disapperTooltip("remind", "上传失败："+result.message);
+                    }
+                  })
+                }
+            } else {
+                disapperTooltip("remind", "上传失败："+result.message);
+            }
+        })
+    });
+
+</script>
+
+<if condition="C('qscms_mobile_top_color')">
+    <script type="text/javascript" >
+        var rgb="{:C('qscms_mobile_top_color')}";
+        document.FormData.mobile_top_color.value= rgb;
+        document.getElementById('tit_color').style.background=rgb;
+        document.getElementById('color_box').style.background=rgb;
+    </script>
+</if>
+</html>

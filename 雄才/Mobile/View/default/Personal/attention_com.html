@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta" />
+    <link rel="stylesheet" href="../public/css/personal.css">
+    <link rel="stylesheet" href="../public/css/jobs.css">
+</head>
+<body>
+    <include file="public:header" />
+    <div class="favorites-top-nav list_height">
+        <div class="n-cell" onclick="window.location='{:U('Personal/jobs_favorites')}'">收藏的职位</div>
+        <div class="n-cell active" onclick="window.location='{:U('Personal/attention_com')}'">关注的企业<div class="b-line"></div></div>
+        <div class="clear"></div>
+    </div>
+    <div class="split-block"></div>
+    <notempty name="company['list']">
+    <volist name="company['list']" id="list">
+            <div class="com-list-item js-longpress for-event" data-yid="{$list.id}" onclick="window.location='{:url_rewrite('QS_companyshow',array('id'=>$list['id']))}'">
+            <div class="com-info">
+                <div class="logo">
+                    <img src="<if condition=" $list['logo']">{:attach($list['logo'],'company_logo')}<else/>{:attach('no_logo_mob.png','resource')}</if>?{:time()}" border="0" />
+                </div>
+                <div class="info">
+                    <div class="line-one font15 substring">{$list.companyname}</div>
+                    <div class="line-two font14 substring">{$list.trade_cn} | {$list.nature_cn}</div>
+                    <if condition="$list['tag_cn']">
+                        <div class="line-three font12">
+                            <volist name="list['tag_cn']" id="tag" offset="1" length="4">
+                                <div class="tag">{$tag}</div>
+                            </volist>
+                            <div class="clear"></div>
+                        </div>
+                    <else/>
+                        <div class="line-four font14">{$list.district_cn} | {$list.scale_cn}</div>
+                    </if>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="com-district font13">
+                <div class="district substring">{$list.address}</div>
+                <div class="more-jobs link_yellow"><a>共{$list.jobs_count}个在招职位>></a></div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="list-split-block"></div>
+    </volist>
+    <div class="qspage">{$company['page']}</div>
+    <else />
+        <div class="list-empty link_blue">
+            目前您未关注任何企业！<br>
+            关注感兴趣的企业了解招聘动态！立即 <a href="{:url_rewrite('QS_jobslist')}">搜职位</a>
+        </div>
+    </notempty>
+    <include file="public:footer_min" />
+    <script src="../public/js/longPress.js"></script>
+    <script type="text/javascript">
+        // 长按删除
+        $('.js-longpress').each(function () {
+            var y_id = $(this).data('yid');
+            $(this).longPress(function(){
+                var popout = new QSpopout();
+                popout.setContent('确定删除吗？');
+                popout.show();
+                popout.getPrimaryBtn().on('click', function () {
+                    $.getJSON("{:U('personal/del_focus_company')}",{id:y_id},function(result){
+                        if(result.status == 1){
+                            qsToast({type:1,context: result.msg});
+                            setTimeout(function () {
+                                location.href = "{:U('personal/attention_com')}";
+                            }, 2000);
+                        }else{
+                            qsToast({type:2,context: result.msg});
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+/* 企业职位管理*/
+.jobs-manager-top-nav {
+    background: #fff;
+}
+
+.jobs-manager-top-nav .n-cell {
+    position: relative;
+    width: 50%;
+    float: left;
+    text-align: center;
+}
+
+.jobs-manager-top-nav .n-cell .b-line {
+    display: none;
+    position: absolute;
+    top: 1.02rem;
+    width: 100%;
+    height: .03rem;
+    background: #0180CF;
+}
+
+.jobs-manager-top-nav .n-cell.active {
+    color: #0180cf;
+}
+
+.jobs-manager-top-nav .n-cell.active .b-line {
+    display: block;
+}
+
+.job {
+    background: #ffffff;
+    width: 100%;
+    border-bottom: 1px solid #f0f0f0;
+    border-top: 1px solid #f0f0f0;
+}
+
+.job .info {
+    height: 2.1rem;
+    padding: .25rem .35rem;
+}
+
+.job .info .line-one {
+    height: .6rem;
+    line-height: .6rem;
+}
+
+.job .info .line-one .job-name {
+    width: 70%;
+    float: left;
+    color: #333333;
+}
+
+.job .info .line-one .job-status {
+    float: right;
+}
+
+.job .info .line-two {
+    height: .5rem;
+    line-height: .5rem;
+}
+
+.job .info .line-three {
+    height: .5rem;
+    line-height: .5rem;
+}
+
+.job .info .line-three .pic {
+    float: left;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: .3rem;
+    background-position: 0 center;
+    padding-left: .4rem;
+    padding-right: .2rem;
+}
+
+.job .info .line-three .pic.apply {
+    background-image: url(../images/52.png);
+}
+
+.job .info .line-three .pic.browse {
+    background-image: url(../images/53.png);
+    background-size: .4rem;
+    padding-left: .45rem;
+}
+
+.job .info .line-three .pic.refresh {
+    background-image: url(../images/54.png);
+    background-size: .28rem;
+}
+
+.job .handler {
+    background: #f8f9fa;
+    height: 1rem;
+    padding: 0 .2rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.job .handler .item {
+    width: 25%;
+    height: 1rem;
+    line-height: 1rem;
+    float: left;
+}
+
+.job .handler .item:active {
+    background: #f0f0f0;
+}
+
+.job .handler .item:active span {
+    color: #ff6600;
+}
+
+.job .handler .item span {
+    height: .5rem;
+    line-height: .5rem;
+    color: #666666;
+    text-align: center;
+    text-decoration: none;
+    border-right: 1px #dddddd solid;
+    display: block;
+    margin-top: .22rem;
+}
+
+.job .handler .item span.disable {
+    color: #999999;
+}
+
+.job .handler .item span.last {
+    border: 0px;
+}
+
+/* 收到的简历、已下载简历、收藏的简历共用 */
+.resume {
+    background: #ffffff;
+    padding-top: .2rem;
+    padding-bottom: .25rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.resume .content {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.resume .content .line-one {
+    height: .6rem;
+    line-height: .6rem;
+    position: relative;
+}
+
+.resume .content .line-one .real-name {
+    width: 40%;
+    float: left;
+    color: #333333;
+}
+
+.resume .content .line-one .real-name.no-reply {
+    font-weight: bolder;
+}
+
+.resume .content .line-one .real-name .red-tip {
+    position: absolute;
+    width: .22rem;
+    height: .22rem;
+    border: .04rem #FFFFFF solid;
+    border-radius: .15rem;
+    background-color: #FF0000;
+    left: -.28rem;
+    top: .16rem;
+}
+
+.resume .content .line-one .reply-status {
+    float: right;
+}
+
+.resume .content .line-one .delete {
+    float: right;
+    border: 1px solid #fd8000;
+    color: #fd8000;
+    width: 1rem;
+    height: .52rem;
+    line-height: .52rem;
+    text-align: center;
+    margin-top: .04rem;
+    border-radius: .08rem;
+}
+
+.resume .content .line-one .delete:active {
+    background: #fd8000;
+    color: #ffffff;
+}
+
+.resume .content .line-two {
+    height: .5rem;
+    line-height: .5rem;
+}
+
+.resume .content .line-two .info {
+    width: 70%;
+    float: left;
+}
+
+.resume .content .line-two .date {
+    float: right;
+}
+
+.resume .content .line-three {
+    height: .5rem;
+    line-height: .5rem;
+}
+
+.resume .content .line-four {
+    color: #999999;
+    line-height: .4rem;
+}
+
+/* 企业资料 */
+.com-logo {
+    background: #ffffff;
+    padding: .35rem;
+}
+
+.com-logo .logo {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: .1rem;
+    float: left;
+    padding: .05rem;
+    border: 1px #E8E8E8 solid;
+}
+
+.com-logo .logo img {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: .1rem;
+}
+
+.com-logo .desc {
+    width: 4.6rem;
+    height: 1.6rem;
+    line-height: .5rem;
+    padding-left: .3rem;
+    padding-top: .25rem;
+    float: left;
+}
+
+.com-map {
+    background: #ffffff;
+    padding: 0 .4rem .35rem;
+}
+
+.com-map .desc {
+    height: 1.05rem;
+    line-height: 1.05rem;
+}
+
+.com-map .map {
+    height: 5rem;
+    text-align: center;
+    padding: .05rem;
+    border: 1px #E8E8E8 solid;
+}
+
+.com-introduce {
+    background: #ffffff;
+    padding: .35rem;
+}
+
+.com-introduce textarea {
+    width: 100%;
+    height: 3.5rem;
+    border: 0px;
+}
+
+.com-introduce-tip {
+    height: 0.85rem;
+    line-height: 0.85rem;
+    padding: 0 0.35rem;
+}
+
+.com-introduce-tip .text-num {
+    float: left;
+}
+
+.com-introduce-tip .text-clear {
+    float: right;
+    background-image: url(../images/45.png);
+    background-repeat: no-repeat;
+    background-size: .4rem;
+    background-position: 0rem center;
+    padding-left: .5rem;
+}

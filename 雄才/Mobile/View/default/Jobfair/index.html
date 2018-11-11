@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<qscms:jobfair_list 列表名="list"/>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/jobfair.css">
+</head>
+<body>
+<include file="public:header"/>
+<volist name="list['list']" id="vo" offset="0" length="1">
+<div class="jobfair-top">
+    <div class="title font20 substring">{$vo['title']}</div>
+    <div class="date font16">{:date('Y年m月d日',$vo['holddate_start'])} - {:date('Y年m月d日',$vo['holddate_end'])}</div>
+    <div class="btns">
+        <div class="btn info" onclick="javascript:location.href='{$vo.url}'">查看详情</div>
+        <div class="btn com J_to_comlist" data-num="{$vo['com_num']}" url="{$vo.exhibitorsurl}">参会企业</div>
+        <div class="clear"></div>
+    </div>
+    <div class="district substring">{$vo['address']}</div>
+</div>
+</volist>
+<div class="list-split-block"></div>
+
+<volist name="list['list']" id="vo" offset="1" length="4">
+<div class="jobfair-list-item" onclick="javascript:location.href='{$vo.url}'">
+    <div class="title font16 substring">{$vo['title']}</div>
+    <div class="pic date">{:date('Y年m月d日',$vo['holddate_start'])} - {:date('Y年m月d日',$vo['holddate_end'])}</div>
+    <div class="pic district substring">{$vo['address']}</div>
+    <if condition="$vo['predetermined_ok'] eq 0">
+    <div class="status"></div>
+    </if>
+</div>
+<div class="list-split-block"></div>
+</volist>
+
+<include file="public:footer_min" />
+<script type="text/javascript">
+    $('.J_to_comlist').on('click',function(){
+        var com_num = parseInt($(this).data('num'));
+        if(com_num==0){
+            qsToast({type: 2, context: '当前还没有企业参会'});
+            return false;
+        }else{
+            window.location.href=$(this).attr('url');
+        }
+    });
+</script>
+</body>
+</html>

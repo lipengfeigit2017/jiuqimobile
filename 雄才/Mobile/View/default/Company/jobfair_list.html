@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/jobfair.css">
+</head>
+<body>
+<include file="public:header"/>
+     <div class="qs-top-nav x2 list_height">
+          <div class="n-cell active">近期招聘会<div class="b-line"></div></div>
+          <div class="n-cell" onclick="javascript:location.href='{:U('jobfair_enact')}'">定展记录<div class="b-line"></div></div>
+          <div class="clear"></div>
+     </div>
+     <div class="split-block"></div>
+
+<volist name="jobfair_list['list']" id="vo">
+<div class="jobfair-list-item" onclick="javascript:location.href='{$vo.url}'">
+    <div class="title font16 substring">{$vo['title']}</div>
+    <div class="pic date">{:date('Y年m月d日',$vo['holddate_start'])} - {:date('Y年m月d日',$vo['holddate_end'])}</div>
+    <div class="pic district substring">{$vo['address']}</div>
+    <if condition="$vo['predetermined_ok'] eq 0">
+    <div class="status"></div>
+    </if>
+</div>
+<div class="list-split-block"></div>
+</volist>
+<div class="qspage">{$jobfair_list['page']}</div>
+
+<include file="public:footer_min" />
+</body>
+</html>

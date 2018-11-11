@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/nprogress.css">
+</head>
+<body class="up-page">
+    <div class="up-page-logo"><div class="logo-img"><img src="{$info['avatars']}" border="0"/></div></div>
+    <div class="up-sp-37"></div>
+    <div class="up-txt-line font_3 font16 qs-center">{$info['fullname']} - {$info['title']}</div>
+    <div class="up-sp-45"></div>
+    <div class="up-txt-line font_3 font14 qs-center">欢迎上传 <span class="font_yellow">照片/作品</span>，请点击下方区域上传</div>
+    <div class="up-sp-40"></div>
+    <div class="up-input-box">
+        <input type="file" class="file-input">
+        <div class="icon-add"></div>
+        <div class="up-sp-29"></div>
+        <div class="up-txt-line font_gray9">点击此区域上传</div>
+        <div class="up-sp-29"></div>
+        <div class="up-txt-line font12 font_yellow">图片大小2M以内</div>
+    </div>
+    <div class="up-sp-39"></div>
+    <div class="block-sp2"></div>
+    <div class="up-sp-40"></div>
+    <notempty name="img">
+        <div class="up-txt-line font_3 font15 pd-left-45">已上传 <span class="font_yellow">照片/作品</span> 图片：</div>
+        <div class="up-sp-40"></div>
+        <div class="img-callback-box">
+            <volist name="img" id="vo">
+                <div class="img-callback-cell">
+                    <img src="{:attach($vo['img'],'resume_img')}">
+                    <div class="img-del J_delete" data-id="{$vo.id}" data-pid="{$info.id}"></div>
+                </div>
+            </volist>
+            <div class="clear"></div>
+        </div>
+    </notempty>
+
+    <include file="public:footer_min" />
+</body>
+<script src="../public/js/mobileBUGFix.mini.js"></script>
+<script src="../public/js/LocalResizeIMG.js"></script>
+<script src="../public/js/nprogress.js"></script>
+<script type="text/javascript">
+    $(function () {
+        // 选择文件上传
+        $('.file-input').localResizeIMG({
+            width: 400,
+            quality: 1,
+            success: function (result) {
+                var submitData={
+                    base64_string:result.clearBase64,
+                };
+                NProgress.start();
+                $.ajax({
+                    type: "POST",
+                    url: "{:U('upload/resume_img')}",
+                    data: submitData,
+                    dataType:"json",
+                    success: function(result){
+                        NProgress.done();
+                        if(result.status == 1){
+                            var img = result.data.img;
+                            var pid = "{$info.id}";
+                            // 提交表单
+                            $.ajax({
+                                url: "{:U('Personal/resume_edit_img')}",
+                                type: 'POST',
+                                dataType: 'json',
+                                data: {pid:pid,img:img},
+                                success:function(data){
+                                    if (data.status == 1) {
+                                        //window.location.href = data.data.url;
+                                        window.location.reload();
+                                    } else {
+                                        qsToast({type:2,context: data.msg});
+                                    }
+                                },
+                                error:function(data){
+                                    qsToast({type:2,context: data.msg});
+                                }
+                            });
+                        }else{
+                            qsToast({type:2,context:result.msg});
+                        }
+                    },
+                    complete :function(XMLHttpRequest, textStatus){},
+                    error:function(XMLHttpRequest, textStatus, errorThrown){ //上传失败
+                        qsToast({type:2,context: '图片上传失败！'});
+                    }
+                });
+            }
+        });
+        // 删除
+        $('.J_delete').live('click', function () {
+            var f = $(this).parent(), pid = $(this).data('pid'), id = $(this).data('id');
+            var popout = new QSpopout('删除图片');
+            popout.setContent('删除后将无法恢复，您确定要删除该图片吗?');
+            popout.getPrimaryBtn().on('click', function () {
+                NProgress.start();
+                $.post(qscms.root + '?m=Mobile&c=Personal&a=del_img', {pid: pid, id: id}, function (result) {
+                    if (result.status == 1) {
+                        //f.remove();
+                        NProgress.done();
+                        window.location.reload();
+                        qsToast({type: 1, context: result.msg});
+                    } else {
+                        qsToast({type: 2, context: result.msg});
+                    }
+                }, 'json');
+            });
+            popout.show();
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta" />
+    <link rel="stylesheet" href="../public/css/resume.css">
+		<qscms:load type="category" search="1"/>
+</head>
+<body>
+<include file="public:header" />
+<input type="hidden" id="pageSoType" value="0">
+<div class="split-block-title">
+    <div class="sbox js-show-qspageso">
+        {$Think.get.key|default="请输入意向职位等关键字"|urldecode|urldecode}
+		    <script>
+			    // 显示搜索层
+			    $('.js-show-qspageso').on('click', function(){
+				  $('.qspageso').toggle();
+                  $('#J_soinput').focus();
+                  if($('#J_soinput').val()!=''){
+                    $('#J_soinput').val($('#J_soinput').val());
+                    $('#J_soinput').closest('.topbg').addClass('has-inp');
+                  }
+			    });
+		    </script>
+    </div>
+</div>
+<qscms:classify 列表名="experience_list" 类型="QS_experience" 显示数目="100"/>
+<qscms:classify 列表名="education_list" 类型="QS_education" 显示数目="100"/>
+<qscms:classify 列表名="age_list" 类型="QS_age"/>
+<qscms:classify 列表名="wage_list" 类型="QS_wage" 显示数目="100"/>
+<qscms:classify 列表名="tag_list" 类型="QS_resumetag" 显示数目="100"/>
+<qscms:classify 列表名="major_info" 类型="QS_major_info" id="$_GET['major']"/>
+<qscms:classify 列表名="city" 类型="QS_citycategory" 地区分类="$_GET['citycategory']" 显示数目="100"/>
+<div class="filter-group x4 filter-outer">
+    <div id="f-mask"></div>
+    <div class="filter-outer">
+      <div class="filter-list js-filter qs-temp-new-city" data-tag="0" data-type="city"><div class="filter-cell"><div class="filter-cell-txt qs-temp-txt-city"><if condition="$Think.get.citycategory neq ''">{$city['select']['categoryname']|default="地区"}<else/>地区</if></div></div></div>
+      <div class="filter-list js-filter" data-tag="1"><div class="filter-cell"><div class="filter-cell-txt f-normal-txt-exp">{$experience_list[$_GET['experience']]|default="经验"}</div></div></div>
+      <div class="filter-list js-filter" data-tag="2"><div class="filter-cell"><div class="filter-cell-txt f-normal-txt-edu">{$education_list[$_GET['education']]|default="学历"}</div></div></div>
+      <div class="filter-list js-filter" data-tag="3"><div class="filter-cell"><div class="filter-cell-txt j-change-color">更多</div></div></div>
+      <div class="clear"></div>
+      <div class="qs-actionmore"></div>
+	    <form id="searchForm">
+		    <input type="hidden" class="" name="key" value="{$Think.get.key|urldecode|urldecode}">
+		    <input type="hidden" class="qs-temp-code-city" name="citycategory" value="{$Think.get.citycategory}">
+		    <input type="hidden" class="f-normal-code-exp" name="experience" value="{$Think.get.experience}">
+		    <input type="hidden" class="f-normal-code-edu" name="education" value="{$Think.get.education}">
+		    <input type="hidden" class="f-more-l-code-sex" name="sex" value="{$Think.get.sex}">
+		    <input type="hidden" class="f-more-l-code-age" name="age" value="{$Think.get.age}">
+		    <input type="hidden" class="f-more-l-code-major" name="major" value="{$Think.get.major}">
+		    <input type="hidden" class="f-more-l-code-wage" name="wage" value="{$Think.get.wage}">
+		    <input type="hidden" class="f-more-l-code-tag" name="resumetag" value="{$Think.get.resumetag}">
+		    <input type="hidden" class="f-more-l-code-settr" name="settr" value="{$Think.get.settr}">
+		    <input type="hidden" class="qs-temp-code-range" name="range" value="">
+	    </form>
+	    <input type="hidden" class="f-seach-page" value="?m=Mobile&c=Resume&a=index&">
+    </div>
+    <div class="con-filter">
+	    <div class="f-box f-box-city"></div>
+	    <div class="f-box f-box-exp">
+		    <div class="f-box-inner">
+			    <volist name="experience_list" id="experience">
+				    <li><a class="f-item f-item-normal <if condition="$Think.get.experience eq $key">select</if>" href="javascript:;" data-type="exp" data-code="{$key}" data-title="{$experience}">{$experience}</a></li>
+			    </volist>
+		    </div>
+			<div class="f-btn-submit qs-center"><div onclick="window.location='{:P(array('experience'=>''))}';" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange">不限</div></div>
+	    </div>
+	    <div class="f-box f-box-edu">
+		    <div class="f-box-inner">
+			    <volist name="education_list" id="education">
+				    <li><a class="f-item f-item-normal <if condition="$Think.get.education eq $key">select</if>" href="javascript:;" data-type="edu" data-code="{$key}" data-title="{$education}">{$education}</a></li>
+			    </volist>
+		    </div>
+			<div class="f-btn-submit qs-center"><div onclick="window.location='{:P(array('education'=>''))}';" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange">不限</div></div>
+	    </div>
+	    <div class="f-box f-box-more">
+		    <div class="f-box-inner">
+			    <ul class="arrow">
+				    <li><a href="javascript:;" data-id="filter-sex" class="js-more-l">性别<span class="choice f-more-l-txt-sex"><if condition="$Think.get.sex eq 1">男<elseif condition="$Think.get.sex eq 2"/>女<else/>不限</if></span></a></li>
+				    <li><a href="javascript:;" data-id="filter-age" class="js-more-l">年龄<span class="choice f-more-l-txt-age">{$age_list[$_GET['age']]|default="不限"}</span></a></li>
+				    <li><a href="javascript:;" data-id="filter-major" class="js-more-l">专业<span class="choice f-more-l-txt-major">{$major_info['categoryname']|default="不限"}</span></a></li>
+				    <li><a href="javascript:;" data-id="filter-wage" class="js-more-l">期望薪资<span class="choice f-more-l-txt-wage">{$wage_list[$_GET['wage']]|default="不限"}</span></a></li>
+				    <li><a href="javascript:;" data-id="filter-tag" class="js-more-l">简历标签<span class="choice f-more-l-txt-tag">{$tag_list[$_GET['resumetag']]|default="不限"}</span></a></li>
+				    <li><a href="javascript:;" data-id="filter-settr" class="js-more-l">更新时间<span class="choice f-more-l-txt-settr">
+				    	<switch name="_GET['settr']">
+				    		<case value="">不限</case>
+				    		<case value="0">不限</case>
+							<case value="3">3天内</case>
+							<case value="7">7天内</case>
+							<case value="15">15天内</case>
+							<case value="30">30天内</case>
+						</switch>
+				    </span></a></li>
+			    </ul>
+		    </div>
+		    <div class="f-btn-submit qs-center">
+				<div href="javascript:;" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange" id="f-do-filter"> 确 定 </div>
+				&nbsp;&nbsp;&nbsp;
+				<div onclick="window.location='{:url_rewrite('QS_resumelist')}';" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-border-gray"> 清空所选 </div>
+			</div>
+		    <div class="f-btn-back qs-center"><div href="javascript:;" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange f-more-back-btn"> 返 回 </div></div>
+	    </div>
+	    <div class="f-box f-more-content" id="filter-sex">
+		    <div class="f-box-inner">
+			    <ul>
+				    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.sex eq 0">select</if>" data-type="sex" data-title="不限" data-code="0">不限</a></li>
+				    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.sex eq 1">select</if>" data-type="sex" data-title="男" data-code="1">男</a></li>
+				    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.sex eq 2">select</if>" data-type="sex" data-title="女" data-code="2">女</a></li>
+			    </ul>
+		    </div>
+	    </div>
+	    <div class="f-box f-more-content" id="filter-age">
+		    <div class="f-box-inner">
+			    <ul>
+				    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.age eq 0">select</if>" data-type="age" data-title="不限" data-code="0">不限</a></li>
+				    <volist name="age_list" id="age">
+					    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.age eq $key">select</if>" data-type="age" data-title="{$age}" data-code="{$key}">{$age}</a></li>
+				    </volist>
+			    </ul>
+		    </div>
+	    </div>
+	    <div class="f-box f-more-content" id="filter-major">
+		    <div class="f-box-inner">
+			    <ul class="for-temp-major-group"></ul>
+		    </div>
+	    </div>
+	    <div class="f-box f-more-content" id="filter-wage">
+		    <div class="f-box-inner">
+			    <ul>
+				    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.wage eq 0">select</if>" data-type="wage" data-title="不限" data-code="0">不限</a></li>
+				    <qscms:classify 列表名="wage_list" 类型="QS_wage" 显示数目="100"/>
+				    <volist name="wage_list" id="wage">
+					    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.wage eq $key">select</if>" data-type="wage" data-title="{$wage}" data-code="{$key}">{$wage}</a></li>
+				    </volist>
+			    </ul>
+		    </div>
+	    </div>
+	    <div class="f-box f-more-content" id="filter-tag">
+		    <div class="f-box-inner">
+			    <ul>
+				    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.resumetag eq ''">select</if>" data-type="tag" data-title="不限" data-code="0">不限</a></li>
+				    <volist name="tag_list" id="tag">
+					    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.resumetag eq $key">select</if>" data-type="tag" data-title="{$tag}" data-code="{$key}">{$tag}</a></li>
+				    </volist>
+			    </ul>
+		    </div>
+	    </div>
+	    <div class="f-box f-more-content" id="filter-settr">
+		    <div class="f-box-inner">
+			    <ul>
+				    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.settr eq 0">select</if>" data-type="settr" data-title="不限" data-code="0">不限</a></li>
+				    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.settr eq 3">select</if>" data-type="settr" data-title="3天内" data-code="3">3天内</a></li>
+				    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.settr eq 7">select</if>" data-type="settr" data-title="7天内" data-code="7">7天内</a></li>
+				    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.settr eq 15">select</if>" data-type="settr" data-title="15天内" data-code="15">15天内</a></li>
+				    <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.settr eq 30">select</if>" data-type="settr" data-title="30天内" data-code="30">30天内</a></li>
+			    </ul>
+		    </div>
+	    </div>
+    </div>
+</div>
+<qscms:resume_list 列表名="resumelist" 搜索类型="$_GET['search_type']" 显示数目="15" 分页显示="1" 关键字="$_GET['key']" 职位分类="$_GET['jobcategory']" 地区分类="$_GET['citycategory']" 日期范围="$_GET['settr']" 学历="$_GET['education']" 工作经验="$_GET['experience']" 工资="$_GET['wage']" 工作性质="$_GET['nature']" 标签="$_GET['resumetag']" 手机认证="$_GET['mobile_audit']" 照片="$_GET['photo']" 所学专业="$_GET['major']" 行业="$_GET['trade']" 年龄="$_GET['age']" 性别="$_GET['sex']" 特长描述长度="100" 排序="$_GET['sort']"/>
+<notempty name="resumelist['list']">
+<volist name="resumelist['list']" id="resume">
+<div class="resume-list-item for-event" onclick="javascript:location.href='{$resume.resume_url}'">
+    <div class="info">
+        <div class="info-logo"><img src="{$resume.photosrc}" alt="{$resume.fullname}"></div>
+        <div class="line-one">
+            <div class="real-name substring font16">{$resume.fullname}</div>
+            <if condition="$resume['talent'] eq 1"><div class="real-adv"></div></if>
+            <if condition="$resume['strong_tag']">
+			<div class="gold font10">{$resume['strong_tag']}</div>
+			</if>
+            <if condition="$resume['stick'] eq 1 && !$_GET['sort']">
+            <div class="refresh-time font12 font_red_light">置顶</div>
+            <else />
+            <div class="refresh-time font12">{$resume['refreshtime_cn']}</div>
+            </if>
+            <div class="clear"></div>
+        </div>
+        <div class="line-two font14 substring">
+            {$resume.sex_cn} / {$resume.age}岁 / {$resume.education_cn} / {$resume.experience_cn}
+        </div>
+        <if condition="$resume['tag_cn']">
+        <div class="line-three font9">
+            <volist name="resume['tag_cn']" id="tag" offset="0" length="4">
+                <div class="resume-tag">{$tag}</div>
+            </volist>
+            <div class="clear"></div>
+        </div>
+        <else />
+        <div class="line-four font13 substring">
+            意向地区: {$resume.district_cn}
+        </div>
+        </if>
+    </div>
+    <div class="intent-jobs font13 substring">
+        意向职位: {$resume.intention_jobs}
+    </div>
+</div>
+<div class="list-split-block"></div>
+</volist>
+<div class="qspage">{$resumelist['page']}</div>
+<else />
+	<div class="list-split-block"></div>
+	<div class="list-empty link_blue">
+		抱歉，没有找到符合您条件的简历！<br />
+		放宽搜索条件也许有更多合适您的简历哦~
+	</div>
+</notempty>
+<if condition="C('qscms_footer_nav_status') eq 1">
+    <div class="bottom-nav-bar-group">
+        <div class="bottom-nav-bar">
+            <div class="nav-bar-cell qs-left">
+                <a href="{:url_rewrite('QS_index')}" class="bar-cell index">
+                    <div class="b-img"></div>
+                    <div class="b-txt font12">首页</div>
+                </a>
+                <a href="{:url_rewrite('QS_jobslist')}" class="bar-cell job">
+                    <div class="b-img"></div>
+                    <div class="b-txt font12">工作</div>
+                </a>
+                <div class="clear"></div>
+            </div>
+            <div class="nav-bar-more qs-left for-event">
+				<a href="{:url_rewrite('QS_jobfairlist')}" style="color: #666">
+					<div class="nav-bar-more-cell js-b-nav-bar1" style="top: 0.1rem"></div>
+					<div class="b-txt font10"
+						 style="width: 100%;text-align: center; bottom: 0.05rem; position: absolute;">招聘
+					</div>
+				</a>
+            </div>
+            <div class="nav-bar-cell qs-left">
+                <a href="{:url_rewrite('QS_resumelist')}" class="bar-cell resume active">
+                    <div class="b-img"></div>
+                    <div class="b-txt font12">简历</div>
+                </a>
+                <a href="{:url_rewrite('QS_login')}" class="bar-cell mine">
+                    <div class="b-img"></div>
+                    <div class="b-txt font12">我的</div>
+                </a>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="bottom-bar-more-group">
+            <div class="bn-mask js-b-nav-bar-active"></div>
+            <div class="bar-more-cell">
+                <div id="hwslider-bottom" class="hwslider">
+                    <ul>
+                        <li>
+                            <a href="{:url_rewrite('QS_jobslist')}"><dl class="l1"><dt class="job for-event"></dt><dd class="font12">找工作</dd></dl></a>
+                            <a href="{:url_rewrite('QS_resumelist')}"><dl class="l1"><dt class="resume for-event"></dt><dd class="font12">找人才</dd></dl></a>
+                            <a href="{:url_rewrite('QS_login')}"><dl class="l1"><dt class="fabu for-event"></dt><dd class="font12">发布</dd></dl></a>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <a href="{:url_rewrite('QS_newslist')}"><dl class="l1"><dt class="news for-event"></dt><dd class="font12">资讯</dd></dl></a>
+                            <notempty name="apply['Mall']">
+                                <a href="{:url_rewrite('QS_mall_index')}"><dl class="l1"><dt class="shop for-event"></dt><dd class="font12">商城</dd></dl></a>
+                            </notempty>
+                            <notempty name="apply['Jobfair']">
+                                <a href="{:url_rewrite('QS_jobfairlist')}"><dl class="l1"><dt class="zhaoph for-event"></dt><dd class="font12">招聘会</dd></dl></a>
+                            </notempty>
+                            <div class="clear"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bar-more-closecell js-b-nav-bar-active for-event"></div>
+        </div>
+    </div>
+</if>
+<include file="public:footer_min" />
+<!--<script src="../public/js/inobounce.js"></script>-->
+<script src="../public/js/QSfilter.js"></script>
+<script src="../public/js/qsCategory.js"></script>
+<script src="../public/js/qsCitySearchResume.js"></script>
+</body>
+<script>
+	/**
+	 * 读取缓存文件中的专业类别
+	 */
+	var revalMajor = '{$Think.get.major}';
+	if (QS_major_parent) {
+		var majorHtml = '<li class="selected"><a href="javascript:;" class="f-more-back-a" data-type="major" data-title="不限" data-code="0">不限</a></li>';
+		$.each(QS_major_parent, function (key, value) {
+			if (value.split(',')) {
+				var level2Id = value.split(',')[0];
+				if (QS_major[level2Id]) {
+					var level2Arr = QS_major[level2Id].split('`');
+					if (level2Arr) {
+						for (var i = 0; i < level2Arr.length; i++) {
+							if (level2Arr[i].split(',')[0] == revalMajor) {
+								majorHtml += '<li class="selected"><a href="javascript:;" class="f-more-back-a select" data-type="major" data-title="' + level2Arr[i].split(',')[1] + '" data-code="' + level2Arr[i].split(',')[0] + '">' + level2Arr[i].split(',')[1] + '</a></li>';
+							} else {
+								majorHtml += '<li class="selected"><a href="javascript:;" class="f-more-back-a" data-type="major" data-title="' + level2Arr[i].split(',')[1] + '" data-code="' + level2Arr[i].split(',')[0] + '">' + level2Arr[i].split(',')[1] + '</a></li>';
+							}
+						}
+					}
+				}
+			}
+		})
+		$('.for-temp-major-group').html(majorHtml);
+	}
+    var recoverSex = '{$Think.get.sex}';
+    var recoverAge = '{$Think.get.age}';
+    var recoverMajor = '{$Think.get.major}';
+    var recoverWage = '{$Think.get.wage}';
+    var recoverResumetag = '{$Think.get.resumetag}';
+    var recoverSettr = '{$Think.get.settr}';
+    var isChangeColor = false;
+    if (eval(recoverSex) > 0 || eval(recoverAge) > 0 || eval(recoverMajor) > 0 || eval(recoverWage) > 0 || eval(recoverResumetag) > 0 || eval(recoverSettr) > 0) {
+        isChangeColor = true;
+    }
+    if (isChangeColor) {
+        $('.j-change-color').addClass('red-txt');
+    }
+    setTimeout(function() {
+        var noLimitCityHtml = '<div class="f-btn-submit qs-center"><div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange" id="j-no-limit-city">不限</div></div>';
+        $('.f-box-city').append(noLimitCityHtml);
+        $('#j-no-limit-city').click(function() {
+            window.location = "{:P(array('citycategory'=>''))}";
+        });
+    }, 100)
+    // 特长标签随机背景色
+    function randomsort(a, b) {
+        return Math.random()>.5 ? -1 : 1;
+    }
+    var bgArrBefore = [1,2,3,4];
+    $('.resume-list-item').each(function () {
+        var $jobTagDom = $(this).find('.resume-tag');
+        if ($jobTagDom.length) {
+            var bgArray = bgArrBefore.sort(randomsort);
+            $($jobTagDom).each(function (index, value) {
+                $(this).addClass('tg' + bgArray[index]);
+            })
+        }
+    })
+	// 更多列表左右切换
+	$('.js-more-l').on('click', function () {
+		var targetId = $(this).data('id');
+		$('.f-box-more').toggleClass('qs-actionsheet-toggle-left');
+		$('#' + targetId).toggleClass('qs-actionsheet-toggle');
+	})
+	$('.f-more-back-btn').on('click', function () { // 更多列表切换返回
+		$('.f-box-more').toggleClass('qs-actionsheet-toggle-left');
+		$('.f-more-content').removeClass('qs-actionsheet-toggle');
+	})
+	$('.f-more-back-a').on('click', function () { // 更多列表项点击
+		var thisType = $(this).data('type');
+		var thisTitle = $(this).data('title');
+		var thisCode = $(this).data('code');
+		$('.f-more-l-code-' + thisType).val(thisCode);
+		$('.f-more-l-txt-' + thisType).text(thisTitle);
+		$('.f-box-more').toggleClass('qs-actionsheet-toggle-left');
+		$('.f-more-content').removeClass('qs-actionsheet-toggle');
+	})
+	// 除更多和读取缓存之外的下拉列表
+	$('.f-item-normal').on('click', function () {
+		var thisType = $(this).data('type');
+		var thisTitle = $(this).data('title');
+		var thisCode = $(this).data('code');
+		$('.f-normal-code-' + thisType).val(thisCode);
+		$('.f-normal-txt-' + thisType).text(thisTitle);
+		$('body').removeClass('filter-fixed');
+		$('.f-box-' + thisType).addClass('qs-hidden');
+		$('.js-filter').removeClass('active');
+		$('#f-mask').hide();
+		goPage();
+	})
+	// 过滤已投递
+	$('.js-clickedbox').on('click', function () {
+		if ($(this).hasClass('clickedchoice')) {
+			$(this).removeClass('clickedchoice');
+			$('.f-deliver').val('0');
+		} else {
+			$(this).addClass('clickedchoice');
+			$('.f-deliver').val('1');
+		}
+	})
+	// 跳转方法
+	function goPage() {
+		var toSearchPage = $('.f-seach-page').val();
+		window.location.href = qscms.root + toSearchPage + $('#searchForm').serialize();
+	}
+	// 点击筛选
+	$('#f-do-filter').on('click', function () {
+		goPage();
+	});
+	$('.js-filter').on('click', function () {
+		var filter = new QSfilter($(this));
+	});
+</script>
+</html>

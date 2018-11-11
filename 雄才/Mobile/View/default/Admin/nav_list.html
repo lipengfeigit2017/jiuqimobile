@@ -1,0 +1,61 @@
+<include file="Admin@default/public/header" />
+<form id="form1" name="form1" method="post" action="{:U('nav_save_all')}">
+    <div class="list_th">
+        <div class="td" style=" width:24%;">
+        <div class="left_padding">导航名称</div>
+        </div>
+        <div class="td" style=" width:24%;">显示名称</div>
+        <div class="td" style=" width:20%;">是否显示</div>
+        <div class="td" style=" width:20%;">排序(数字越大越靠前)</div>
+        <div class="td" style=" width:12%;">操作</div>
+        <div class="clear"></div>
+    </div>
+
+    <volist name="list" id="vo">
+        <div class="list_tr link_black">
+            <div class="td" style=" width:24%;">
+                <div class="left_padding striking">
+                    <input name="id[]" type="hidden" value="{$vo['id']}"/>
+                    <span class="vtip" title="<img src='<if condition="$vo['nav_img'] eq ''">{:attach($vo['alias'].'.png','resource/mobile_nav')}<else />{:attach($vo['nav_img'],'images')}</if>' border=0 align=absmiddle width=120 height=120>">
+                        <img class="avatar" src="<if condition="$vo['nav_img'] eq ''">{:attach($vo['alias'].'.png','resource/mobile_nav')}<else />{:attach($vo['nav_img'],'images')}</if>" align="absmiddle">&nbsp;&nbsp;
+                    </span>
+                    {$vo['sys_name']}
+                </div>
+            </div>
+            <div class="td" style=" width:24%;">
+                <input name="show_name[]" type="text" class="input_text_default small" value="{$vo['show_name']}" style="width:100px;">
+            </div>
+            <div class="td" style=" width:20%;">
+                <div data-code="0,1" class="imgchecked_small <if condition="$vo['display'] eq 1">select</if>"><input name="display[]" type="hidden" value="{$vo['display']}"></div>
+            </div>
+            <div class="td" style=" width: 20%;">
+                <input name="ordid[]" type="text" class="input_text_default small" maxlength="3" value="{$vo['ordid']}" style="width:50px;">
+            </div>
+            <div class="td edit" style=" width:12%;">
+                <a href="{:U('nav_edit',array('id'=>$vo['id']))}">修改</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </volist>
+</form>
+
+<empty name="list">
+    <div class="list_empty">没有任何信息！</div>
+</empty>
+
+<div class="list_foot">
+    <div class="btnbox">
+        <input type="button" class="admin_submit" id="ButSaveOrder" value="全部保存"/>
+    </div>
+
+</div>
+
+</div>
+<include file="Admin@default/public/footer" />
+    <script type="text/javascript">
+        $('#ButSaveOrder').click(function(){
+            $('#form1').submit();
+        });
+    </script>
+</body>
+</html>

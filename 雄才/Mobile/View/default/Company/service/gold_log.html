@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+     <include file="public:header" />
+     <div class="points-detail">
+     	<div class="points-detail-top">
+			<div class="circle  <if condition="$operate eq 1">active</if>" <if condition="$operate eq 2">onclick="javascript:location.href='{:P(array('operate'=>1))}'"</if>>
+				<div class="t1">累计获得</div>
+				<div class="t2 font18">{$get_num}</div>
+			</div>
+			<div class="circle right <if condition="$operate eq 2">active</if>" <if condition="$operate eq 1">onclick="javascript:location.href='{:P(array('operate'=>2))}'"</if>>
+				<div class="t1">累计消耗</div>
+				<div class="t2 font18">{$use_num}</div>
+			</div>
+		</div>
+		<div class="split">
+			<div class="txt"><eq name="operate" value="1">获得<else />消耗</eq>{:C('qscms_points_byname')}明细</div>
+		</div>
+	 	<notempty name="list['list']">
+			<volist name="list['list']" id="vo">
+			<div class="line">
+				<div class="line-wrap left">
+					<div class="txt t1 font_gray9">{:date('Y-m-d H:i',$vo['addtime'])}</div>
+					<div class="txt t2">{$vo['htype_cn']}</div>
+				</div>
+				<div class="line-wrap right">
+					<div class="txt points-op font_yellow font18"><eq name="operate" value="1">+<else />-</eq>{$vo['points']}</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			</volist>
+			<div class="qspage">{$list['page']}</div>
+		<else />
+			<div class="list-empty">
+				抱歉，没有符合条件的积分记录！
+			</div>
+		</notempty>
+
+     </div>
+     <include file="public:footer_min" />
+	</body>
+</html>

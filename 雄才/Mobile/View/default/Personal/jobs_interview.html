@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/personal.css">
+</head>
+<body>
+    <include file="public:header"/>
+    <div class="filter-group x2 filter-outer">
+        <div id="f-mask"></div>
+        <div class="filter-outer">
+            <div class="filter-list js-filter" data-tag="0">
+                <div class="filter-cell">
+	                <div class="filter-cell-txt">
+                    <if condition="$Think.get.look eq ''">
+                        查看状态
+                    <elseif condition="$Think.get.look eq 1"/>
+                        未查看
+                    <else/>
+                        已查看
+                    </if>
+	                </div>
+                </div>
+            </div>
+            <div class="filter-list js-filter" data-tag="1">
+                <if condition="$Think.get.settr eq 0">
+                    <div class="filter-cell"><div class="filter-cell-txt">发送时间</div></div>
+                <else />
+                    <switch name="Think.get.settr">
+                        <case value="0">
+                            <div class="filter-cell"><div class="filter-cell-txt">不限</div></div>
+                        </case>
+                        <case value="3">
+                            <div class="filter-cell"><div class="filter-cell-txt">3天内</div></div>
+                        </case>
+                        <case value="7">
+                            <div class="filter-cell"><div class="filter-cell-txt">7天内</div></div>
+                        </case>
+                        <case value="15">
+                            <div class="filter-cell"><div class="filter-cell-txt">15天内</div></div>
+                        </case>
+                        <case value="30">
+                            <div class="filter-cell"><div class="filter-cell-txt">30天内</div></div>
+                        </case>
+                    </switch>
+                </if>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--查看状态-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item <if condition="$Think.get.look eq ''">select</if>" href="{:P(array('look'=>''))}">全部</a></li>
+                    <li><a class="f-item <if condition="$Think.get.look eq 2">select</if>" href="{:P(array('look'=>2))}">已查看</a></li>
+                    <li><a class="f-item <if condition="$Think.get.look eq 1">select</if>" href="{:P(array('look'=>1))}">未查看</a></li>
+                </div>
+            </div>
+        </div>
+        <!--发送时间下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item <if condition="$Think.get.settr eq '' || $Think.get.settr eq '0'">select</if>" href="{:P(array('settr'=>0))}">全部</a></li>
+                    <li><a class="f-item <if condition="$Think.get.settr eq 3">select</if>" href="{:P(array('settr'=>3))}">3天内</a></li>
+                    <li><a class="f-item <if condition="$Think.get.settr eq 7">select</if>" href="{:P(array('settr'=>7))}">7天内</a></li>
+                    <li><a class="f-item <if condition="$Think.get.settr eq 15">select</if>" href="{:P(array('settr'=>15))}">15天内</a></li>
+                    <li><a class="f-item <if condition="$Think.get.settr eq 30">select</if>" href="{:P(array('settr'=>30))}">30天内</a></li>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="split-block"></div>
+    <notempty name="interview['list']">
+        <volist name="interview['list']" id="list">
+            <if condition="$list['company_name']">
+                <div class="list-item J_look js-longpress for-event " data-look="{$list['personal_look']}" data-yid="{$list['did']}" url="{$list.company_url}">
+                    <div class="content">
+                        <div class="line-one">
+                            <div class="title substring <if condition="$list['personal_look'] neq 2">no-read</if>">
+                                {$list.company_name}
+                                <if condition="$list['personal_look'] neq 2">
+                                    <div class="red-tip"></div>
+                                </if>
+                            </div>
+                            <div class="right font12">{:date('Y-m-d',$list['interview_addtime'])}</div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="line-two font12">
+                            <div class="left">{$list.jobs_name}</div>
+                            <div class="right font12 font_yellow">{$list.wage_cn}</div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="line-four font12">
+                            {$list.resume_name}，你好！看到你的简历适合我们公司的招聘条件，通知你{:date('Y-m-d H:i',$list['interview_time'])}来公司参见面试。联系电话：{$list.telephone}，
+                            联系人：{$list.contact}，面试地址：{$list.address}。
+                        </div>
+                    </div>
+                </div>
+            <else/>
+                <div class="list-item js-longpress for-event" data-yid="{$list.did}">
+                    <div class="content">
+                        <div class="line-two font12">
+                            <div class="left">该企业不存在或已被删除</div>
+                        </div>
+                    </div>
+                </div>
+            </if>
+        </volist>
+        <div class="split-block"></div>
+        <div class="qspage">{$interview['page']}</div>
+    <else />
+        <if condition="$hasget">
+            <div class="list-empty">
+                抱歉，没有找到符合您条件的的邀请记录！
+            </div>
+            <else />
+            <div class="list-empty link_blue">
+                目前您暂未收到面试邀请！<br />
+                建议您主动出击 <a href="{:url_rewrite('QS_jobslist')}">找工作</a>
+            </div>
+        </if>
+    </notempty>
+    <include file="public:footer_min" />
+    <script src="../public/js/longPress.js"></script>
+    <script type="text/javascript">
+        $('.js-filter').on('click', function() {
+            var filter = new QSfilter($(this));
+        });
+        $('.J_look').on('click',function(){
+            var y_id = $(this).data('yid');
+            var url = $(this).attr('url');
+            var look = $(this).data('look');//2已查看 1未查看
+            if(look==1){
+                $.getJSON("{:U('Personal/set_interview')}",{y_id:y_id},function(){
+                    window.location.href=url;
+                });
+            }else{
+                window.location.href=url;
+            }
+        });
+        // 长按删除
+        $('.js-longpress').each(function () {
+            var y_id = $(this).data('yid');
+            $(this).longPress(function(){
+                var popout = new QSpopout();
+                popout.setContent('确定删除吗？');
+                popout.show();
+                popout.getPrimaryBtn().on('click', function () {
+                    $.getJSON("{:U('personal/interview_del')}",{y_id:y_id},function(result){
+                        if(result.status == 1){
+                            qsToast({type:1,context: result.msg});
+                            setTimeout(function () {
+                                location.href = "{:U('personal/jobs_interview')}";
+                            }, 2000);
+                        }else{
+                            qsToast({type:2,context: result.msg});
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

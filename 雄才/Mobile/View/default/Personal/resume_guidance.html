@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/personal.css">
+</head>
+<body>
+    <include file="public:header"/>
+    <div class="split-block-title">您的简历暂不完整，<span class="qs-txt-orange">90%</span> 的企业更愿意联系完整的简历，完善后可提高 <span class="qs-txt-orange">10</span> 倍的求职效果！</div>
+    <!--工作经历-->
+    <div class="listmod toggleBox">
+        <div class="eattitle list_height t5">工作经历<div class="toggleBtn down-btn up font13">收起</div></div>
+        <div class="toggleItem itemListBox qs-hidden" id="workListBox"></div>
+        <div class="toggleItem itemAddBox">
+            <form id="form1">
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">公司名称</div>
+                    <div class="describe font13">
+                        <input type="text" class="companyname" name="companyname" placeholder="请输入公司名称" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">职位名称</div>
+                    <div class="describe font13">
+                        <input type="text" class="jobs" name="jobs" placeholder="请输入职位名称" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt js-actionParent">
+                    <div class="pic"></div>
+                    <div class="tit font14">开始时间</div>
+                    <div class="describe font13 qs-temp-date js-showActionSheet" data-type="start">
+                        <span class="f-date-txt-start">请选择</span>
+                        <input type="hidden" class="f-year-code-start startyear" name="startyear" value="">
+                        <input type="hidden" class="f-month-code-start startmonth" name="startmonth" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                    <!--BEGIN actionSheet-->
+                    <div>
+                        <div class="qs-mask" style="display:none"></div>
+                        <div class="qs-actionsheet js-actionsheet">
+                            <div class="qs-actionsheet-menu">
+                                <div class="con-filter">
+                                    <div class="f-selected-group">
+                                        <div class="s-bar">
+                                            <div class="s-bar-title qs-left">开始时间</div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="s-list"></div>
+                                    </div>
+                                    <div class="f-box f-box-date-start"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list_height plist-txt js-actionParent">
+                    <div class="pic"></div>
+                    <div class="tit font14">结束时间</div>
+                    <div class="describe font13 qs-temp-date js-showActionSheet" data-type="end">
+                        <span class="f-date-txt-end">请选择</span>
+                        <input type="hidden" class="f-year-code-end endyear" name="endyear" value="">
+                        <input type="hidden" class="f-month-code-end endmonth" name="endmonth" value="">
+                        <input type="hidden" class="todate" name="todate" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                    <!--BEGIN actionSheet-->
+                    <div>
+                        <div class="qs-mask" style="display:none"></div>
+                        <div class="qs-actionsheet js-actionsheet">
+                            <div class="qs-actionsheet-menu">
+                                <div class="con-filter">
+                                    <div class="f-selected-group">
+                                        <div class="s-bar">
+                                            <div class="s-bar-title qs-left">结束时间</div>
+                                            <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet js-todate">至今</div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="s-list"></div>
+                                    </div>
+                                    <div class="f-box f-box-date-end"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list_height plist-txt notarrow last">
+                    <div class="pic"></div>
+                    <div class="tit font14">工作职责</div>
+                    <div class="describe font13"></div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="textarea-txt">
+                    <textarea class="achievements" name="achievements" placeholder="请简述一下岗位职责和工作业绩，可使用人单位对你了解更多！" class="font13">{$info['achievements']}</textarea>
+                </div>
+                <input type="hidden" class="id" name="id" value="">
+                <input type="hidden" class="pid" name="pid" value="{$resume.id}">
+                <input type="hidden" class="news" name="news" value="{$Think.get.news}">
+                <div class="btn-save-line font18 addWorkExp">保存</div>
+            </form>
+        </div>
+        <div class="toggleItem itemAgainBtnBox qs-hidden">
+            <div class="split-block"></div>
+            <div class="btn-add-line workExpAgainAdd">
+                <div class="bal-icon font18">添加一条</div>
+            </div>
+        </div>
+        <div class="toggleItem itemAddAgainBox qs-hidden">
+            <form id="form2">
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">公司名称</div>
+                    <div class="describe font13">
+                        <input type="text" class="companyname" name="companyname" placeholder="请输入公司名称" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">职位名称</div>
+                    <div class="describe font13">
+                        <input type="text" class="jobs" name="jobs" placeholder="请输入职位名称" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt js-actionParent">
+                    <div class="pic"></div>
+                    <div class="tit font14">开始时间</div>
+                    <div class="describe font13 qs-temp-date js-showActionSheet" data-type="start">
+                        <span class="f-date-txt-start">请选择</span>
+                        <input type="hidden" class="f-year-code-start startyear" name="startyear" value="">
+                        <input type="hidden" class="f-month-code-start startmonth" name="startmonth" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                    <!--BEGIN actionSheet-->
+                    <div>
+                        <div class="qs-mask" style="display:none"></div>
+                        <div class="qs-actionsheet js-actionsheet">
+                            <div class="qs-actionsheet-menu">
+                                <div class="con-filter">
+                                    <div class="f-selected-group">
+                                        <div class="s-bar">
+                                            <div class="s-bar-title qs-left">开始时间</div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="s-list"></div>
+                                    </div>
+                                    <div class="f-box f-box-date-start"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list_height plist-txt js-actionParent">
+                    <div class="pic"></div>
+                    <div class="tit font14">结束时间</div>
+                    <div class="describe font13 qs-temp-date js-showActionSheet" data-type="end">
+                        <span class="f-date-txt-end">请选择</span>
+                        <input type="hidden" class="f-year-code-end endyear" name="endyear" value="">
+                        <input type="hidden" class="f-month-code-end endmonth" name="endmonth" value="">
+                        <input type="hidden" class="todate" name="todate" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                    <!--BEGIN actionSheet-->
+                    <div>
+                        <div class="qs-mask" style="display:none"></div>
+                        <div class="qs-actionsheet js-actionsheet">
+                            <div class="qs-actionsheet-menu">
+                                <div class="con-filter">
+                                    <div class="f-selected-group">
+                                        <div class="s-bar">
+                                            <div class="s-bar-title qs-left">结束时间</div>
+                                            <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet js-todate">至今</div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="s-list"></div>
+                                    </div>
+                                    <div class="f-box f-box-date-end"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list_height plist-txt notarrow last">
+                    <div class="pic"></div>
+                    <div class="tit font14">工作职责</div>
+                    <div class="describe font13"></div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="textarea-txt">
+                    <textarea class="achievements" name="achievements" placeholder="请简述一下岗位职责和工作业绩，可使用人单位对你了解更多！" class="font13">{$info['achievements']}</textarea>
+                </div>
+                <input type="hidden" class="id" name="id" value="">
+                <input type="hidden" class="pid" name="pid" value="{$resume.id}">
+                <input type="hidden" class="news" name="news" value="{$Think.get.news}">
+                <div class="btn-save-line font18">
+                    <div class="bsl bsl-left cancelWorkExp">取消</div>
+                    <div class="bsl bsl-right saveAgainWorkExp">保存</div>
+                    <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <div class="toggleItem itemEditBox qs-hidden">
+            <form id="form3">
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">公司名称</div>
+                    <div class="describe font13">
+                        <input type="text" class="companyname" name="companyname" placeholder="请输入公司名称" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">职位名称</div>
+                    <div class="describe font13">
+                        <input type="text" class="jobs" name="jobs" placeholder="请输入职位名称" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt js-actionParent">
+                    <div class="pic"></div>
+                    <div class="tit font14">开始时间</div>
+                    <div class="describe font13 qs-temp-date js-showActionSheet" data-type="start">
+                        <span class="f-date-txt-start">请选择</span>
+                        <input type="hidden" class="f-year-code-start startyear" name="startyear" value="">
+                        <input type="hidden" class="f-month-code-start startmonth" name="startmonth" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                    <!--BEGIN actionSheet-->
+                    <div>
+                        <div class="qs-mask" style="display:none"></div>
+                        <div class="qs-actionsheet js-actionsheet">
+                            <div class="qs-actionsheet-menu">
+                                <div class="con-filter">
+                                    <div class="f-selected-group">
+                                        <div class="s-bar">
+                                            <div class="s-bar-title qs-left">开始时间</div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="s-list"></div>
+                                    </div>
+                                    <div class="f-box f-box-date-start"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list_height plist-txt js-actionParent">
+                    <div class="pic"></div>
+                    <div class="tit font14">结束时间</div>
+                    <div class="describe font13 qs-temp-date js-showActionSheet" data-type="end">
+                        <span class="f-date-txt-end">请选择</span>
+                        <input type="hidden" class="f-year-code-end endyear" name="endyear" value="">
+                        <input type="hidden" class="f-month-code-end endmonth" name="endmonth" value="">
+                        <input type="hidden" class="todate" name="todate" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                    <!--BEGIN actionSheet-->
+                    <div>
+                        <div class="qs-mask" style="display:none"></div>
+                        <div class="qs-actionsheet js-actionsheet">
+                            <div class="qs-actionsheet-menu">
+                                <div class="con-filter">
+                                    <div class="f-selected-group">
+                                        <div class="s-bar">
+                                            <div class="s-bar-title qs-left">结束时间</div>
+                                            <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet js-todate">至今</div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="s-list"></div>
+                                    </div>
+                                    <div class="f-box f-box-date-end"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list_height plist-txt notarrow last">
+                    <div class="pic"></div>
+                    <div class="tit font14">工作职责</div>
+                    <div class="describe font13"></div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="textarea-txt">
+                    <textarea class="achievements" name="achievements" placeholder="请简述一下岗位职责和工作业绩，可使用人单位对你了解更多！" class="font13">{$info['achievements']}</textarea>
+                </div>
+                <input type="hidden" class="id" name="id" value="">
+                <input type="hidden" class="pid" name="pid" value="{$resume.id}">
+                <input type="hidden" class="news" name="news" value="{$Think.get.news}">
+                <div class="btn-save-line font18">
+                    <div class="bsl bsl-left cancelEditWorkExp">取消</div>
+                    <div class="bsl bsl-right saveEditWorkExp">保存</div>
+                    <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--工作经历 end-->
+    <!--教育经历-->
+    <div class="listmod toggleBox">
+        <div class="split-block"></div>
+        <div class="eattitle list_height t4">教育经历<div class="toggleBtn down-btn font13">展开</div></div>
+        <div class="toggleItem itemListBox qs-hidden" id="eduListBox"></div>
+        <div class="toggleItem itemAddBox qs-hidden">
+            <form id="form4">
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">学校名称</div>
+                    <div class="describe font13">
+                        <input type="text" class="school" name="school" placeholder="请输入学校名称" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">专业名称</div>
+                    <div class="describe font13">
+                        <input type="text" class="speciality" name="speciality" placeholder="请输入专业名称" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt">
+                    <div class="pic"></div>
+                    <div class="tit font14">学历</div>
+                    <div class="describe font13">
+                        <span class="for-select"></span>
+                        <select class="education" name="education">
+                            <option value="">请选择</option>
+                            <volist name="education" id="education1">
+                                <option value="{$key}">{$education1}</option>
+                            </volist>
+                        </select>
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt js-actionParent">
+                    <div class="pic"></div>
+                    <div class="tit font14">开始时间</div>
+                    <div class="describe font13 qs-temp-date js-showActionSheet" data-type="start">
+                        <span class="f-date-txt-start">请选择</span>
+                        <input type="hidden" class="f-year-code-start startyear" name="startyear" value="">
+                        <input type="hidden" class="f-month-code-start startmonth" name="startmonth" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                    <!--BEGIN actionSheet-->
+                    <div>
+                        <div class="qs-mask" style="display:none"></div>
+                        <div class="qs-actionsheet js-actionsheet">
+                            <div class="qs-actionsheet-menu">
+                                <div class="con-filter">
+                                    <div class="f-selected-group">
+                                        <div class="s-bar">
+                                            <div class="s-bar-title qs-left">开始时间</div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="s-list"></div>
+                                    </div>
+                                    <div class="f-box f-box-date-start"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list_height plist-txt js-actionParent last">
+                    <div class="pic"></div>
+                    <div class="tit font14">结束时间</div>
+                    <div class="describe font13 qs-temp-date js-showActionSheet" data-type="end">
+                        <span class="f-date-txt-end">请选择</span>
+                        <input type="hidden" class="f-year-code-end endyear" name="endyear" value="">
+                        <input type="hidden" class="f-month-code-end endmonth" name="endmonth" value="">
+                        <input type="hidden" class="todate" name="todate" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                    <!--BEGIN actionSheet-->
+                    <div>
+                        <div class="qs-mask" style="display:none"></div>
+                        <div class="qs-actionsheet js-actionsheet">
+                            <div class="qs-actionsheet-menu">
+                                <div class="con-filter">
+                                    <div class="f-selected-group">
+                                        <div class="s-bar">
+                                            <div class="s-bar-title qs-left">结束时间</div>
+                                            <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet js-todate">至今</div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="s-list"></div>
+                                    </div>
+                                    <div class="f-box f-box-date-end"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" class="id" name="id" value="">
+                <input type="hidden" class="pid" name="pid" value="{$resume.id}">
+                <input type="hidden" class="news" name="news" value="{$Think.get.news}">
+                <div class="btn-save-line font18 addEduExp">保存</div>
+            </form>
+        </div>
+        <div class="toggleItem itemAgainBtnBox qs-hidden">
+            <div class="split-block"></div>
+            <div class="btn-add-line eduExpAgainAdd">
+                <div class="bal-icon font18">添加一条</div>
+            </div>
+        </div>
+        <div class="toggleItem itemAddAgainBox qs-hidden">
+            <form id="form5">
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">学校名称</div>
+                    <div class="describe font13">
+                        <input type="text" class="school" name="school" placeholder="请输入学校名称" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">专业名称</div>
+                    <div class="describe font13">
+                        <input type="text" class="speciality" name="speciality" placeholder="请输入专业名称" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt">
+                    <div class="pic"></div>
+                    <div class="tit font14">学历</div>
+                    <div class="describe font13">
+                        <span class="for-select"></span>
+                        <select class="education" name="education">
+                            <option value="">请选择</option>
+                            <volist name="education" id="education2">
+                                <option value="{$key}">{$education2}</option>
+                            </volist>
+                        </select>
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt js-actionParent">
+                    <div class="pic"></div>
+                    <div class="tit font14">开始时间</div>
+                    <div class="describe font13 qs-temp-date js-showActionSheet" data-type="start">
+                        <span class="f-date-txt-start">请选择</span>
+                        <input type="hidden" class="f-year-code-start startyear" name="startyear" value="">
+                        <input type="hidden" class="f-month-code-start startmonth" name="startmonth" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                    <!--BEGIN actionSheet-->
+                    <div>
+                        <div class="qs-mask" style="display:none"></div>
+                        <div class="qs-actionsheet js-actionsheet">
+                            <div class="qs-actionsheet-menu">
+                                <div class="con-filter">
+                                    <div class="f-selected-group">
+                                        <div class="s-bar">
+                                            <div class="s-bar-title qs-left">开始时间</div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="s-list"></div>
+                                    </div>
+                                    <div class="f-box f-box-date-start"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list_height plist-txt js-actionParent last">
+                    <div class="pic"></div>
+                    <div class="tit font14">结束时间</div>
+                    <div class="describe font13 qs-temp-date js-showActionSheet" data-type="end">
+                        <span class="f-date-txt-end">请选择</span>
+                        <input type="hidden" class="f-year-code-end endyear" name="endyear" value="">
+                        <input type="hidden" class="f-month-code-end endmonth" name="endmonth" value="">
+                        <input type="hidden" class="todate" name="todate" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                    <!--BEGIN actionSheet-->
+                    <div>
+                        <div class="qs-mask" style="display:none"></div>
+                        <div class="qs-actionsheet js-actionsheet">
+                            <div class="qs-actionsheet-menu">
+                                <div class="con-filter">
+                                    <div class="f-selected-group">
+                                        <div class="s-bar">
+                                            <div class="s-bar-title qs-left">结束时间</div>
+                                            <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet js-todate">至今</div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="s-list"></div>
+                                    </div>
+                                    <div class="f-box f-box-date-end"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" class="id" name="id" value="">
+                <input type="hidden" class="pid" name="pid" value="{$resume.id}">
+                <input type="hidden" class="news" name="news" value="{$Think.get.news}">
+                <div class="btn-save-line font18">
+                    <div class="bsl bsl-left cancelEduExp">取消</div>
+                    <div class="bsl bsl-right saveAgainEduExp">保存</div>
+                    <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <div class="toggleItem itemEditBox qs-hidden">
+            <form id="form6">
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">学校名称</div>
+                    <div class="describe font13">
+                        <input type="text" class="school" name="school" placeholder="请输入学校名称" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">专业名称</div>
+                    <div class="describe font13">
+                        <input type="text" class="speciality" name="speciality" placeholder="请输入专业名称" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt">
+                    <div class="pic"></div>
+                    <div class="tit font14">学历</div>
+                    <div class="describe font13">
+                        <span class="for-select"></span>
+                        <select class="education" name="education">
+                            <option value="">请选择</option>
+                            <volist name="education" id="education3">
+                                <option value="{$key}">{$education3}</option>
+                            </volist>
+                        </select>
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt js-actionParent">
+                    <div class="pic"></div>
+                    <div class="tit font14">开始时间</div>
+                    <div class="describe font13 qs-temp-date js-showActionSheet" data-type="start">
+                        <span class="f-date-txt-start">请选择</span>
+                        <input type="hidden" class="f-year-code-start startyear" name="startyear" value="">
+                        <input type="hidden" class="f-month-code-start startmonth" name="startmonth" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                    <!--BEGIN actionSheet-->
+                    <div>
+                        <div class="qs-mask" style="display:none"></div>
+                        <div class="qs-actionsheet js-actionsheet">
+                            <div class="qs-actionsheet-menu">
+                                <div class="con-filter">
+                                    <div class="f-selected-group">
+                                        <div class="s-bar">
+                                            <div class="s-bar-title qs-left">开始时间</div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="s-list"></div>
+                                    </div>
+                                    <div class="f-box f-box-date-start"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list_height plist-txt js-actionParent last">
+                    <div class="pic"></div>
+                    <div class="tit font14">结束时间</div>
+                    <div class="describe font13 qs-temp-date js-showActionSheet" data-type="end">
+                        <span class="f-date-txt-end">请选择</span>
+                        <input type="hidden" class="f-year-code-end endyear" name="endyear" value="">
+                        <input type="hidden" class="f-month-code-end endmonth" name="endmonth" value="">
+                        <input type="hidden" class="todate" name="todate" value="">
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                    <!--BEGIN actionSheet-->
+                    <div>
+                        <div class="qs-mask" style="display:none"></div>
+                        <div class="qs-actionsheet js-actionsheet">
+                            <div class="qs-actionsheet-menu">
+                                <div class="con-filter">
+                                    <div class="f-selected-group">
+                                        <div class="s-bar">
+                                            <div class="s-bar-title qs-left">结束时间</div>
+                                            <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet js-todate">至今</div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="s-list"></div>
+                                    </div>
+                                    <div class="f-box f-box-date-end"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" class="id" name="id" value="">
+                <input type="hidden" class="pid" name="pid" value="{$resume.id}">
+                <input type="hidden" class="news" name="news" value="{$Think.get.news}">
+                <div class="btn-save-line font18">
+                    <div class="bsl bsl-left cancelEditEduExp">取消</div>
+                    <div class="bsl bsl-right saveEditEduExp">保存</div>
+                    <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--教育经历 end-->
+    <!--自我描述-->
+    <div class="listmod toggleBox">
+        <div class="split-block"></div>
+        <div class="eattitle list_height t3">自我描述<div class="toggleBtn down-btn font13">展开</div></div>
+        <div class="toggleItem itemAddBox qs-hidden">
+            <div class="textarea-txt">
+                <form id="form7">
+                    <textarea class="specialty" name="specialty" placeholder="请输入自我描述" class="font13"></textarea>
+                </form>
+            </div>
+            <div class="btn-save-line font18 saveDesBtn">保存</div>
+        </div>
+    </div>
+    <!--自我描述 end-->
+    <div class="btn-spacing">
+        <div id="saveResumeInfo" class="qs-btn qs-btn-blue font18" title="保存简历">保存简历</div>
+    </div>
+    <include file="public:footer_min" />
+    <script type="text/javascript">
+        function check_complete_percent_allowance(){
+          if(eval("{:C('qscms_perfected_resume_allowance_open')}")==1){
+            $.getJSON("{:U('Personal/check_complete_percent_allowance')}",function(result){
+              if(result.status==1){
+                var popout = new QSpopout();
+                popout.setContent(result.msg);
+                popout.setBtn(1, ['确定']);
+                popout.show();
+              }else if(result.status==2){
+                var popout = new QSpopout();
+                popout.setContent(result.msg);
+                popout.getPrimaryBtn().on('click', function() {
+                    $.getJSON("{:U('Personal/check_complete_percent_allowance_nolonger_notice')}");
+                });
+                popout.setBtn(2, ['关闭', '不再提示']);
+                popout.show();
+              }
+            });
+          }
+        }
+        var tempDateArr = $('.qs-temp-date');
+        $.each(tempDateArr, function() {
+            var dtype = $(this).data('type');
+            var experienceDate = new Date();
+            var eyear = experienceDate.getFullYear();
+            var eyearMin = eyear - 59;
+            var dateHtml = '<div class="f-box-inner">';
+            for (var i = eyear; i >= eyearMin; i--) {
+                dateHtml += '<li><a class="font12 f-item f-item-year" href="javascript:;" data-code="' + i + '">' + i + '年</a></li>';
+            }
+            dateHtml += '</div>';
+            dateHtml += '<div class="f-box-inner">';
+            for (var i = 1; i <= 12; i++) {
+                dateHtml += '<li><a class="font12 f-item f-item-month js-cancelActionSheet" href="javascript:;" data-code="' + i + '">' + i + '月</a></li>';
+            }
+            dateHtml += '</div>';
+            $('.f-box-date-' + dtype).html(dateHtml);
+            $('.f-box-date-' + dtype + ' .f-item-year').eq(0).addClass('select');
+            $('.f-box-date-' + dtype + ' .f-item-month').eq(0).addClass('select');
+
+            $('.f-box-date-' + dtype + ' .f-item-year').on('click', function() {
+                $(this).closest('.js-actionParent').find('.f-box-date-' + dtype + ' .f-item-year').removeClass('select');
+                $(this).addClass('select');
+            })
+            $('.f-box-date-' + dtype + ' .f-item-month').on('click', function() {
+                $(this).closest('.js-actionParent').find('.f-box-date-' + dtype + ' .f-item-month').removeClass('select');
+                $(this).addClass('select');
+                if (dtype == 'end') {
+                    $(this).closest('.js-actionParent').find('.todate').val('0');
+                }
+                // 赋值
+                $(this).closest('.js-actionParent').find('.f-year-code-' + dtype).val($(this).closest('.js-actionParent').find('.f-box-date-' + dtype + ' .f-item-year.select').data('code'));
+                $(this).closest('.js-actionParent').find('.f-month-code-' + dtype).val($(this).closest('.js-actionParent').find('.f-box-date-' + dtype + ' .f-item-month.select').data('code'));
+                $(this).closest('.js-actionParent').find('.f-date-txt-' + dtype).text($(this).closest('.js-actionParent').find('.f-box-date-' + dtype + ' .f-item-year.select').text() + '-' + $(this).closest('.js-actionParent').find('.f-box-date-' + dtype + ' .f-item-month.select').text());
+            })
+            $('.js-todate').on('click', function() {
+                $(this).closest('.js-actionParent').find('.todate').val('1');
+                $(this).closest('.js-actionParent').find('.f-year-code-end').val('');
+                $(this).closest('.js-actionParent').find('.f-month-code-end').val('');
+                $(this).closest('.js-actionParent').find('.f-date-txt-end').text('至今');
+            })
+        })
+        $('.js-actionParent').each(function() {
+            $(this).find('.f-box-date-start .f-item-year').eq(0).addClass('select');
+            $(this).find('.f-box-date-start .f-item-month').eq(0).addClass('select');
+            $(this).find('.f-box-date-end .f-item-year').eq(0).addClass('select');
+            $(this).find('.f-box-date-end .f-item-month').eq(0).addClass('select');
+        })
+        $(".js-showActionSheet").on("click", function(){
+            var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+            var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+            $iosActionsheet.removeClass('qs-actionsheet-toggle');
+            $iosActionsheet.addClass('qs-actionsheet-toggle');
+            $iosMask.fadeIn(200);
+            $iosMask.on('click', hideActionSheet);
+            $(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+            $(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+            function hideActionSheet() {
+                $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+                $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+            }
+        });
+        // 收起展开
+        $('.toggleBtn').on('click', function() {
+            var thisPar = $(this).closest('.toggleBox');
+            if ($(this).hasClass('up')) {
+               $(this).removeClass('up').text('展开');
+               thisPar.find('.toggleItem').hide();
+            } else {
+                $(this).addClass('up').text('收起');
+                if (thisPar.find('.expmod').length) {
+                    thisPar.find('.itemListBox').fadeIn();
+                    thisPar.find('.itemAgainBtnBox').fadeIn();
+                } else {
+                    thisPar.find('.itemAddBox').fadeIn();
+                }
+            }
+        });
+        // 第一次新增工作经历
+        $('.addWorkExp').on('click', function () {
+            if ($(this).hasClass('gui_disabled')) return false;
+            var companynameValue = $.trim($('#form1 .companyname').val());
+            var experiencenameValue = $.trim($('#form1 .jobs').val());
+            var startyearExpValue = $.trim($('#form1 .startyear').val());
+            var startmonthExpValue = $.trim($('#form1 .startmonth').val());
+            var endyearExpValue = $.trim($('#form1 .endyear').val());
+            var endmonthExpValue = $.trim($('#form1 .endmonth').val());
+            var todateExpValue = $.trim($('#form1 .todate').val());
+            var jobresponsValue = $.trim($('#form1 .achievements').val());
+            var id = $.trim($('#form1 .id').val());
+            var pid = $.trim($('#form1 .pid').val());
+            var news = $.trim($('#form1 .news').val());
+            if (companynameValue == "") {
+                qsToast({type:2,context: '请填写公司名称'});
+                return false;
+            }
+            if (experiencenameValue == "") {
+                qsToast({type:2,context: '请填写职位名称'});
+                return false;
+            }
+            if (startyearExpValue == "") {
+                qsToast({type:2,context: '请选择工作开始时间'});
+                return false;
+            }
+            if (startmonthExpValue == "") {
+                qsToast({type:2,context: '请选择工作开始月份'});
+                return false;
+            }
+            if (!parseInt(todateExpValue)) {
+                if (endyearExpValue == "") {
+                    qsToast({type:2,context: '请选择工作结束时间'});
+                    return false;
+                }
+                if (endmonthExpValue == "") {
+                    qsToast({type:2,context: '请选择工作结束月份'});
+                    return false;
+                }
+                if (wrongTime(startyearExpValue, startmonthExpValue, endyearExpValue, endmonthExpValue)) {
+                    qsToast({type:2,context: '工作开始时间需小于结束时间'});
+                    return false;
+                };
+            };
+            if (jobresponsValue == "") {
+                qsToast({type:2,context: '请填写工作职责'});
+                return false;
+            }
+            $('.addWorkExp').addClass('gui_disabled').text('保存中...');
+            // 提交表单
+            $.ajax({
+                url: "{:U('Personal/resume_edit_work')}",
+                type: 'POST',
+                dataType: 'json',
+                data: {id: id, pid: pid, companyname: companynameValue, jobs: experiencenameValue, startyear: startyearExpValue, startmonth: startmonthExpValue, endyear: endyearExpValue, endmonth: endmonthExpValue, todate: todateExpValue, achievements: jobresponsValue,news:news},
+                success:function(data){
+                    if (data.status == 1) {
+                        qsToast({type:1,context: data.msg});
+                        $('#workListBox').closest('.toggleBox').find('.itemAddBox').hide();
+                        $('#workListBox').append(data.data.html);
+                        $('#workListBox').show();
+                        $('#workListBox').closest('.toggleBox').find('.itemAgainBtnBox').show();
+                        $('#form1 input').not('.pid,.news').val('');
+                        $('#form1 .f-date-txt-start').text('请选择');
+                        $('#form1 .f-date-txt-end').text('请选择');
+                        $('#form1 .achievements').val('');
+                        check_complete_percent_allowance();
+                    } else {
+                        qsToast({type:2,context: data.msg});
+                    }
+                    $('.addWorkExp').removeClass('gui_disabled').text('保存');
+                },
+                error:function(result){
+                    $('.addWorkExp').removeClass('gui_disabled').text('保存');
+                    qsToast({type:2,context: result.msg});
+                }
+            });
+        });
+        // 再次添加工作经历按钮
+        $('.workExpAgainAdd').on('click', function() {
+            $(this).closest('.itemAgainBtnBox').hide();
+            $('#form2 input').not('.pid,.news').val('');
+            $('#form2 .f-date-txt-start').text('请选择');
+            $('#form2 .f-date-txt-end').text('请选择');
+            $('#form2 .achievements').val('');
+            $('#form2 .f-item-year').removeClass('select');
+            $('#form2 .f-item-month').removeClass('select');
+            $('#form2 .f-box-date-start .f-item-year').eq(0).addClass('select');
+            $('#form2 .f-box-date-start .f-item-month').eq(0).addClass('select');
+            $('#form2 .f-box-date-end .f-item-year').eq(0).addClass('select');
+            $('#form2 .f-box-date-end .f-item-month').eq(0).addClass('select');
+            $(this).closest('.toggleBox').find('.itemAddAgainBox').fadeIn();
+        })
+        // 取消添加工作经历
+        $('.cancelWorkExp').on('click', function() {
+            $(this).closest('.toggleBox').find('.itemAgainBtnBox').show();
+            $(this).closest('.toggleBox').find('.itemAddAgainBox').hide();
+        })
+        // 再次新增工作经历
+        $('.saveAgainWorkExp').on('click', function () {
+            if ($(this).hasClass('gui_disabled')) return false;
+            var companynameValue = $.trim($('#form2 .companyname').val());
+            var experiencenameValue = $.trim($('#form2 .jobs').val());
+            var startyearExpValue = $.trim($('#form2 .startyear').val());
+            var startmonthExpValue = $.trim($('#form2 .startmonth').val());
+            var endyearExpValue = $.trim($('#form2 .endyear').val());
+            var endmonthExpValue = $.trim($('#form2 .endmonth').val());
+            var todateExpValue = $.trim($('#form2 .todate').val());
+            var jobresponsValue = $.trim($('#form2 .achievements').val());
+            var id = $.trim($('#form2 .id').val());
+            var pid = $.trim($('#form2 .pid').val());
+            var news = $.trim($('#form2 .news').val());
+            if (companynameValue == "") {
+                qsToast({type:2,context: '请填写公司名称'});
+                return false;
+            }
+            if (experiencenameValue == "") {
+                qsToast({type:2,context: '请填写职位名称'});
+                return false;
+            }
+            if (startyearExpValue == "") {
+                qsToast({type:2,context: '请选择工作开始时间'});
+                return false;
+            }
+            if (startmonthExpValue == "") {
+                qsToast({type:2,context: '请选择工作开始月份'});
+                return false;
+            }
+            if (!parseInt(todateExpValue)) {
+                if (endyearExpValue == "") {
+                    qsToast({type:2,context: '请选择工作结束时间'});
+                    return false;
+                }
+                if (endmonthExpValue == "") {
+                    qsToast({type:2,context: '请选择工作结束月份'});
+                    return false;
+                }
+                if (wrongTime(startyearExpValue, startmonthExpValue, endyearExpValue, endmonthExpValue)) {
+                    qsToast({type:2,context: '工作开始时间需小于结束时间'});
+                    return false;
+                };
+            };
+            if (jobresponsValue == "") {
+                qsToast({type:2,context: '请填写工作职责'});
+                return false;
+            }
+            $('.saveAgainWorkExp').addClass('gui_disabled').text('保存中...');
+            // 提交表单
+            $.ajax({
+                url: "{:U('Personal/resume_edit_work')}",
+                type: 'POST',
+                dataType: 'json',
+                data: {id: id, pid: pid, companyname: companynameValue, jobs: experiencenameValue, startyear: startyearExpValue, startmonth: startmonthExpValue, endyear: endyearExpValue, endmonth: endmonthExpValue, todate: todateExpValue, achievements: jobresponsValue,news:news},
+                success:function(data){
+                    if (data.status == 1) {
+                        qsToast({type:1,context: data.msg});
+                        $('#workListBox').closest('.toggleBox').find('.itemAddAgainBox').hide();
+                        $('#workListBox').append(data.data.html);
+                        $('#workListBox').closest('.toggleBox').find('.itemAgainBtnBox').show();
+                        check_complete_percent_allowance();
+                    } else {
+                        qsToast({type:2,context: data.msg});
+                    }
+                    $('.saveAgainWorkExp').removeClass('gui_disabled').text('保存');
+                },
+                error:function(result){
+                    $('.saveAgainWorkExp').removeClass('gui_disabled').text('保存');
+                    qsToast({type:2,context: result.msg});
+                }
+            });
+        });
+        // 修改工作经历
+        $('#workListBox .expedit').die().live('click', function () {
+            var currentGroup = $(this).closest('.expmod');
+            $('#form3 .id').val(currentGroup.attr('sid'));
+            $('#form3 .companyname').val($.trim(currentGroup.find('.expComName').val()));
+            $('#form3 .jobs').val($.trim(currentGroup.find('.expJobName').val()));
+            $('#form3 .startyear').val($.trim(currentGroup.find('.expWorkStartyear').val()));
+            $('#form3 .startmonth').val($.trim(currentGroup.find('.expWorkStartmonth').val()));
+            $('#form3 .f-date-txt-start').text($.trim(currentGroup.find('.expWorkStartyear').val()) + '年-' + $.trim(currentGroup.find('.expWorkStartmonth').val()) + '月');
+            $('#form3 .endyear').val($.trim(currentGroup.find('.expWorkEndyear').val()));
+            $('#form3 .endmonth').val($.trim(currentGroup.find('.expWorkEndmonth').val()));
+            if (eval($.trim(currentGroup.find('.expWorkEndyear').val()))) {
+                $('#form3 .todate').val('0');
+                $('#form3 .f-date-txt-end').text($.trim(currentGroup.find('.expWorkEndyear').val()) + '年-' + $.trim(currentGroup.find('.expWorkEndmonth').val()) + '月');
+            } else {
+                $('#form3 .todate').val('1');
+                $('#form3 .f-date-txt-end').text('至今');
+            }
+            $('#form3 .achievements').val($.trim(currentGroup.find('.expAchievements').val()));
+            $('#form3 .f-item-year').removeClass('select');
+            $('#form3 .f-item-month').removeClass('select');
+            $('#form3 .f-box-date-start').find('[data-code="'+$.trim(currentGroup.find('.expWorkStartyear').val())+'"]').addClass('select');
+            $('#form3 .f-box-date-start').find('[data-code="'+$.trim(currentGroup.find('.expWorkStartmonth').val())+'"]').addClass('select');
+            $('#form3 .f-box-date-end').find('[data-code="'+$.trim(currentGroup.find('.expWorkEndyear').val())+'"]').addClass('select');
+            $('#form3 .f-box-date-end').find('[data-code="'+$.trim(currentGroup.find('.expWorkEndmonth').val())+'"]').addClass('select');
+            $(this).closest('.toggleBox').find('.itemAgainBtnBox').hide();
+            $(this).closest('.toggleBox').find('.itemEditBox').fadeIn();
+        })
+        // 取消修改工作经历
+        $('.cancelEditWorkExp').on('click', function() {
+            $(this).closest('.toggleBox').find('.itemAgainBtnBox').show();
+            $(this).closest('.toggleBox').find('.itemEditBox').hide();
+        })
+        // 保存修改工作经历
+        $('.saveEditWorkExp').on('click', function () {
+            if ($(this).hasClass('gui_disabled')) return false;
+            var companynameValue = $.trim($('#form3 .companyname').val());
+            var experiencenameValue = $.trim($('#form3 .jobs').val());
+            var startyearExpValue = $.trim($('#form3 .startyear').val());
+            var startmonthExpValue = $.trim($('#form3 .startmonth').val());
+            var endyearExpValue = $.trim($('#form3 .endyear').val());
+            var endmonthExpValue = $.trim($('#form3 .endmonth').val());
+            var todateExpValue = $.trim($('#form3 .todate').val());
+            var jobresponsValue = $.trim($('#form3 .achievements').val());
+            var id = $.trim($('#form3 .id').val());
+            var pid = $.trim($('#form3 .pid').val());
+            var news = $.trim($('#form3 .news').val());
+            if (companynameValue == "") {
+                qsToast({type:2,context: '请填写公司名称'});
+                return false;
+            }
+            if (experiencenameValue == "") {
+                qsToast({type:2,context: '请填写职位名称'});
+                return false;
+            }
+            if (startyearExpValue == "") {
+                qsToast({type:2,context: '请选择工作开始时间'});
+                return false;
+            }
+            if (startmonthExpValue == "") {
+                qsToast({type:2,context: '请选择工作开始月份'});
+                return false;
+            }
+            if (!parseInt(todateExpValue)) {
+                if (endyearExpValue == "") {
+                    qsToast({type:2,context: '请选择工作结束时间'});
+                    return false;
+                }
+                if (endmonthExpValue == "") {
+                    qsToast({type:2,context: '请选择工作结束月份'});
+                    return false;
+                }
+                if (wrongTime(startyearExpValue, startmonthExpValue, endyearExpValue, endmonthExpValue)) {
+                    qsToast({type:2,context: '工作开始时间需小于结束时间'});
+                    return false;
+                };
+            };
+            if (jobresponsValue == "") {
+                qsToast({type:2,context: '请填写工作职责'});
+                return false;
+            }
+            $('.saveEditWorkExp').addClass('gui_disabled').text('保存中...');
+            // 提交表单
+            $.ajax({
+                url: "{:U('Personal/resume_edit_work')}",
+                type: 'POST',
+                dataType: 'json',
+                data: {id: id, pid: pid, companyname: companynameValue, jobs: experiencenameValue, startyear: startyearExpValue, startmonth: startmonthExpValue, endyear: endyearExpValue, endmonth: endmonthExpValue, todate: todateExpValue, achievements: jobresponsValue,news:news},
+                success:function(data){
+                    if (data.status == 1) {
+                        qsToast({type:1,context: data.msg});
+                        $('#workListBox').find('[sid="'+id+'"]').replaceWith(data.data.html);
+                        $('#workListBox').closest('.toggleBox').find('.itemEditBox').hide();
+                        $('#workListBox').closest('.toggleBox').find('.itemAgainBtnBox').show();
+                    } else {
+                        qsToast({type:2,context: data.msg});
+                    }
+                    $('.saveEditWorkExp').removeClass('gui_disabled').text('保存');
+                },
+                error:function(result){
+                    $('.saveEditWorkExp').removeClass('gui_disabled').text('保存');
+                    qsToast({type:2,context: result.msg});
+                }
+            });
+        });
+
+        // 第一次新增教育经历
+        $('.addEduExp').on('click', function () {
+            if ($(this).hasClass('gui_disabled')) return false;
+            var schoolValue = $.trim($('#form4 .school').val());
+            var specialityValue = $.trim($('#form4 .speciality').val());
+            var education1Value = $.trim($('#form4 .education').val());
+            var startyearEduValue = $.trim($('#form4 .startyear').val());
+            var startmonthEduValue = $.trim($('#form4 .startmonth').val());
+            var endyearEduValue = $.trim($('#form4 .endyear').val());
+            var endmonthEduValue = $.trim($('#form4 .endmonth').val());
+            var todateEduValue = $.trim($('#form4 .todate').val());
+            var id = $.trim($('#form4 .id').val());
+            var pid = $.trim($('#form4 .pid').val());
+            var news = $.trim($('#form4 .news').val());
+            if (schoolValue == "") {
+                qsToast({type:2,context: '请填写学校名称'});
+                return false;
+            }
+            if (specialityValue == "") {
+                qsToast({type:2,context: '请填写专业名称'});
+                return false;
+            }
+            if (education1Value == "") {
+                qsToast({type:2,context:'请选择学历'});
+                return false;
+            }
+            if (startyearEduValue == "") {
+                qsToast({type:2,context: '请选择就读开始时间'});
+                return false;
+            }
+            if (startmonthEduValue == "") {
+                qsToast({type:2,context: '请选择就读开始月份'});
+                return false;
+            }
+            if (!parseInt(todateEduValue)) { // 不选择至今才验证结束时间
+                if (endyearEduValue == "") {
+                    qsToast({type:2,context: '请选择就读结束时间'});
+                    return false;
+                }
+                if (endmonthEduValue == "") {
+                    qsToast({type:2,context: '请选择就读结束月份'});
+                    return false;
+                }
+                if (wrongTime(startyearEduValue, startmonthEduValue, endyearEduValue, endmonthEduValue)) {
+                    qsToast({type:2,context: '就读开始时间需小于毕业时间'});
+                    return false;
+                };
+            };
+            $('.addEduExp').addClass('gui_disabled').text('保存中...');
+            // 提交表单
+            $.ajax({
+                url: "{:U('Personal/resume_edit_edu')}",
+                type: 'POST',
+                dataType: 'json',
+                data: {id:id, pid: pid, school: schoolValue, speciality: specialityValue, education: education1Value, startyear: startyearEduValue, startmonth: startmonthEduValue, endyear: endyearEduValue, endmonth: endmonthEduValue, todate: todateEduValue,news:news},
+                success:function(data){
+                    if (data.status == 1) {
+                        qsToast({type:1,context: data.msg});
+                        $('#eduListBox').closest('.toggleBox').find('.itemAddBox').hide();
+                        $('#eduListBox').append(data.data.html);
+                        $('#eduListBox').show();
+                        $('#eduListBox').closest('.toggleBox').find('.itemAgainBtnBox').show();
+                        $('#form4 input').not('.pid,.news').val('');
+                        $('#form4 option').prop('selected', 0);
+                        $('#form4 .for-select').text('请选择');
+                        $('#form4 .f-date-txt-start').text('请选择');
+                        $('#form4 .f-date-txt-end').text('请选择');
+                        check_complete_percent_allowance();
+                    } else {
+                        qsToast({type:2,context: data.msg});
+                    }
+                    $('.addEduExp').removeClass('gui_disabled').text('保存');
+                },
+                error:function(result){
+                    $('.addEduExp').removeClass('gui_disabled').text('保存');
+                    qsToast({type:2,context: result.msg});
+                }
+            });
+        });
+        // 再次添加教育经历按钮
+        $('.eduExpAgainAdd').on('click', function() {
+            $(this).closest('.itemAgainBtnBox').hide();
+            $('#form5 input').not('.pid,.news').val('');
+            $('#form5 option').prop('selected', 0);
+            $('#form5 .for-select').text('请选择');
+            $('#form5 .f-date-txt-start').text('请选择');
+            $('#form5 .f-date-txt-end').text('请选择');
+            $('#form5 .f-item-year').removeClass('select');
+            $('#form5 .f-item-month').removeClass('select');
+            $('#form5 .f-box-date-start .f-item-year').eq(0).addClass('select');
+            $('#form5 .f-box-date-start .f-item-month').eq(0).addClass('select');
+            $('#form5 .f-box-date-end .f-item-year').eq(0).addClass('select');
+            $('#form5 .f-box-date-end .f-item-month').eq(0).addClass('select');
+            $(this).closest('.toggleBox').find('.itemAddAgainBox').fadeIn();
+        })
+        // 取消添加教育经历
+        $('.cancelEduExp').on('click', function() {
+            $(this).closest('.toggleBox').find('.itemAgainBtnBox').show();
+            $(this).closest('.toggleBox').find('.itemAddAgainBox').hide();
+        })
+        // 再次新增教育经历
+        $('.saveAgainEduExp').on('click', function () {
+            if ($(this).hasClass('gui_disabled')) return false;
+            var schoolValue = $.trim($('#form5 .school').val());
+            var specialityValue = $.trim($('#form5 .speciality').val());
+            var education1Value = $.trim($('#form5 .education').val());
+            var startyearEduValue = $.trim($('#form5 .startyear').val());
+            var startmonthEduValue = $.trim($('#form5 .startmonth').val());
+            var endyearEduValue = $.trim($('#form5 .endyear').val());
+            var endmonthEduValue = $.trim($('#form5 .endmonth').val());
+            var todateEduValue = $.trim($('#form5 .todate').val());
+            var id = $.trim($('#form5 .id').val());
+            var pid = $.trim($('#form5 .pid').val());
+            var news = $.trim($('#form5 .news').val());
+            if (schoolValue == "") {
+                qsToast({type:2,context: '请填写学校名称'});
+                return false;
+            }
+            if (specialityValue == "") {
+                qsToast({type:2,context: '请填写专业名称'});
+                return false;
+            }
+            if (education1Value == "") {
+                qsToast({type:2,context:'请选择学历'});
+                return false;
+            }
+            if (startyearEduValue == "") {
+                qsToast({type:2,context: '请选择就读开始时间'});
+                return false;
+            }
+            if (startmonthEduValue == "") {
+                qsToast({type:2,context: '请选择就读开始月份'});
+                return false;
+            }
+            if (!parseInt(todateEduValue)) { // 不选择至今才验证结束时间
+                if (endyearEduValue == "") {
+                    qsToast({type:2,context: '请选择就读结束时间'});
+                    return false;
+                }
+                if (endmonthEduValue == "") {
+                    qsToast({type:2,context: '请选择就读结束月份'});
+                    return false;
+                }
+                if (wrongTime(startyearEduValue, startmonthEduValue, endyearEduValue, endmonthEduValue)) {
+                    qsToast({type:2,context: '就读开始时间需小于毕业时间'});
+                    return false;
+                };
+            };
+            $('.saveAgainEduExp').addClass('gui_disabled').text('保存中...');
+            // 提交表单
+            $.ajax({
+                url: "{:U('Personal/resume_edit_edu')}",
+                type: 'POST',
+                dataType: 'json',
+                data: {id:id, pid: pid, school: schoolValue, speciality: specialityValue, education: education1Value, startyear: startyearEduValue, startmonth: startmonthEduValue, endyear: endyearEduValue, endmonth: endmonthEduValue, todate: todateEduValue,news:news},
+                success:function(data){
+                    if (data.status == 1) {
+                        qsToast({type:1,context: data.msg});
+                        $('#eduListBox').closest('.toggleBox').find('.itemAddAgainBox').hide();
+                        $('#eduListBox').append(data.data.html);
+                        $('#eduListBox').closest('.toggleBox').find('.itemAgainBtnBox').show();
+                        check_complete_percent_allowance();
+                    } else {
+                        qsToast({type:2,context: data.msg});
+                    }
+                    $('.saveAgainEduExp').removeClass('gui_disabled').text('保存');
+                },
+                error:function(result){
+                    $('.saveAgainEduExp').removeClass('gui_disabled').text('保存');
+                    qsToast({type:2,context: result.msg});
+                }
+            });
+        });
+        // 修改教育经历
+        $('#eduListBox .expedit').die().live('click', function () {
+            var currentGroup = $(this).closest('.expmod');
+            $('#form6 .id').val(currentGroup.attr('sid'));
+            $('#form6 .school').val($.trim(currentGroup.find('.expSchool').val()));
+            $('#form6 .speciality').val($.trim(currentGroup.find('.expSpeciality').val()));
+            $('#form6 .for-select').text($.trim(currentGroup.find('.expEducationCn').val()));
+            $('#form6').find('[value="'+$.trim(currentGroup.find('.expEducation').val())+'"]').prop('selected', !0);
+            $('#form6 .startyear').val($.trim(currentGroup.find('.expEduStartyear').val()));
+            $('#form6 .startmonth').val($.trim(currentGroup.find('.expEduStartmonth').val()));
+            $('#form6 .f-date-txt-start').text($.trim(currentGroup.find('.expEduStartyear').val()) + '年-' + $.trim(currentGroup.find('.expEduStartmonth').val()) + '月');
+            $('#form6 .endyear').val($.trim(currentGroup.find('.expEduEndyear').val()));
+            $('#form6 .endmonth').val($.trim(currentGroup.find('.expEduEndmonth').val()));
+            if (eval($.trim(currentGroup.find('.expEduEndyear').val()))) {
+                $('#form6 .todate').val('0');
+                $('#form6 .f-date-txt-end').text($.trim(currentGroup.find('.expEduEndyear').val()) + '年-' + $.trim(currentGroup.find('.expEduEndmonth').val()) + '月');
+            } else {
+                $('#form6 .todate').val('1');
+                $('#form6 .f-date-txt-end').text('至今');
+            }
+            $('#form6 .f-item-year').removeClass('select');
+            $('#form6 .f-item-month').removeClass('select');
+            $('#form6 .f-box-date-start').find('[data-code="'+$.trim(currentGroup.find('.expEduStartyear').val())+'"]').addClass('select');
+            $('#form6 .f-box-date-start').find('[data-code="'+$.trim(currentGroup.find('.expEduStartmonth').val())+'"]').addClass('select');
+            $('#form6 .f-box-date-end').find('[data-code="'+$.trim(currentGroup.find('.expEduEndyear').val())+'"]').addClass('select');
+            $('#form6 .f-box-date-end').find('[data-code="'+$.trim(currentGroup.find('.expEduEndmonth').val())+'"]').addClass('select');
+            $(this).closest('.toggleBox').find('.itemAgainBtnBox').hide();
+            $(this).closest('.toggleBox').find('.itemEditBox').fadeIn();
+        })
+        // 取消修改教育经历
+        $('.cancelEditEduExp').on('click', function() {
+            $(this).closest('.toggleBox').find('.itemAgainBtnBox').show();
+            $(this).closest('.toggleBox').find('.itemEditBox').hide();
+        })
+        // 保存修改教育经历
+        $('.saveEditEduExp').on('click', function () {
+            if ($(this).hasClass('gui_disabled')) return false;
+            var schoolValue = $.trim($('#form6 .school').val());
+            var specialityValue = $.trim($('#form6 .speciality').val());
+            var education1Value = $.trim($('#form6 .education').val());
+            var startyearEduValue = $.trim($('#form6 .startyear').val());
+            var startmonthEduValue = $.trim($('#form6 .startmonth').val());
+            var endyearEduValue = $.trim($('#form6 .endyear').val());
+            var endmonthEduValue = $.trim($('#form6 .endmonth').val());
+            var todateEduValue = $.trim($('#form6 .todate').val());
+            var id = $.trim($('#form6 .id').val());
+            var pid = $.trim($('#form6 .pid').val());
+            var news = $.trim($('#form6 .news').val());
+            if (schoolValue == "") {
+                qsToast({type:2,context: '请填写学校名称'});
+                return false;
+            }
+            if (specialityValue == "") {
+                qsToast({type:2,context: '请填写专业名称'});
+                return false;
+            }
+            if (education1Value == "") {
+                qsToast({type:2,context:'请选择学历'});
+                return false;
+            }
+            if (startyearEduValue == "") {
+                qsToast({type:2,context: '请选择就读开始时间'});
+                return false;
+            }
+            if (startmonthEduValue == "") {
+                qsToast({type:2,context: '请选择就读开始月份'});
+                return false;
+            }
+            if (!parseInt(todateEduValue)) { // 不选择至今才验证结束时间
+                if (endyearEduValue == "") {
+                    qsToast({type:2,context: '请选择就读结束时间'});
+                    return false;
+                }
+                if (endmonthEduValue == "") {
+                    qsToast({type:2,context: '请选择就读结束月份'});
+                    return false;
+                }
+                if (wrongTime(startyearEduValue, startmonthEduValue, endyearEduValue, endmonthEduValue)) {
+                    qsToast({type:2,context: '就读开始时间需小于毕业时间'});
+                    return false;
+                };
+            };
+            $('.saveEditEduExp').addClass('gui_disabled').text('保存中...');
+            // 提交表单
+            $.ajax({
+                url: "{:U('Personal/resume_edit_edu')}",
+                type: 'POST',
+                dataType: 'json',
+                data: {id:id, pid: pid, school: schoolValue, speciality: specialityValue, education: education1Value, startyear: startyearEduValue, startmonth: startmonthEduValue, endyear: endyearEduValue, endmonth: endmonthEduValue, todate: todateEduValue,news:news},
+                success:function(data){
+                    if (data.status == 1) {
+                        qsToast({type:1,context: data.msg});
+                        $('#eduListBox').find('[sid="'+id+'"]').replaceWith(data.data.html);
+                        $('#eduListBox').closest('.toggleBox').find('.itemEditBox').hide();
+                        $('#eduListBox').closest('.toggleBox').find('.itemAgainBtnBox').show();
+                    } else {
+                        qsToast({type:2,context: data.msg});
+                    }
+                    $('.saveEditEduExp').removeClass('gui_disabled').text('保存');
+                },
+                error:function(result){
+                    $('.saveEditEduExp').removeClass('gui_disabled').text('保存');
+                    qsToast({type:2,context: result.msg});
+                }
+            });
+        });
+
+        // 保存自我描述
+        $('.saveDesBtn').on('click', function() {
+            if ($(this).hasClass('gui_disabled')) return false;
+            var pid = "{$resume.id}";
+            var specialty = $.trim($('#form7 .specialty').val());
+            var news = "{$Think.get.news}";
+            if (specialty == "") {
+                qsToast({type:2,context: '请输入自我描述'});
+                return false;
+            }
+            $('.saveDesBtn').addClass('gui_disabled').text('保存中...');
+            // 提交表单
+            $.ajax({
+                url: "{:U('Personal/resume_edit_description')}",
+                type: 'POST',
+                dataType: 'json',
+                data: {pid:pid,specialty: specialty,news:news},
+                success:function(data){
+                    if (data.status == 1) {
+                        qsToast({type:1,context: data.msg});
+                        check_complete_percent_allowance();
+                    } else {
+                        qsToast({type:2,context: data.msg});
+                    }
+                    $('.saveDesBtn').removeClass('gui_disabled').text('保存');
+                },
+                error:function(result){
+                    $('.saveDesBtn').removeClass('gui_disabled').text('保存');
+                    qsToast({type:2,context: result.msg});
+                }
+            });
+        })
+        
+        // 删除一项
+        var tip = {
+            work : '工作经历',
+            education : '教育经历'
+        }
+        $('.J_delete').die().live('click', function () {
+            var currentGroup = $(this).closest('.toggleBox');
+            var currentParent = $(this).closest('.expmod');
+            var type = currentParent.attr('type');
+            var pid = "{$resume.id}";
+            var id = currentParent.attr('sid');
+            var popout = new QSpopout('删除'+tip[type]);
+            popout.setContent('删除后将无法恢复，您确定要删除该'+tip[type]+'吗?');
+            popout.show();
+            popout.getPrimaryBtn().on('click', function () {
+                $.post(qscms.root + '?m=Mobile&c=Personal&a=del_'+type,{pid:pid,id:id},function(result){
+                    if (result.status == 1) {
+                        qsToast({type:1,context: result.msg});
+                        currentParent.remove();
+                        if (!currentGroup.find('.expmod').length) {
+                            currentGroup.find('.itemAddBox').fadeIn();
+                        }
+                    } else {
+                        qsToast({type:2,context: result.msg});
+                    }
+                },'json');
+            })
+        })
+
+        // 保存简历信息
+        $('#saveResumeInfo').on('click', function () {
+            var workExpNum = $('#workListBox .expmod').length;
+            var eduExpNum = $('#eduListBox .expmod').length;
+            var desNum = $.trim($('#form7 .specialty').val()).length;
+            var dialogControl = false;
+            if (!(workExpNum > 0) || !(eduExpNum > 0) || !(desNum > 0)) {
+                dialogControl = true;
+            }
+            if (dialogControl) {
+                var dialogContent = '';
+                if (!(workExpNum > 0)) {
+                    dialogContent += ' <strong class="font_yellow">工作经历</strong>';
+                }
+                if (!(eduExpNum > 0)) {
+                    dialogContent += ' <strong class="font_yellow">教育经历</strong>';
+                }
+                if (!(desNum > 0)) {
+                    dialogContent += ' <strong class="font_yellow">简历描述</strong>';
+                }
+                var dialog = new QSpopout('保存简历');
+                dialog.setContent('<div style="line-height: 1.8;color:#666">您的简历暂不完善，可继续完善' + dialogContent + '</div>');
+                dialog.setBtn(2, ['继续完善', '不填了']);
+                dialog.show();
+                dialog.getPrimaryBtn().on('click', function () {
+                    window.location.href = "{:U('Personal/resume_add_success',array('pid'=>$resume['id']))}";
+                });
+            } else {
+                window.location.href = "{:U('Personal/resume_add_success',array('pid'=>$resume['id']))}";
+            }
+        })
+
+        // 判断结束时间是否大于开始时间
+        function wrongTime(sYear, sMonth, eYear, eMonth) {
+            if (parseInt(sYear) > parseInt(eYear)) {
+                return true;
+            } else {
+                if (parseInt(sYear) == parseInt(eYear)) {
+                    if (parseInt(sMonth) >= parseInt(eMonth)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        }
+      $(document).ready(function(){
+        check_complete_percent_allowance();
+      });
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+		<include file="public:header" />
+			<div class="pmslist-img for-event last" onClick="javascript:location.href='{:url_rewrite('QS_resumeshow',array('id'=>$msg_list[0]['resume']['id']))}'">
+				<div class="pic">
+					<img src="{$msg_list[0]['from_avatars']}">
+				</div>
+				<div class="describe font12">
+					<div class="tit font14 substring">{$msg_list[0]['from_name']}<span class="font12">({$msg_list[0]['resume']['sex_cn']}&nbsp;|&nbsp;{:date('Y') - $msg_list[0]['resume']['birthdate']}岁&nbsp;|&nbsp;{$msg_list[0]['resume']['current_cn']})</span>
+				</div>
+				<div class="txt substring">意向职位：{$msg_list[0]['resume']['intention_jobs']}</div>
+		   </div>		   
+	       <div class="arrow"></div>
+		   <div class="clear"></div>
+		</div>
+		<div class="pmsshow-btns">
+			<div id="J_resume_favor" class="btns for-event" rid="{$msg_list[0]['resume']['id']}">收藏简历</div>
+			<a class="btns tel for-event" href="tel:{$msg_list[0]['resume']['telephone']}">拨打电话</a>
+			<div class="clear"></div>
+		</div>
+		<div class="split-block"></div>
+		<volist name="msg_list" id="msg">
+			<if condition="$msg['fromuid'] eq $visitor['uid']">
+				<div class="pmsshow-right">
+					<div class="txt">{$msg.message}
+						<div class="times font10">{:fdate($msg['addtime'])}</div>
+						<div class="arrow"></div>
+					</div>
+					<div class="pic">
+						<img src="{$msg.from_avatars}">
+					</div>
+					<div class="clear"></div>
+				</div>
+			<else/>
+				<div class="pmsshow-left">
+					<div class="pic">
+						<img src="{$msg.from_avatars}">
+					</div>
+					<div class="txt">{$msg.message}
+						<div class="times font10">{:fdate($msg['addtime'])}</div>
+						<div class="arrow"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</if>
+			<div class="split-block"></div>
+		</volist>
+		<if condition="$msg_list">
+			<div id="send" class="pmsreply">
+				<div class="replybox">
+					<div class="inputbox">
+						<input id="J_val" type="text"  placeholder="请输入回复内容">
+					</div>
+					<div class="btnbox">
+						<div id="J_btn" class="qs-btn qs-btn-medium qs-btn-blue">发送</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</if>
+        <include file="public:footer_min" />
+		<script src="../public/js/qscrollTo.js"></script>
+        <script type="text/javascript">
+        	$('#J_btn').on('click',function(){
+        		var t = $.trim($('#J_val').val()),
+					pid = "{$msg_list[0]['id']}",
+					touid = "{$msg_list[0]['fromuid']}";
+        		if(t == ''){
+					alert('回复内容不能为空！');
+					return !1;
+				}
+				$.post("{:U('Company/pms_feedback_send')}",{pid:pid,touid:touid,message:t},function(result){
+					if(result.status == 1){
+						var h = '<div class="pmsshow-right"><div class="txt">'+result.data.message+'<div class="times font10">刚刚</div><div class="arrow"></div></div><div class="pic"><img src="{:attach($company_profile['logo'],'company_logo')}"></div><div class="clear"></div></div><div class="split-block"></div>';
+						$('body').scrollTo({
+							toT : $('body').height(),
+							durTime: 500
+						})
+						$('#send').before(h);
+						$('#J_val').val('');
+						qsToast({type:1,context: result.msg});
+					}else{
+						qsToast({type:2,context: result.msg});
+					}
+				},'json');
+        	});
+        	$('#J_resume_favor').on('click',function(){
+        		var rid = $(this).attr('rid');
+        		$.getJSON("{:U('AjaxCompany/resume_favor')}",{rid:rid},function(result){
+        			if(result.status == 1){
+						qsToast({type:1,context: result.msg});
+					}else{
+						qsToast({type:2,context: result.msg});
+					}
+        		});
+        	});
+        </script> 
+	</body>
+</html>

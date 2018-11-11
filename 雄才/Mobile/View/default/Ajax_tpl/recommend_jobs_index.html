@@ -1,0 +1,22 @@
+<notempty name="jobs_list">
+<div class="job-head"><div class="con font13"><div class="icon">{$title}</div></div></div>
+<div class="job-group">
+	<volist name="jobs_list" id="jobs">
+    <div class="job-list-item for-event" onclick="javascript:location.href='{$jobs.jobs_url}'">
+        <div class="line-one"><div class="job-name substring font16">{$jobs.jobs_name}<span class="adr font12">（{$jobs.district_cn}）</span></div></div>
+        <div class="line-two font14">{$jobs.education_cn}/{$jobs.experience_cn}</div>
+        <div class="line-two font14">{$jobs.companyname}</div>
+        <notempty name="jobs['tag_cn']">
+        <div class="line-three fontag">
+        	<volist name="jobs['tag_cn']" id="tag" offset="1" length='4'>
+            	<div class="job-tag">{$tag}</div>
+			</volist>
+            <div class="clear"></div>
+        </div>
+        </notempty>
+        <div class="wage font16">{$jobs.wage_cn}</div>
+    </div>
+    </volist>
+</div>
+<div class="job-more"><a href="{$more_url}" class="rm">查看更多</a></div>
+</notempty>

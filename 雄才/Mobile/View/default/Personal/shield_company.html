@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+	</head>
+	<body>
+		<include file="public:header"/>
+		<div class="split-block-title">包含屏蔽关键词的企业将无法查看您的简历，请谨慎操作！</div>
+		<div class="ptitle border">
+			<div class="th1">添加屏蔽词</div>
+			<div class="rtxt">还可添加<span id="J_n">{$count}</span>个</div>
+		</div>
+		<div class="listmod">
+			<div class="shiele_wrap">
+				<input id="shieleVal" type="text" class="shiele_val" placeholder="请输入屏蔽关键词">
+				<div id="saveBtn" class="qs-btn qs-btn-blue shiele_btn">加入屏蔽</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="split-block"></div>
+		<div class="listmod">
+			<div class="list_height pl6 bottom_order">已屏蔽关键字</div>
+			<div id="J_tags" class="tagmod <if condition="!$keywords">qs-hidden</if>" pid="860">
+				<volist name="keywords" id="list">
+		        	<div class="J_tagList litag substring" iid="{$list.id}">{$list.comkeyword}<div class="del"></div></div>
+		        </volist>
+		        <div class="clear"></div>
+			</div>
+			<if condition="!$keywords">
+				<div class="J_null txtmod qs-center">您还没有添加屏蔽的企业</div>
+			</if>
+		</div>
+		<div class="split-block"></div>
+		<include file="public:footer_min"/>
+		<script type="text/javascript">
+			$('.J_tagList .del').live('click',function(){
+				var f = $(this).parent(),
+					i = f.attr('iid');
+				var dialog = new QSpopout('删除屏蔽关键字');
+	            dialog.setContent('删除后无法恢复，您确定要删除该关键字吗？');
+	            dialog.show();
+	            dialog.getPrimaryBtn().on('click', function () {
+					$.getJSON("{:U('Personal/shield_company_del')}",{keyword_id:i},function(result){
+						if(result.status == 1){
+							f.remove();
+							$('#J_n').html(parseInt($('#J_n').html()) + 1);
+							qsToast({type:1,context:result.msg});
+						}else{
+							qsToast({type:2,context:result.msg});
+						}
+					})
+	            });
+			});
+			$('#saveBtn').on('click',function(){
+				var c = $('#shieleVal').val();
+				if (c == "") {
+					qsToast({type:2,context: '请填写关键字'});
+					return false;
+				}
+				$.post("{:U('Personal/shield_company_add')}",{comkeyword:c},function(result){
+					if(result.status == 1){
+						$('#J_tags').removeClass('qs-hidden').prepend('<div class="J_tagList litag substring" iid="'+result.data.id+'">'+result.data.comkeyword+'<div class="del"></div></div>');
+						$('.J_null').remove();
+						$('#shieleVal').val('');
+						$('#J_n').html(parseInt($('#J_n').html()) - 1);
+						qsToast({type:1,context:result.msg});
+					}else{
+						qsToast({type:2,context:result.msg});
+					}
+				},'json');
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/company.css">
+</head>
+<body>
+    <include file="public:header"/>
+    <div class="split-block-title">请您对求职者做出评价</div>
+    <div class="ptitle border">
+        <div class="th1">选择分值</div>
+        <div class="rtxt"><a>满分为5分</a></div>
+    </div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">工作经验与简历相符：</div>
+        <div class="describe font13 qs-relative">
+            <div class="for-select">请选择</div>
+            <select id="score_experience" name="score_experience">
+                <option value="0" selected>0分</option>
+                <option value="1" >1分</option>
+                <option value="2" >2分</option>
+                <option value="3" >3分</option>
+                <option value="4" >4分</option>
+                <option value="5" >5分</option>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">学历与简历描述相符：</div>
+        <div class="describe font13 qs-relative">
+            <div class="for-select">请选择</div>
+            <select id="score_education" name="score_education">
+                <option value="0" selected>0分</option>
+                <option value="1" >1分</option>
+                <option value="2" >2分</option>
+                <option value="3" >3分</option>
+                <option value="4" >4分</option>
+                <option value="5" >5分</option>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="btn-spacing">
+        <div class="btn-half-box">
+            <input type="hidden" id="record_id" value="{$record_id}">
+            <div class="qs-btn qs-btn-inline qs-btn-orange font18" id="yes">评价并确认</div>
+            <div class="qs-btn qs-btn-inline qs-btn-blue font18" id="no">直接确认</div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="split-block"></div>
+    <include file="public:footer_min" />
+    <script type="text/javascript">
+        var url = "{:U('Company/confirm_interview')}";
+        var record_id = $('#record_id').val();
+        $('#yes').on('click',function(){
+            var score_experience = $('#score_experience').val();
+            var score_education = $('#score_education').val();
+            $.post(url,{score:1,record_id:record_id,score_experience:score_experience,score_education:score_education},function(result){
+                    if(result.status == 1){
+                        qsToast({type: 1, context: result.msg});
+                        setTimeout(function () {
+                            location.href="{:U('Company/allowance_detail',array('id'=>$record_id))}";
+                        }, 2000);
+                    } else {
+                        qsToast({type: 2, context: result.msg});
+                    }
+            },'json');
+        });
+        $('#no').on('click',function(){
+            $.post(url,{score:0,record_id:record_id},function(result){
+                if(result.status == 1){
+                    qsToast({type: 1, context: result.msg});
+                    setTimeout(function () {
+                        location.href="{:U('Company/allowance_detail',array('id'=>$record_id))}";
+                    }, 2000);
+                } else {
+                    qsToast({type: 2, context: result.msg});
+                }
+            },'json');
+        });
+    </script>
+</body>
+</html>

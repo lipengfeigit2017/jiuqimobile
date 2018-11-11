@@ -1,0 +1,18 @@
+<volist name="list" id="list">
+	<div class="expmod <if condition="$count eq $i">last</if>" type="work" pid="{$pid}" sid="{$list['id']}">
+		<div class="expedit" onClick="javascript:location.href='{:U('personal/resume_edit_work',array('pid'=>$pid,'id'=>$list['id']))}'"></div>
+		<if condition="IS_AJAX">
+			<input type="hidden" class="expComName" value="{$list.companyname}">
+			<input type="hidden" class="expJobName" value="{$list.jobs}">
+			<input type="hidden" class="expAchievements" value="{$list.achievements}">
+			<input type="hidden" class="expWorkStartyear" value="{$list['startyear']}">
+			<input type="hidden" class="expWorkStartmonth" value="{$list['startmonth']}">
+			<input type="hidden" class="expWorkEndyear" value="{$list['endyear']}">
+			<input type="hidden" class="expWorkEndmonth" value="{$list['endmonth']}">
+		</if>
+		<div class="J_delete expdel"></div>
+		<div class="exptr1 substring">{$list.companyname}<span class="font13">(<if condition="$list['todate'] eq 1">{:ddate($list['startyear'].'-'.$list['startmonth'],date('Y-m',time()))}<else/>{:ddate($list['startyear'].'-'.$list['startmonth'],$list['endyear'].'-'.$list['endmonth'])}</if>)</span></div>
+		<div class="exptr2 substring font13	">{$list.jobs}&nbsp;|&nbsp;{$list.startyear}-{$list.startmonth} 至<if condition="$list['todate'] eq 1">今<else/> {$list.endyear}-{$list.endmonth}</if></div>
+		<div class="exptr3 font12">{$list.achievements}</div>
+	</div>
+</volist>

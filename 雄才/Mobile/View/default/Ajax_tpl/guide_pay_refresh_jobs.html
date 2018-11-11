@@ -1,0 +1,14 @@
+<div class="dialog_pay font14">
+	<div class="paytip">今天免费刷新次数已用完，本次刷新需要扣除<strong>{:C('qscms_refresh_jobs_price')}</strong>元，请选择支付方式。</div>
+	<div class="paybox">
+  		<div class="pli for-event pay-type" data-type="alipay">支付宝支付</div>
+  		<div class="pli last for-event pay-type" data-type="wxpay">微信支付</div>
+	  	<div class="clear"></div>
+	</div>
+	<div class="paybottomtip link_blue font12">使用智能刷新低至<strong>{$discount}</strong>折，<a href="{:U('CompanyService/service_refresh',array('jobs_id'=>$jobs_id))}">立即了解</a></div>
+</div>
+<script type="text/javascript">
+	$('.pay-type').on('click',function(){
+		window.location.href=qscms.root+'?m=Mobile&c=CompanyService&a=service_refresh_jobs_one&payment='+$(this).data('type')+'&jobs_id={$jobs_id}';
+	});
+</script>

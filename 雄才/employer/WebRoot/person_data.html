@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>登录</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="red">
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="js/mui.min.js"></script>
+
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+	</head>
+	<style>
+	.model-1 .checkbox input:checked + label {background: #009ef0;}
+	.model-1 .checkbox input:checked + label:after {background: #009ef0;}
+	input[type=password],input[type=text],textarea{
+		padding: 0px 0px;
+	}
+	.pl{
+	  margin-top: 50px;
+	  margin-left: 10px;
+	  margin-right: 10px;
+	  margin-bottom: 10px;
+	}    
+	.person-line{
+	    right: 0;
+	    bottom: 0;
+	    left: 15px;
+	    height: 1px;
+	    content: '';
+	    -webkit-transform: scaleY(.5);
+	    transform: scaleY(.5);
+	    background-color: #c8c7cc;
+	
+	}
+	.mui-table-view-cell{
+		padding: 6px;
+	}
+	.container { width:100%; margin:0 auto; }
+	.left1 { width:15%; float:left; font-size: 16px;}
+	.left2 { width:35%; float:left;padding-right: 10px;text-align: right; }
+	.left3 { width:40%; float:left; font-size: 16px;}
+	.left4 { width:60%; float:left;text-align: right; }
+	.rightside { width:50%;float:right; font-size: 16px;}
+	.right{ float:left; width:50%;}
+	
+	</style>
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			$("#back").click(function () {
+				window.location = "person.html";
+        	});
+			$("#update-base").click(function () {
+				mui.toast('敬请期待')
+        	});
+			$("#update-educ").click(function () {
+				mui.toast('敬请期待')
+        	});
+			$("#update-work").click(function () {
+				mui.toast('敬请期待')
+        	});
+			$("#update-family").click(function () {
+				mui.toast('敬请期待')
+        	});
+			$("#update-study").click(function () {
+				mui.toast('敬请期待')
+        	});
+			$("#update-book").click(function () {
+				mui.toast('敬请期待')
+        	});
+			$("#update-talk").click(function () {
+				mui.toast('敬请期待')
+        	});
+			$("#update-self").click(function () {
+				mui.toast('敬请期待')
+        	});
+			$("#update-want").click(function () {
+				mui.toast('敬请期待')
+        	});
+		});
+		
+	</script>
+	<body style="background-color: #FFFFFF;">
+		<header class="mui-bar mui-bar-nav">
+			<a id="back" class="mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">基本信息</h1>
+			
+		</header>
+		
+		<div class="mui-content" style="background: white;">
+			<div class="mui-content-padded">
+
+				<h4 style="height: 25px;">*基本资料  <button id="update-base" type="button" class="mui-btn" style="float: right;line-height: 1;bottom: 3px;background: cornflowerblue;color: white;">修改</button></h4>
+				<div class="person-line"></div>
+				<ul class="mui-table-view">
+					 <li class="mui-table-view-cell">
+					        <div class="container">
+							<div class="left1">姓名</div>
+							<p class="left2" style="">秦朗</p>
+							<div class="rightside">
+							<div class="right" style="">性别</div>
+							<p class="right" style="text-align: right;">男</p>
+							</div>
+							</div>
+					 </li>
+			        <li class="mui-table-view-cell">
+					        <div class="container">
+							<div class="left1">民族</div>
+							<p class="left2" style="">汉</p>
+							<div class="rightside">
+							<div class="right" style="">出生日期</div>
+							<p class="right" style="text-align: right;">1989</p>
+							</div>
+							</div>
+					 </li>
+			        <li class="mui-table-view-cell">
+					        <div class="container">
+							<div class="left1">婚否</div>
+							<p class="left2" style="">未婚</p>
+							<div class="rightside">
+							<div class="right" style="">政治面貌</div>
+							<p class="right" style="text-align: right;">党员</p>
+							</div>
+							</div>
+					 </li>
+			        <li class="mui-table-view-cell">
+					        <div class="container">
+							<div class="left1">入党团时间</div>
+							<p class="left2" style="">未填写</p>
+							<div class="rightside">
+							<div class="right" style="">学历</div>
+							<p class="right" style="text-align: right;">本科</p>
+							</div>
+							</div>
+					 </li>
+			        <li class="mui-table-view-cell">
+					        <div class="container">
+							<div class="left1">最高学位</div>
+							<p class="left2" style="">本科</p>
+							<div class="rightside">
+							<div class="right" style="">参加工作时间</div>
+							<p class="right" style="text-align: right;">2011</p>
+							</div>
+							</div>
+					 </li>
+			        <li class="mui-table-view-cell">
+					        <div class="container">
+							<div class="left1">居住地</div>
+							<p class="left2" style="">北京市昌平区</p>
+							<div class="rightside">
+							<div class="right" style="">专业</div>
+							<p class="right" style="text-align: right;">未填写</p>
+							</div>
+							</div>
+					 </li>
+			        <li class="mui-table-view-cell">
+					        <div class="container">
+							<div class="left1">QQ</div>
+							<p class="left2" style="">23423423</p>
+							<div class="rightside">
+							<div class="right" style="">微信号</div>
+							<p class="right" style="text-align: right;">hh15555522</p>
+							</div>
+							</div>
+					 </li>
+			        <li class="mui-table-view-cell">
+					        <div class="container">
+							<div class="left1">手机号</div>
+							<p class="left2" style="">3454545645656</p>
+							<div class="rightside">
+							<div class="right" style="">邮箱</div>
+							<p class="right" style="text-align: right;">44956960@qq.com</p>
+							</div>
+							</div>
+					 </li>
+			        <li class="mui-table-view-cell">
+					        <div class="container">
+							<div class="left1">紧急联系人姓名</div>
+							<p class="left2" style="">秦朗</p>
+							<div class="rightside">
+							<div class="right" style="">身体状况</div>
+							<p class="right" style="text-align: right;">良好</p>
+							</div>
+							</div>
+					 </li>
+			        <li class="mui-table-view-cell">
+					    <div class="container">
+							<div class="left3">紧急联系人电话</div>
+							<p class="left4" style="">848548455445</p>						
+							</div>
+					 </li>
+					   <li class="mui-table-view-cell">
+					    <div class="container">
+							<div class="left3">身份证号</div>
+							<p class="left4" style="">8485411111228455445</p>						
+							</div>
+					 </li>
+					   <li class="mui-table-view-cell">
+					    <div class="container">
+							<div class="left3">人事档案存放单位</div>
+							<p class="left4" style="">北京大学</p>						
+							</div>
+					 </li>
+				</ul>
+				
+			</div>
+			<div class="mui-content-padded">
+				<h4 style="height: 25px;">*教育经历(从高中填写)  <button id="update-educ" type="button" class="mui-btn" style="float: right;line-height: 1;bottom: 3px;color: white;background: cornflowerblue;">修改</button></h4>
+				<div class="person-line"></div>
+				<p>2018-1 至 2018-2[1个月]&nbsp&nbsp&nbsp&nbsp本科(全日制)</p>
+				<p>北京大学&nbsp&nbsp&nbsp&nbsp应用技术专业</p>
+			</div>
+			<div class="mui-content-padded">
+			<div class="person-line"></div>
+				<h4 style="height: 25px;">*工作经历  <button id="update-work" type="button" class="mui-btn" style="float: right;line-height: 1;bottom: 3px;color: white;background: cornflowerblue;">修改</button></h4>
+				<div class="person-line"></div>
+								<p>2018-1 至 2018-5[4个月]       秘书</p>
+				<p>航天科工集团                       工作职责及业绩</p>
+			</div>
+			<div class="mui-content-padded">
+			<div class="person-line"></div>
+				<h4 style="height: 25px;">*家庭成员  <button id="update-family" type="button" class="mui-btn" style="float: right;line-height: 1;bottom: 3px;color: white;background: cornflowerblue;">修改</button></h4>
+				<div class="person-line"></div>
+								<p>姓名： 同仁堂                       关系： 母子</p>
+				<p>电话： 1123414312                职业： 务农</p>
+			</div>
+			<div class="mui-content-padded">
+			<div class="person-line"></div>
+				<h4 style="height: 25px;">*培训经历  <button id="update-study" type="button" class="mui-btn" style="float: right;line-height: 1;bottom: 3px;color: white;background: cornflowerblue;">修改</button></h4>
+				<div class="person-line"></div>
+								<p>2018-1 至 2018-6[5个月]       系统配置课程</p>
+				<p>北京大学                              培训内容</p>
+			</div>
+			<div class="mui-content-padded">
+			<div class="person-line"></div>
+				<h4 style="height: 25px;">*获得荣誉及证书  <button id="update-book" type="button" class="mui-btn" style="float: right;line-height: 1;bottom: 3px;color: white;background: cornflowerblue;">修改</button></h4>
+				<div class="person-line"></div>
+								<p>2018-1               一等奖            颁发机构</p>
+								<div class="person-line"></div>
+				<p>2018-2               二等奖            颁发机构</p>
+			</div>
+			<div class="mui-content-padded">
+			<div class="person-line"></div>
+				<h4 style="height: 25px;">*语言能力  <button id="update-talk" type="button" class="mui-btn" style="float: right;line-height: 1;bottom: 3px;color: white;background: cornflowerblue;">修改</button></h4>
+				<div class="person-line"></div>
+								<p>普通话       精通</p>
+				<p>粤语          入门</p>
+			</div>
+			<div class="mui-content-padded">
+			<div class="person-line"></div>
+				<h4 style="height: 25px;">*自我描述  <button id="update-self" type="button" class="mui-btn" style="float: right;line-height: 1;bottom: 3px;color: white;background: cornflowerblue;">修改</button></h4>
+				<div class="person-line"></div>
+								<p>形象好   气质佳   能出差   有亲和力</p>
+				<p>客观全面的自我评价更容易获得企业的好感，快来完善以获得HR的亲睐</p>
+			</div>
+			<div class="mui-content-padded">
+			<div class="person-line"></div>
+				<h4 style="height: 25px;">*求职意向  <button id="update-want" type="button" class="mui-btn" style="float: right;line-height: 1;bottom: 3px;color: white;background: cornflowerblue;">修改</button></h4>
+				<div class="person-line"></div>
+								<p>求职状态：我目前在职，但考虑换个新环境</p>
+				<p>工作性质：全职</p>
+				<p>期望行业：不限</p>
+				<p>期望职位：首席运营官COO,副总裁/副总经理</p>
+				<p>工作地区：东城区,西城区,崇文区</p>
+				<p>期望薪资：30000 元/月</p>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,41 @@
+/**
+ * 职场资讯
+ **/
+
+/* 资讯列表 */
+.news-top-menu-bar{background:#fff;box-sizing:border-box;}
+.news-top-menu-bar .top-menu{overflow:hidden;overflow-x:scroll;-webkit-overflow-scrolling:touch;}
+.news-top-menu-bar .top-menu::-webkit-scrollbar{display:none}
+.news-top-menu-bar .top-menu-list{white-space:nowrap;}
+.news-top-menu-bar .top-menu-list .t-btn{white-space:nowrap;display:inline-block;width:25%;text-align:center;color:#666;text-decoration:none;font-size:.32142857rem;height:1.05rem;line-height:1.05rem;-webkit-tap-highlight-color:rgba(0,0,0,.3);}
+.news-top-menu-bar .top-menu-list .t-btn.font16{font-size:.34285714rem;}
+.news-top-menu-bar .top-menu-list .t-btn.active{color:#0180cf;}
+.news-top-nav{background:#fff;white-space:nowrap;}
+.news-top-nav .n-cell{position:relative;width:25%;float:left;text-align:center;}
+.news-top-nav .n-cell .b-line{display:none;position:absolute;top:1.02rem;width:100%;height:.03rem;background:#0180CF;}
+.news-top-nav .n-cell.active{color:#0180cf;}
+.news-top-nav .n-cell.active .b-line{display:block;}
+.news-list-item{background:#ffffff;width:100%;border-top:1px solid #f0f0f0;}
+.news-list-item.eventactive{background-color:#EEEEEE;}
+.news-list-item .news-info{padding:.2rem 5% .3rem;position:relative;}
+.news-list-item .news-info .thumbnail{width:30%;height:1.8rem;float:left;padding:.05rem;border:1px #E8E8E8 solid;margin-top:0.1rem;margin-right:3%;}
+.news-list-item .news-info .thumbnail img{width:100%;height:100%;}
+.news-list-item .news-info .info{width:67%;float:left;}
+.news-list-item .news-info .info .line-one{height:.6rem;line-height:.6rem;color:#333333;}
+.news-list-item .news-info .info .line-two{height:.5rem;line-height:.5rem;}
+.news-list-item .news-info .info .line-two .pic{float:left;background-repeat:no-repeat;background-size:.3rem;background-position:0 center;padding-left:.32rem;padding-right:.3rem;}
+.news-list-item .news-info .info .line-two .pic.time{background-image:url("../images/171.png");background-size:.26rem;}
+.news-list-item .news-info .info .line-two .pic.page-views{background-image:url("../images/172.png");padding-left:.35rem;}
+.news-list-item .news-info .info .line-three{height:.8rem;line-height:.4rem;overflow:hidden;white-space:normal;text-overflow:ellipsis;}
+.list-split-block{width:100%;height:.15rem;background:transparent;}
+
+/* 资讯详情 */
+.news-show{background:#ffffff;padding:5%;}
+.news-show h1{color:#333333;font-weight:400;}
+.news-show .attribute{padding:.2rem 0;color:#999999;border-bottom:1px dashed #cacaca;margin-bottom:.2rem;}
+.news-show .attribute .category{float:left;}
+.news-show .attribute .pic{float:right;background-repeat:no-repeat;background-size:.3rem;background-position:0 center;padding-left:.32rem;padding-right:.3rem;}
+.news-show .attribute .pic.time{background-image:url("../images/171.png");background-size:.26rem;}
+.news-show .attribute .pic.page-views{background-image:url("../images/172.png");padding-left:.35rem;}
+.news-show .content{line-height:.5rem;word-break: break-all;overflow:hidden;}
+.news-show .content img{max-width:5rem;}

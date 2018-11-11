@@ -1,0 +1,18 @@
+<volist name="list" id="list">
+	<div class="expmod <if condition="$count eq $i">last</if>" type="education" pid="{$pid}" sid="{$list['id']}">
+		<div class="expedit" onClick="javascript:location.href='{:U('personal/resume_edit_edu',array('pid'=>$pid,'id'=>$list['id']))}'"></div>
+        <if condition="IS_AJAX">
+            <input type="hidden" class="expSchool" value="{$list.school}">
+            <input type="hidden" class="expSpeciality" value="{$list.speciality}">
+            <input type="hidden" class="expEducation" value="{$list.education}">
+            <input type="hidden" class="expEducationCn" value="{$list.education_cn}">
+            <input type="hidden" class="expEduStartyear" value="{$list['startyear']}">
+            <input type="hidden" class="expEduStartmonth" value="{$list['startmonth']}">
+            <input type="hidden" class="expEduEndyear" value="{$list['endyear']}">
+            <input type="hidden" class="expEduEndmonth" value="{$list['endmonth']}">
+        </if>
+		<div class="J_delete expdel"></div>
+		<div class="exptr1 substring">{$list.school}<span class="font13">{$list.education_cn}</span></div>
+		<div class="exptr2 substring font13">{$list.startyear}-{$list.startmonth} 至<if condition="$list['todate'] eq 1">今<else/> {$list.endyear}-{$list.endmonth}</if>&nbsp;|&nbsp;{$list.speciality}</div>
+	</div>
+</volist>

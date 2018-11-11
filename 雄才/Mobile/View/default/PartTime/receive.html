@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/parttime.css">
+</head>
+<body>
+    <include file="public:header"/>
+    <div class="filter-group x2 filter-outer">
+        <div id="f-mask"></div>
+        <div class="filter-outer">
+            <div class="filter-list js-filter" data-tag="0">
+                <div class="filter-cell">
+	                <div class="filter-cell-txt">
+                    <if condition="$pid eq 0">报名职位<else />{$jobslist[$pid]}</if>
+                  </div>
+                </div>
+            </div>
+            <div class="filter-list js-filter" data-tag="1">
+                <if condition="$Think.get.settr eq 0">
+                    <div class="filter-cell"><div class="filter-cell-txt">发送时间</div></div>
+                <else />
+                    <switch name="Think.get.settr">
+                        <case value="0">
+                            <div class="filter-cell"><div class="filter-cell-txt">不限</div></div>
+                        </case>
+                        <case value="3">
+                            <div class="filter-cell"><div class="filter-cell-txt">3天内</div></div>
+                        </case>
+                        <case value="7">
+                            <div class="filter-cell"><div class="filter-cell-txt">7天内</div></div>
+                        </case>
+                        <case value="15">
+                            <div class="filter-cell"><div class="filter-cell-txt">15天内</div></div>
+                        </case>
+                        <case value="30">
+                            <div class="filter-cell"><div class="filter-cell-txt">30天内</div></div>
+                        </case>
+                    </switch>
+                </if>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--报名职位下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item <if condition="$pid eq ''">select</if>" href="{:P(array('pid'=>''))}">全部</a></li>
+                    <volist name="jobslist" id="job">
+                        <li><a class="f-item <if condition="$Think.get.pid eq $key">select</if>" href="{:P(array('pid'=>$key))}">{$job}</a></li>
+                    </volist>
+                </div>
+            </div>
+        </div>
+        <!--报名时间下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item <if condition="$Think.get.settr eq '' || $Think.get.settr eq '0'">select</if>" href="{:P(array('settr'=>0))}">全部</a></li>
+                    <li><a class="f-item <if condition="$Think.get.settr eq 3">select</if>" href="{:P(array('settr'=>3))}">3天内</a></li>
+                    <li><a class="f-item <if condition="$Think.get.settr eq 7">select</if>" href="{:P(array('settr'=>7))}">7天内</a></li>
+                    <li><a class="f-item <if condition="$Think.get.settr eq 15">select</if>" href="{:P(array('settr'=>15))}">15天内</a></li>
+                    <li><a class="f-item <if condition="$Think.get.settr eq 30">select</if>" href="{:P(array('settr'=>30))}">30天内</a></li>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="split-block"></div>
+        <notempty name="applylist">
+        <volist name="applylist" id="vo">
+        <div class="resume">
+            <div class="content">
+                <div class="line-one">
+                    <div class="real-name substring">{$vo['realname']}</div>
+                    <div class="date font12">{:date('Y-m-d',$vo['addtime'])}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="line-two font13">{$vo['sex_cn']} | {:intval(date('Y')-$vo['birthdate'])}岁 | {$vo['identity_cn']} | {$vo['mobile']}</div>
+                <div class="line-two font13 substring">应聘：{$jobslist[$vo['pid']]}</div>
+                <div class="btn-call" onClick="javascript:location.href='tel:{$vo['mobile']}'">拨号</div>
+            </div>
+        </div>
+        <div class="split-block"></div>
+        </volist>
+        <div class="qspage">{$page}</div>
+        <else />
+            <div class="list-empty">
+                <if condition="$hasget">抱歉，没有找到符合条件的报名信息！<else />您目前还没有收到报名信息！</if>
+            </div>
+        </notempty>
+    <include file="public:footer_min" />
+    <script type="text/javascript">
+        $('.js-filter').on('click', function() {
+            var filter = new QSfilter($(this));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <qscms:jobs_show 列表名="jobs_info" 职位id="$_GET['id']"/>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/jobs.css">
+</head>
+<body>
+<assign name="page_seo['header_title']" value="$jobs_info['jobs_name']"/>
+<include file="public:header"/>
+<div class="jobsshowtop">
+  <div class="jobsname <if condition="$jobs_info['allowance_open'] eq 1 && $jobs_info['allowance_id'] gt 0">has-alw</if>">
+      <div class="td-j-name substring  font18">{$jobs_info.jobs_name}</div>
+      <if condition="$jobs_info['emergency'] eq 1">
+          <div class="td-j-img"><img src="../public/images/231.png"/></div>
+      </if>
+      <if condition="$jobs_info['allowance_open'] eq 1 && $jobs_info['allowance_id'] gt 0">
+      <div class="j-n-money">
+          <div class="j-m-l jm"></div>
+          <div class="j-m-r"><span class="font12">{$jobs_info['allowance']['per_amount']}</span> <span class="font9">元</span></div>
+          <div class="clear"></div>
+      </div>
+      </if>
+      <div class="clear"></div>
+  </div>
+  <div class="wage font14">{$jobs_info.wage_cn}</div>
+  <div class="city font12">{$jobs_info.district_cn}</div>
+  <div class="time font12">{$jobs_info['refreshtime_cn']}</div>
+</div>
+
+
+<div class="jobsshowatt">
+  <div class="attul font13">
+  	<div class="attli t1">性别{$jobs_info.sex_cn}</div>
+	<div class="attli t2"><if condition="$jobs_info.education eq 0">学历不限<else />{$jobs_info.education_cn}</if></div>
+	<div class="attli t3"><if condition="$jobs_info.experience eq 0">经验不限<else />{$jobs_info.experience_cn}</if></div>
+	<div class="attli t4">{$jobs_info.nature_cn}</div>
+	<div class="attli t5"><if condition="$jobs_info.age_cn eq '不限'">年龄不限<else />{$jobs_info.age_cn}</if></div>
+	<div class="attli t6"><if condition="$jobs_info['department']">{$jobs_info.department}<else />部门不限</if></div>
+	<div class="clear"></div>
+  </div>
+</div>
+
+<if condition="$jobs_info['allowance_open'] eq 1 && $jobs_info['allowance_id'] gt 0">
+<div class="split-block"></div>
+<div class="alw-remind-box">
+    <div class="alw-cr-line">
+        <div class="acl txt-9">红包金额：<span class="txt-red">{$jobs_info['allowance']['per_amount']}</span> 元</div>
+        <div class="acl txt-9">剩余红包：<span class="txt-red">{$jobs_info['allowance']['surplus_num']}</span> 个</div>
+        <div class="clear"></div>
+    </div>
+    <div class="sp-line-20"></div>
+    <div class="alw-r-line">
+    <if condition="$jobs_info['allowance']['type_alias'] eq 'apply'">
+    此红包为<span class="txt-red">投递红包</span>，投递简历后系统将通过微信转入你的账户！
+    <elseif condition="$jobs_info['allowance']['type_alias'] eq 'interview'" />
+    此红包为<span class="txt-red">面试红包</span>，参加面试后系统将把红包发放到你的微信账户！
+    <else />
+    此红包为<span class="txt-red">入职红包</span>，成功入职后系统将把红包发放到你的微信账户！
+    </if>
+    </div>
+</div>
+</if>
+
+<if condition="$jobs_info['tag_cn']">
+<div class="split-block"></div>
+<div class="jobsshowtag font14">
+  <div class="tagul">
+  <volist name="jobs_info['tag_cn']" id="tag">
+    <div class="tagli substring">{$tag}</div>
+  </volist>
+	<div class="clear"></div>
+  </div>
+</div>
+</if>
+<div class="split-block"></div>
+
+<div class="jobsshowcom" onclick="javascript:location.href='{$jobs_info.company_url}'">
+  	<div class="leftpic">
+		<div class="imgbox"><img src="{$jobs_info.company.logo}"></div>
+	</div>
+    <div class="comtxt">
+	  	<div class="cname font15 substring">{$jobs_info.company.companyname}
+            <if condition="$jobs_info['company']['audit'] eq 1"><img src="../public/images/120.png" title="认证企业"></if>
+            <if condition="$jobs_info['company']['setmeal_id'] gt 1"><img src="../public/images/121.png" title="{$info.setmeal_name}"></if>
+            <if condition="$jobs_info['company']['famous'] eq 1"><img src="../public/images/122.png" title="诚聘通企业"></if>
+            <if condition="$jobs_info['company']['report'] eq 1"><img src="../public/images/291.png" title="实地认证企业"></if>
+        </div>
+        <div class="city font12">{$jobs_info.company.scale_cn}  | {$jobs_info.company.nature_cn}</div>
+		<div class="trade font12">{$jobs_info.company.trade_cn}</div>
+    </div>
+	<div class="clear"></div>
+  
+</div>
+
+
+
+<div class="jobsshowadder link_gray6">
+    <div class="adder">
+    <if condition="$jobs_info['map_x'] gt 0 && $jobs_info['map_y'] gt 0">
+        <a class="show-map" href="#map">地址：{$jobs_info.company.address}<img src="../public/images/123.png"></a>
+    <else />
+        地址：{$jobs_info.company.address}
+    </if>
+    </div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="jobsshowst">
+  <div class="eattitle list_height">
+  职位统计
+    <div class="ritle font12">企业最近登录: {$jobs_info.company.last_login_time}</div>
+  </div>
+
+  <div class="stli"><span>{$jobs_info.company.reply_ratio}%</span><br>简历处理率</div>
+  <div class="stli"><span>{$jobs_info.company.reply_time}</span><br>简历平均处理时长</div>
+  <div class="clear"></div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="jobsshowsdes">
+  <div class="eattitle list_height">职位描述</div> 
+  <div class="txt">{:nl2br($jobs_info['contents'])}</div>
+</div>
+
+<div class="split-block"></div>
+
+
+<div class="jobsshowcon">
+  <div class="eattitle list_height">
+  联系方式
+    <if condition="$jobs_info['hide']">
+      <div class="ritle font12 J_check_truenum">点击查看</div>
+    </if>
+  </div>
+  <if condition="$jobs_info['contact']['telephone_show'] eq 0">
+  <div class="mob">企业设置不公开</div>
+  <else />
+  <div class="mob">{$jobs_info.contact.telephone} 
+  <if condition="$jobs_info['contact']['contact_show'] eq 1">({$jobs_info.contact.contact})</if>
+  </div>
+  <div class="font12" style="padding-left: 0.7rem;padding-top: 0.3rem;">(联系我时，请说是在{:C('qscms_site_name')}上看到的)</div>
+  </if>
+  <div class="map link_blue">{$jobs_info.contact.address} <if condition="$jobs_info['map_x'] gt 0 && $jobs_info['map_y'] gt 0"><a class="show-map" href="#map">[地图]</a></if></div>
+  <if condition="$jobs_info['company']['famous'] eq 1">
+  <div class="tip font12">该企业已加入诚聘通会员，可放心求职</div>
+  <else />
+   <div class="tip font12">面试过程中，遇到用人单位收取费用请提高警惕！</div>
+  </if>
+</div>
+
+<qscms:jobs_list 列表名="jobslist" 显示数目="6" 职位分类="$jobs_info['jobcategory']" 去除id="$jobs_info['id']"/>
+<notempty name="jobslist['list']">
+<div class="split-block"></div>
+<div class="jobsshowrec">
+  <div class="eattitle list_height">
+  推荐职位
+    <div class="ritle font12 link_gray9"><a href="{:U('Jobs/index')}">查看更多></a></div>
+  </div>
+ <volist name="jobslist['list']" id="jobs">
+  <div class="jobslist">
+    <div class="jname font15 link_gray6 substring"><a href="{$jobs.jobs_url}">{$jobs.jobs_name}</a></div>
+	<div class="cname font12 substring">{$jobs.companyname} | {$jobs.district_cn}</div>
+	<div class="wage font13">{$jobs.wage_cn}</div>
+	<div class="time font12">{$jobs.refreshtime_cn}</div>
+  </div>
+  </volist>
+</div>
+<div class="jobssshowbottomso link_blue">没有找到满意的职位? <a href="{:U('Jobs/index')}">立即搜索</a></div>
+</notempty>
+
+
+<div class="split-block-footnav"></div>
+<neq name="jobs_info['tmp']" value="1">
+<div class="jobsfootnav">
+    <div class="btns link_gray6">
+        <if condition="$jobs_info['contact']['telephone_show'] eq 0">
+            <a href="javascript:void(0);" class="J_tel tel font9 hide_tel"><img src="../public/images/280.png"><br>电话</a>
+        <elseif condition="$jobs_info['show_contact_direct'] eq 1"/>
+            <a href="tel:<if condition='$jobs_info["contact"]["telephone_"]'>{$jobs_info["contact"]["telephone_"]}<else />{$jobs_info["contact"]["landline_tel"]}</if>" class=" tel font9"><img src="../public/images/280.png"><br>电话</a>
+        <elseif condition="C('qscms_showjobcontact_wap') eq 1"/>
+            <a href="tel:<if condition='$jobs_info["contact"]["telephone_"]'>{$jobs_info["contact"]["telephone_"]}<else />{$jobs_info["contact"]["landline_tel"]}</if>" class="J_tel tel font9"><img src="../public/images/280.png"><br>电话</a>
+        <else />
+            <a href="tel:<if condition='$jobs_info["contact"]["telephone_"]'>{$jobs_info["contact"]["telephone_"]}<else />{$jobs_info["contact"]["landline_tel"]}</if>" class=" tel font9"><img src="../public/images/280.png"><br>电话</a>
+        </if>
+        <if condition="$rong_state eq 1">
+        <a href="{:U('Im/message',array('uid'=>$jobs_info['uid']))}" class="J_im_btn im font9"><img src="../public/images/306.png"><br>在线</a>
+        </if>
+        <div class="fov font9 favor">
+            <if condition="$jobs_info['favor']">
+                <img src="../public/images/282.png"><br>已收藏
+            <else />
+                <img src="../public/images/281.png"><br>收藏
+            </if>
+        </div>
+        <if condition="$jobs_info['allowance_open'] eq 1 && $jobs_info['allowance_id'] gt 0">
+            <div class="fto apply_allowance <empty name="rong_state">width60</empty>">领取红包</div>
+        <else />
+            <div class="fto apply_jobs <empty name="rong_state">width60</empty>">投递简历</div>
+        </if>
+        <div class="clear"></div>
+    </div>
+</div>
+</neq>
+<div class="alw-yes-meet-dia">
+    <div><div class="alw-close"></div><div class="clear"></div></div>
+    <div class="sp-line-10"></div>
+    <div class="alw-ym-con">
+        <div class="ayc-head txt-red font16">投递红包领取成功</div>
+        <div class="sp-line-80"></div>
+        <div class="ayc-cash-num txt-red font24"><span class="amount">0</span>&nbsp;<span class="font16">元</span></div>
+        <div class="ayc-title font18">投递红包</div>
+        <div class="sp-line-20"></div>
+        <div class="ayc-remind font12">提示：请勿使用虚假简历投递，一经查实即加入黑名单，永久失去本平台领取红包特权！</div>
+        <div class="sp-line-20"></div>
+        <div class="alw-yes-share-btn font12">分享给好友 >></div>
+        <div class="sp-line-20"></div>
+        <div class="alw-txt-line txt-fff font9">红包到账可能有延迟，请在微信中查询</div>
+        <div class="sp-line-15"></div>
+        <div class="alw-txt-line txt-dark-red font9">本活动最终解释权归{:C('qscms_site_name')}所有</div>
+    </div>
+</div>
+<div class="alw-layer"></div>
+<div class="alw-wx-layer"></div>
+<script id="tpl-map" type="text/html">
+    <!--地图-->
+    <div class="headernavfixed">
+        <div class="headernav font18"><div class="title">企业位置<div class="return js-back"></div></div></div>
+    </div>
+    <div class="com-map">
+        <div class="map" id="container"></div>
+    </div>
+    <div class="split-block"></div>
+    <div class="btn-spacing">
+        <div id="mapBtn" class="qs-btn qs-btn-blue font18" title="返回">返回</div>
+    </div>
+</script>
+<include file="public:footer_min" />
+<script src="../public/js/popWin.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak={:C('qscms_map_ak')}"></script>
+<script type="text/javascript" charset="utf-8" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+  /* 显示分享 覆盖层 */
+  function share() {
+      $(".alw-wx-layer").show();
+  }
+  function share_() {
+      $(".alw-layer").show();
+  }
+  //分享按钮
+  $('.alw-yes-share-btn').on('click', function() {
+      var agent = navigator.userAgent.toLowerCase();
+      if (agent.indexOf('micromessenger') < 0) {
+          share_();
+      } else {
+          share();
+      }
+  });
+  $(".alw-layer, .alw-wx-layer").on("click", function() {
+      $(this).hide();
+  });
+    if ($('.jobsshowtag').length) {
+      // 如果有职位亮点，随机变色
+      function randomsort(a, b) {  
+          return Math.random()>.5 ? -1 : 1;
+      }
+      var bgArrBefore = [1,2,3,4,5,6];
+      var $jobTagDom = $('.jobsshowtag').find('.tagli');
+      var bgArray = bgArrBefore.sort(randomsort);
+      $($jobTagDom).each(function (index, value) {
+          $(this).addClass('tg' + bgArray[index]);
+      })
+    }
+      $.getJSON("{:U('AjaxCommon/jobs_click')}",{id:"{$jobs_info.id}"});
+      $.getJSON("{:U('AjaxCommon/company_statistics_add')}",{comid:"{$jobs_info['company_id']}",jobid:"{$jobs_info['id']}"});
+      var mapTemp = $('#tpl-map').html();
+      $(".show-map").on('click', function() {
+          var $this = $(this);
+          popWin.init({
+              from:"right",
+              html:mapTemp,
+              handle:function(a){
+                var map = new BMap.Map("container");
+                var point = new BMap.Point("{$jobs_info['map_x']}","{$jobs_info['map_y']}");  // 创建点坐标
+                map.centerAndZoom(point, "{$jobs_info['map_zoom']}");
+                var qs_marker = new BMap.Marker(point);        // 创建标注
+                map.addOverlay(qs_marker);
+                map.setCenter(point);
+                map.addControl(new BMap.NavigationControl());//添加鱼骨
+                map.enableScrollWheelZoom();//启用滚轮放大缩小，默认禁用。
+                $('#mapBtn').on('click',function(){
+                    a.close();
+                });
+              }
+          })
+      });
+  var isVisitor = "{:C('visitor.uid')}";
+  var utype = "{:C('visitor.utype')}";
+  // 收藏职位点击事件绑定
+    $(".favor").on('click',function(){
+      var obj = $(this);
+      var url = "{:U('ajaxPersonal/jobs_favorites')}";
+      var jid = "{$jobs_info['id']}";
+      if ((isVisitor > 0)) {
+        if(utype != 2){
+          qsToast({type:2,context: '请登录个人会员'});
+          return false;
+        }
+        $.getJSON(url,{jid:jid},function(result){
+          if(result.status==1){
+            qsToast({type:1,context: result.msg});
+            if(result.data=='cancel'){
+              obj.html('<img src="../public/images/281.png"><br>收藏');
+            }else{
+              obj.html('<img src="../public/images/282.png"><br>已收藏');
+            }
+          } else {
+            qsToast({type:2,context: result.msg});
+            return false;
+          }
+        });
+      } else {
+        window.location.href="{:U('members/login')}";
+        return false;
+      }
+    });
+  // 申请职位点击事件绑定
+  $(".apply_jobs").on('click', function () {
+      var url = "{:U('ajaxPersonal/resume_apply')}";
+      var jid = "{$jobs_info['id']}";
+      if ((isVisitor > 0)) {
+          if (utype != 2) {
+              qsToast({type: 2, context: '请登录个人会员'});
+              return false;
+          }
+          $.getJSON(url, {jid: jid}, function (result) {
+              if (result.status == 1) {
+                  qsToast({type: 1, context: result.msg});
+              } else if(eval(result.dialog)) {
+                  var data = result.data;
+                  if (data.id){
+                      var $mPop = new QSpopout();
+                      var url = "{:U('Personal/resume_edit',array('pid'=>Placeholder))}";
+                      url = url.replace('Placeholder',data.id);
+                      $mPop.setContent('<div class="link_yellow" style="line-height: 180%;">您的简历完整度只有 <strong>'+data.percent+'%</strong>，该公司要求达到 <strong>{:C("qscms_apply_job_min_percent")}%</strong> 才可以申请，请<a href="'+url+'">继续完善</a>吧</div>');
+                      $mPop.show();
+                      $mPop.getPrimaryBtn().on('click', function () {
+                          window.location.href = url;
+                      });
+                  }else{
+                      qsToast({type:2,context: result.msg});
+                      return false;
+                  }
+              } else {
+                    qsToast({type:2,context: result.msg});
+                    return false;
+              }
+          });
+      } else {
+          if (eval(qscms.smsTatus)) {
+              var regResume = "{:C('qscms_rapid_registration_resume')}";
+              if(regResume == 1){
+                window.location.href = qscms.root + '?m=Mobile&c=AjaxPersonal&a=resume_add_dig&jid=' + jid;
+              }else{
+                window.location.href = "{:url_rewrite('QS_login')}";
+              }
+          } else {
+              window.location.href = "{:url_rewrite('QS_login')}";
+          }
+      }
+  });
+    // 领取红包点击事件绑定
+    $(".apply_allowance").on('click',function(){
+      var url = qscms.root+"?m=Mobile&c=AjaxAllowance&a=apply_allowance";
+      var jid = "{$jobs_info['id']}";
+      if ((isVisitor > 0)) {
+        if(utype != 2){
+          qsToast({type:2,context: '请登录个人会员'});
+          return false;
+        }
+        $.getJSON(url,{jid:jid},function(data){
+          if(data.status==1){
+            $('body').append(data.data.html);
+          } 
+          else
+            {
+                qsToast({type:2,context: data.msg});
+                if(data.status==2){
+                    setTimeout(function() {
+                        location.href=qscms.root+"?m=Mobile&c=Personal&a=resume_add";
+                    },2000);
+                }
+            }
+        });
+      } else {
+          window.location.href="{:url_rewrite('QS_login')}";
+      }
+    });
+    $('.J_tel').on('click',function(){
+      if($(this).hasClass('hide_tel')){
+        qsToast({type:2,context: '该企业设置联系方式不公开！'});
+        return false;
+      }
+      if(isVisitor > 0) {
+        if(utype != 2){
+          qsToast({type:2,context: '请登录个人会员'});
+          return false;
+        }
+      }else{
+          window.location.href="{:U('members/login')}";
+          return false;
+      }
+    });
+    $('.J_check_truenum').on('click',function(){
+      if(isVisitor > 0) {
+        if(utype == 1){
+          qsToast({type:2,context: '请登录个人会员'});
+          return false;
+        }else{
+          qsToast({type:2,context: '请先创建一份简历'});
+          window.location.href="{:U('personal/resume_add')}";
+          return false;
+        }
+      }else{
+          window.location.href="{:U('members/login')}";
+          return false;
+      }
+    });
+    $('.J_im_btn').on('click',function(){
+      if(isVisitor > 0) {
+        var uid = "{$jobs_info['uid']}";
+        if(isVisitor == uid){
+          qsToast({type:2,context: '不能和自已聊天'});
+          return false;
+        }
+        if(utype != 2){
+          qsToast({type:2,context: '请登录个人会员'});
+          return false;
+        }
+      }else{
+          window.location.href="{:U('members/login')}";
+          return false;
+      }
+    });
+    wx.config({
+    // debug: true,
+    appId: '{$signPackage.appId}',
+    timestamp: '{$signPackage.timestamp}',
+    nonceStr: '{$signPackage.nonceStr}',
+    signature: '{$signPackage.signature}',
+    jsApiList: [
+      // 所有要调用的 API 都要加到这个列表中
+      "onMenuShareTimeline",
+      "onMenuShareAppMessage",
+      "onMenuShareQQ",
+      "onMenuShareWeibo"
+    ]
+  });
+  wx.ready(function () 
+  {
+      var linkUrl = "{:build_mobile_url(array('c'=>'Jobs','a'=>'show','params'=>'id='.$jobs_info['id']))}";//放链接
+      var title = "{$jobs_info['company']['companyname']}高薪诚聘{$jobs_info['jobs_name']},小伙伴们快来看看吧。";
+      var desc = "{$jobs_info['company']['companyname']}正在招聘人才，待遇福利优厚，欢迎各路人才，快来看看吧。"; 
+      var imgUrl="{:C('qscms_site_domain')}{:C('qscms_site_dir')}{$jobs_info['company']['logo']}";//图片链接
+      <if condition="$jobs_info['allowance_open'] eq 1 && $jobs_info['allowance_id'] gt 0">
+      var title = "我在{:C('qscms_site_name')}上成功领取了红包了，小伙伴们也试一下吧。";
+      </if>
+      wx.onMenuShareTimeline({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareAppMessage({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          type: '', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareQQ({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareWeibo({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+  });
+</script>
+</body>
+</html>

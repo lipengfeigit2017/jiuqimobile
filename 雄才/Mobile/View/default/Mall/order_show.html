@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/mall.css">
+	</head>
+	<body>
+    <include file="public:header" />
+	<div class="split-block"></div>
+    <div class="ptitle border">
+      <div class="th1">订单概要</div>
+    </div>
+
+	<div class="order-list-item back-gray">
+		<div class="item-content">
+			<div class="pic">
+				<img src="{$goods_info['goods_img']}" border="0" />
+			</div>
+			<div class="txt">
+				<div class="t1 substring">{$order['goods_title']}</div>
+				<div class="t2">
+					<div class="num font_gray9 font12">{$order['goods_points']}{:C('qscms_points_byname')}*{$order['goods_num']}件</div>
+					<div class="price font_yellow">{$order['order_points']}{:C('qscms_points_byname')}</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+
+    <div class="pay-info">
+		<div class="item">
+			<div class="t1 font_gray9">创建时间：</div>
+			<div class="t2">{:date('Y-m-d H:i',$order['addtime'])}</div>
+			<div class="clear"></div>
+		</div>
+    	<div class="item">
+    		<div class="t1 font_gray9">订单状态：</div>
+    		<if condition="$order['status'] eq 1">
+	        <div class="t2 font_yellow">
+	        待审核
+	        </div>
+	        <elseif condition="$order['status'] eq 2" />
+	        <div class="t2 font_green">
+	        已完成
+	        </div>
+	        <elseif condition="$order['status'] eq 3" />
+	        <div class="t2 font_red">
+	        未通过
+	        </div>
+	        </if>
+			<div class="clear"></div>
+    	</div>
+    	<div class="item">
+    		<div class="t1 font_gray9">支付{:C('qscms_points_byname')}：</div>
+    		<div class="t2 font_yellow">{$order['order_points']}{:C('qscms_points_byname')}</div>
+			<div class="clear"></div>
+    	</div>
+    </div>
+	<div class="split-block"></div>
+	<div class="contact-info font_gray9">
+		<div class="item">联系人：{$order['contact']}</div>
+		<div class="item">联系电话：{$order['mobile']}</div>
+		<div class="item">联系地址：{$order['address']}</div>
+	</div>
+	<div class="split-block"></div>
+<include file="public:footer_min" />
+	</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+	</head>
+	<body>
+		<include file="public:header"/>
+        <div class="per-introduce">
+            <textarea placeholder="请输入简历描述" name="specialty" id="specialty">{$resume.specialty}</textarea>
+        </div>
+        <div class="per-introduce-tip">
+            <div class="text-num">最多可输入100字</div>
+            <div class="J_empty text-clear">清空</div>
+            <div class="clear"></div>
+        </div>
+        <div class="split-block"></div>
+        <div class="btn-spacing">
+            <div id="J_saveresume" class="qs-btn qs-btn-blue font18" title="确定">确定</div>
+        </div>
+        <div class="split-block"></div>
+	    <include file="public:footer_min" />
+	    <script type="text/javascript">
+	    	$('#J_saveresume').die().live('click', function() {
+	            var pid = "{$resume.id}";
+	            var specialty = $.trim($('#specialty').val());
+	            var news = "{$Think.get.news}";
+	            if (specialty == "") {
+                	qsToast({type:2,context: '请输入简历描述'});
+	                return false;
+	            }
+	            $('#J_saveresume').val('保存中...').addClass('qs-btn-border-disabled');
+	            // 提交表单
+	            $.ajax({
+	                url: "{:U('Personal/resume_edit_description')}",
+	                type: 'POST',
+	                dataType: 'json',
+	                data: {pid:pid,specialty: specialty,news:news},
+	                success:function(data){
+	                    if (data.status == 1) {
+	                        window.location.href = data.data.url;
+	                    } else {
+	                        qsToast({type:2,context: data.msg});
+	                        $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    }
+	                },
+	                error:function(result){
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    qsToast({type:2,context: result.msg});
+	                }
+	            });
+	        });
+	        $('.J_empty').on('click',function(){
+                $('#specialty').val('');
+            });
+	    </script>
+	</body>
+</html>

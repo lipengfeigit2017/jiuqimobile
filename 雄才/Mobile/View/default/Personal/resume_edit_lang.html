@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+	</head>
+	<body>
+		<include file="public:header"/>
+		<div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">选择语种<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	        <span class="for-select"></span>
+	            <select id="language" name="language">
+	            	<option value="">请选择</option>
+	    		    <volist name="language" id="language">
+	                    <option value="{$key}" <if condition="$info['language'] eq $key">selected</if>>{$language}</option>
+	    			</volist>
+	    		</select>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">熟悉程度<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	        <span class="for-select"></span>
+				<select id="level" name="level">
+					<option value="">请选择</option>
+	    		    <volist name="level" id="level">
+	                    <option value="{$key}" <if condition="$info['level'] eq $key">selected</if>>{$level}</option>
+	    			</volist>
+	    		</select>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="split-block"></div>
+        <div class="btn-spacing">
+        	<input type="hidden" id="id" value="{$info['id']}">
+            <div id="J_saveresume" class="qs-btn qs-btn-blue font18" title="确定">确定</div>
+        </div>
+        <div class="split-block"></div>
+	    <include file="public:footer_min" />
+	    <script type="text/javascript">
+	    	$('#J_saveresume').die().live('click', function() {
+				var language = $.trim($('#language').val());
+				var level = $.trim($('#level').val());
+				var id = $.trim($('#id').val());
+				var pid = "{$resume.id}";
+				var news = "{$Think.get.news}";
+				if (language == "") {
+					qsToast({type:2,context: '请选择语种'});
+					return false;
+				}
+				if (level == "") {
+					qsToast({type:2,context: '请选择熟悉程度'});
+					return false;
+				}
+				$('#J_saveresume').val('保存中...').addClass('qs-btn-border-disabled');
+	            // 提交表单
+	            $.ajax({
+	                url: "{:U('Personal/resume_edit_lang')}",
+	                type: 'POST',
+	                dataType: 'json',
+	                data: {id: id, pid: pid, language: language, level: level,news:news},
+	                success:function(data){
+	                    if (data.status == 1) {
+	                        window.location.href = data.data.url;
+	                    } else {
+	                        qsToast({type:2,context: data.msg});
+	                        $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    }
+	                },
+	                error:function(result){
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    qsToast({type:2,context: result.msg});
+	                }
+	            });
+	        });
+	    </script>
+	</body>
+</html>

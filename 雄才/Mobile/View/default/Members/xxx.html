@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/members.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<div class="qs-top-nav x2 list_height">
+			<div class="n-cell active">账号密码登录<div class="b-line"></div></div>
+			<div class="n-cell" onclick="javascript:location.href='{:U('Members/login_mobile')}'">手机动态码登录<div class="b-line"></div></div>
+			<div class="clear"></div>
+		</div>
+		<div class="split-block"></div>
+		<form action="post" id="logingForm">
+			<div class="loging-input-group">
+				<div class="group-list">
+					<div class="g-close"></div>
+					<input id="uikokkokokok" name="uikokkokokok" type="text" class="l-input font14" placeholder="请输入账户名/手机号/邮箱" autocomplete="off">
+				</div>
+				<div class="group-list pwd">
+					<div class="g-close"></div>
+					<input id="fjdlkjl" name="fjdlkjl" type="password" class="l-input font14" placeholder="请输入密码" autocomplete="off">
+				</div>
+			</div>
+			<div class="l-tool-bar list_height">
+				<div class="auto-loging">
+					<div class="for-checkbox active" id="for-checkbox">下次自动登录</div>
+				</div>
+				<div class="for-pwd link_gray6"><a href="{:U('members/user_getpass')}">忘记密码</a></div>
+				<div class="clear"></div>
+			</div>
+			<div id="pop" style="display:none"></div>
+			<input type="hidden" name="expire" id="expire" value="1" >
+		</form>
+		<div class="btn-spacing"><a id="aaaBtn" href="javascript:;" class="qs-btn qs-btn-blue font18">登录</a></div>
+		<div class="qs-center"><a href="{:U('members/register')}" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-border-orange font14">立即注册</a></div>
+		<div class="qs-center coop-title">使用合作账号登录/注册</div>
+		<div class="coop-group g3 qs-center">
+			<volist name="oauth_list" id="oauth">
+			<if condition="$key neq 'weixin'">
+				<a href="{:U('callback/index',array('mod'=>$key,'type'=>'login'))}" class="coop-cell">
+					<div class="img {$key}"></div>
+					<p>{$oauth.name}</p>
+				</a>
+			</if>
+			</volist>
+			<div class="clear"></div>
+		</div>
+		<input type="hidden" id="verifyLogin" value="{$verify_userlogin}">
+		<include file="public:footer" />
+		<include file="public:footer_min" />
+	</body>
+	<script src="../public/js/gt.js"></script>
+	<script>
+		// 自动登录
+		$('#for-checkbox').on('click', function() {
+			$(this).toggleClass('active');
+			if ($(this).hasClass('active')) {
+				$('#expire').val('1');
+			} else {
+				$('#expire').val('0');
+			}
+		})
+
+		/**
+		 * 配置极验
+		 */
+		$.ajax({
+			url: qscms.root+'?m=Mobile&c=Captcha&type=mobile&t=' + (new Date()).getTime(),
+			type: 'get',
+			dataType: 'json',
+			success: function(config) {
+				initGeetest({
+					gt: config.gt,
+					challenge: config.challenge,
+					offline: !config.success
+				}, function(captchaObj) {
+					captchaObj.appendTo("#pop");
+					captchaObj.onSuccess(function() {
+						doAjax();
+					});
+					window.captchaObj = captchaObj
+				});
+			}
+		});
+
+		/**
+		 * ajax 登录
+		 */
+		function doAjax() {
+			$.ajax({
+				url: "{:U('Members/login')}",
+				type: 'POST',
+				dataType: 'json',
+				data: $('#logingForm').serialize(),
+				success: function(result) {
+					if (result.status) {
+						window.location.href = result.data;
+					} else {
+            $('#pop').hide();
+						if (result.data) {
+							$("#verifyLogin").val(result.data);
+						}
+						qsToast({type:2,context: result.msg});
+					}
+				},
+				error: function(result) {
+					$('#pop').hide();
+					qsToast({type:2,context: result.msg});
+				}
+			})
+		}
+
+		/**
+		 * 登录验证
+		 */
+		$('#aaaBtn').on('click', function(e) {
+			var Value1 = $.trim($('input[name=uikokkokokok]').val());
+			var Value2 = $.trim($('input[name=fjdlkjl]').val());
+			if (Value1 == '') {
+				qsToast({type:2,context: '请输入账户名/手机号/邮箱'});
+				return false;
+			}
+			qsToast({type:2,context: '排查BUG'});
+			if (Value2 == '') {
+				qsToast({type:2,context: '请输入密码'});
+				return false;
+			}
+
+
+			if (eval($('#verifyLogin').val())) {
+				window.captchaObj.refresh();
+				$('#pop').show();
+			} else {
+				doAjax();
+			}
+		});
+
+		/**
+		 * 清空所填项
+		 */
+		$('.g-close').on('click', function() {
+			$(this).next().val('');
+		})
+	</script>
+</html>

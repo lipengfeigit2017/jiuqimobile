@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+<head>
+<qscms:resume_show 列表名="info" 简历id="$_GET['id']"/>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/resume.css">
+</head>
+<body>
+
+
+<div class="retop">
+  <div class="topbg" style="background-color:<if condition="C('qscms_mobile_top_color') neq ''">{:C('qscms_mobile_top_color')}</if>;">  
+    <div class="return js-back for-event"></div>
+    <if condition="$info['preview'] eq 0">
+		<div id="j_favor" class="attention font14 favor <eq name="info['favor']" value="1">has<else /></eq>"><eq name="info['favor']" value="1">已收藏<else />收藏</eq></div>
+	</if>
+    <div class="logobox"><img src="{$info['photosrc']}"></div>
+  </div>
+  
+  <div class="com">
+  	<div class="cname font16">
+		{$info['fullname']}
+        <if condition="$info['talent'] eq 1"><span class="adv"></span></if>
+		<if condition="$info['strong_tag']">
+		<span class="gold font10">{$info['strong_tag']}</span>
+		</if>
+	</div>
+    <div class="txt font14">{$info['sex_cn']} | {$info['age']}岁 | {$info['education_cn']} | {$info['experience_cn']}工作经验</div>
+      <div class="txt font14">更新时间：{$info['refreshtime_cn']}</div>
+  </div>
+  
+  <div class="bg"></div>
+</div>
+
+<div class="split-block"></div>
+
+
+<div class="reintent">
+ <div class="eattitle list_height">求职意向</div>
+
+
+
+ <div class="tit">求职状态</div>
+ <div class="txt">{$info['current_cn']}</div>
+ <div class="clear"></div>
+ 
+ <div class="tit">工作性质</div>
+ <div class="txt">{$info['nature_cn']}</div>
+ <div class="clear"></div>
+ 
+  <div class="tit">期望行业</div>
+ <div class="txt"><if condition="$info['trade_cn']">{$info['trade_cn']}<else />不限</if></div>
+ <div class="clear"></div>
+ 
+ <div class="tit">期望职位</div>
+ <div class="txt">{$info['intention_jobs']}</div>
+ <div class="clear"></div>
+ 
+  <div class="tit">期望地区</div>
+ <div class="txt">{$info['district_cn']}</div>
+ <div class="clear"></div>
+
+  <div class="tit">期望薪资</div>
+ <div class="txt">{$info['wage_cn']}</div>
+ <div class="clear"></div>
+</div>
+
+
+
+<div class="split-block"></div>
+
+<div class="rebasic">
+<div class="eattitle list_height">联系方式</div>
+ <if condition="$info['telephone']">
+<div class="txt substring"><span>手机</span>{$info['telephone']}<if condition="!$info['show_contact']"><u class="downbtn font12">[下载后查看]</u></if></div>
+</if>
+<if condition="$info['email']">
+<div class="txt substring"><span>邮箱</span>{$info['email']}<if condition="!$info['show_contact']"><u class="downbtn font12">[下载后查看]</u></if></div>
+</if>
+<if condition="$info['qq']">
+<div class="txt substring"><span>Q Q</span>{$info['qq']}<if condition="!$info['show_contact']"><u class="downbtn font12">[下载后查看]</u></if></div>
+</if>
+<if condition="$info['weixin']">
+<div class="txt substring"><span>微信</span>{$info['weixin']}<if condition="!$info['show_contact']"><u class="downbtn font12">[下载后查看]</u></if></div>
+</if>
+</div>
+
+<if condition="$info['tag_cn']">
+<div class="split-block"></div>
+<div class="retag font13">
+<div class="eattitle list_height">特长标签</div>
+  <div class="tagul">
+  <volist name="info['tag_cn']" id="vo">
+    <div class="tagli substring">{$vo}</div>
+    </volist>
+	<div class="clear"></div>
+  </div>
+</div>
+</if>
+<if condition="$info['specialty']">
+<div class="split-block"></div>
+<div class="redes">
+  <div class="eattitle list_height">自我描述</div> 
+  <div class="txt">{$info['specialty']}</div>
+</div>
+</if>
+
+<if condition="$info['education_list']">
+	<div class="split-block"></div>
+	<div class="reedu">
+		<div class="eattitle list_height">教育经历
+			<div class="ritle font12">{:count($info['education_list'])}段教育经历</div>
+		</div>
+		<div class="edu-list desc">
+			<volist name="info['education_list']" id="vo">
+				<div class="works <if condition="$key eq count($info['education_list'])-1">last</if>">
+				<div class="cname substring">{$vo['school']}<span class="font13">[{$vo['duration']}]</span></div>
+				<div class="jname substring font13">{$vo['startyear']}.{$vo['startmonth']}
+				<eq name="vo['todate']" value="1">
+					至今
+					<else />
+					- {$vo['endyear']}.{$vo['endmonth']}
+				</eq> | {$vo['education_cn']} | {$vo['speciality']}
+				</div>
+				</div>
+			</volist>
+		</div>
+		<if condition="count($info['education_list']) gt 1">
+		<div class="more">
+			<div class="showbtn font12 ">展开信息</div>
+			<!--<div class="showbtn font12 topbtn">收起信息</div> -->
+		</div>
+		</if>
+
+	</div>
+</if>
+
+<if condition="$info['work_list']">
+	<div class="split-block"></div>
+	<div class="rework">
+		<div class="eattitle list_height">工作经验
+		  <div class="ritle font12">{$info['work_duration']}做了{$info['work_count']}份工作</div>
+		</div>
+		<div class="work-list <if condition="count($info['work_list']) gt 1">desc</if>">
+			<volist name="info['work_list']" id="vo">
+			<div class="works <if condition="$key eq count($info['work_list'])-1">last</if>">
+			  	<div class="cname substring">{$vo['companyname']}<span class="font13">[{$vo['duration']}]</span></div>
+			  	<div class="jname substring">
+				  	<span class="font13">
+				  	{$vo['startyear']}.{$vo['startmonth']}
+				  	<eq name="vo['todate']" value="1">
+				  		至今
+				  	<else />
+				  		- {$vo['endyear']}.{$vo['endmonth']}
+				  	</eq>
+				  	 | {$vo['jobs']}
+					</span>
+			  	</div>
+			  	<div class="wtxt font13">{$vo['achievements']}</div>
+			</div>
+			</volist>
+		</div>
+		<if condition="count($info['work_list']) gt 1">
+		<div class="more">
+			<div class="showbtn font12 ">展开信息</div>
+			<!--<div class="showbtn font12 topbtn">收起信息</div> -->
+		</div>
+		</if>
+	</div>
+</if>
+
+<if condition="$info['training_list']">
+	<div class="split-block"></div>
+	<div class="retra">
+		<div class="eattitle list_height">培训经历
+		  	<div class="ritle font12">{:count($info['training_list'])}段培训经历</div>
+		</div>
+		<div class="training-list <if condition="count($info['training_list']) gt 1">desc</if>">
+		<volist name="info['training_list']" id="vo">
+			<div class="works <if condition="$key eq count($info['training_list'])-1">last</if>">
+		  		<div class="cname substring">{$vo['agency']}<span class="font13">[{$vo['duration']}]</span></div>
+		  		<div class="jname substring font13">
+					<span>
+						{$vo['startyear']}.{$vo['startmonth']}
+						<eq name="vo['todate']" value="1">
+						 至今
+						<else />
+						 - {$vo['endyear']}.{$vo['endmonth']}
+						</eq> | {$vo['course']}
+			  		</span>
+				</div>
+		  		<div class="wtxt font13">{$vo['description']}</div>
+			</div>
+		</volist>
+		</div>
+		<if condition="count($info['training_list']) gt 1">
+		<div class="more">
+			<div class="showbtn font12 ">展开信息</div>
+			<!--<div class="showbtn font12 topbtn">收起信息</div> -->
+	  	</div>
+		</if>
+	</div>
+</if>
+
+<if condition="$info['credent_list']">	
+<div class="split-block"></div>
+<div class="recer">
+	<div class="eattitle list_height">获得证书
+	</div>
+	<volist name="info['credent_list']" id="vo">
+	<div class="lists">
+	  <div class="cname">{$vo['name']}<span>{$vo['year']}年{$vo['month']}月获得</span></div>
+	</div>	
+	</volist>	
+</div>
+</if>
+
+<if condition="$info['language_list']">
+<div class="split-block"></div>
+<div class="relang">
+	<div class="eattitle list_height">语言能力</div>
+	<div class="tagul">
+	<volist name="info['language_list']" id="vo">
+    <div class="tagli">{$vo['language_cn']}<span>{$vo['level_cn']}</span></div>
+    </volist>
+	<div class="clear"></div>
+  </div>
+</div>
+</if>
+
+<if condition="$info['img_list']">
+<div class="split-block"></div>
+<div class="reimg">
+  <div class="eattitle list_height">照片作品</div> 
+  <div class="scrollbox">
+  	<volist name="info['img_list']" id="vo">
+	  <div class="imgbox"><img src="{$vo['img']}"></div>
+	</volist>
+  </div>
+</div>
+</if>
+
+<if condition="$info['comment_content']">
+<div class="split-block"></div>
+<div class="recomment">
+  <div class="eattitle list_height">网站客服点评</div> 
+  <div class="txt">{$info['comment_content']}</div>
+</div>
+</if>
+
+<eq name="info['preview']" value="0">
+<div class="split-block-footnav"></div>
+<div class="refootnav">
+	<div class="btns link_gray6">
+      <if condition="$info['show_contact']">
+        <a  class="tel font9" href="tel:{$info['telephone_']}"  <if condition="!$info['show_contact']">type="1"</if>>
+            <img src="../public/images/280.png"><br>电话
+        </a>
+	  <else />	
+	   <a href="javascript:;" id="J_tel" utype="{$visitor.utype}" class=" tel font9 hide_tel" <if condition="!$info['show_contact']">type="1"</if>><img src="../public/images/280.png"><br>电话</a>
+	  </if>
+		<if condition="$rong_state eq 1">
+		<a href="{:U('Im/message',array('id'=>$info['id'],'uid'=>$info['uid']))}" id="J_im_btn" utype="{$visitor.utype}" class=" im font9 hide_tel" <if condition="!$info['show_contact']">type="1"</if>><img src="../public/images/306.png"><br>在线</a>
+		</if>
+		<div style="display:none">
+			<input type="hidden" class="label_img_1_0" value="../public/images/212.png">
+			<input type="hidden" class="label_img_1_1" value="../public/images/213.png">
+			<input type="hidden" class="label_img_1_2" value="../public/images/216.png">
+			<input type="hidden" class="label_img_1_3" value="../public/images/215.png">
+			<input type="hidden" class="label_img_2_0" value="../public/images/212.png">
+			<input type="hidden" class="label_img_2_1" value="../public/images/213.png">
+			<input type="hidden" class="label_img_2_2" value="../public/images/215.png">
+			<input type="hidden" class="label_img_2_3" value="../public/images/214.png">
+			<input type="hidden" class="label_img_2_4" value="../public/images/216.png">
+		</div>
+        <if condition="$info['label_resume']">
+		    <div class="fov font9 label_resume">
+                <if condition="!$info['label_id']"><img class="label_img" src="../public/images/283.png"></if>
+                <eq name="info['label_type']" value="1">
+                    <if condition="$info['label_id'] eq 1"><img class="label_img" src="../public/images/213.png"></if>
+                    <if condition="$info['label_id'] eq 2"><img class="label_img" src="../public/images/216.png"></if>
+                    <if condition="$info['label_id'] eq 3"><img class="label_img" src="../public/images/215.png"></if>
+                </eq>
+                <eq name="info['label_type']" value="2">
+                    <if condition="$info['label_id'] eq 1"><img class="label_img" src="../public/images/213.png"></if>
+                    <if condition="$info['label_id'] eq 2"><img class="label_img" src="../public/images/215.png"></if>
+                    <if condition="$info['label_id'] eq 3"><img class="label_img" src="../public/images/214.png"></if>
+                    <if condition="$info['label_id'] eq 4"><img class="label_img" src="../public/images/216.png"></if>
+                </eq>
+                <br>
+                <div class="for-select">请标记</div>
+                <select label_type="{$info['label_type']}" id="J_label_resume">
+                    <option disabled value="0" <if condition="0 eq $info['label_id']">data-status="1" selected<else />data-status="0"</if>>请标记</option>
+                    <volist name="info['label_arr']" id="vo">
+                    <option value="{$key}" <if condition="$key eq $info['label_id']">data-status="1" selected<else />data-status="0"</if>>{$vo}</option>
+                    </volist>
+                </select>
+		    </div>
+		<else />
+            <div class="fov font9 favor" id="j_favor_bottom">
+                <if condition="$info['favor']">
+                    <img src="../public/images/282.png"><br>已收藏
+                <else />
+                    <img src="../public/images/281.png"><br>收藏
+                </if>
+            </div>
+		</if>
+        <if condition="$info['show_contact'] && C('visitor.utype') eq 1">
+            <div class="fto invitebtn <empty name="rong_state">width60</empty>" onClick="javascript:location.href='{:U('AjaxCompany/jobs_interview_add',array('id'=>$info['id']))}'">邀请面试</div>
+        <else/>
+            <div class="fto downbtn <empty name="rong_state">width60</empty>">下载简历</div>
+        </if>
+    </div>
+</div>
+</eq>
+<include file="public:footer_min" />
+<script src="../public/js/imageScrool.js"></script>
+<script type="text/javascript" charset="utf-8" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+var isVisitor = "{$visitor.uid}";
+var utype = "{$visitor.utype}";
+	(function(){
+	  /*
+	      注意：$.mggScrollImg返回的scrollImg对象上有
+	              next，prev，go三个方法，可以实现外部对滚动索引的控制。
+	      如：scrollImg.next();//会切换到下一张图片
+	          scrollImg.go(0);//会切换到第一张图片
+	  */
+	  var scrollImg = $.mggScrollImg('.scrollbox',{
+	          loop : true,//循环切换
+	          auto : true//自动切换
+	      });
+	  })()
+    if ($('.retag').length) {
+        // 如果有特长标签，随机变色
+        function randomsort(a, b) {
+            return Math.random()>.5 ? -1 : 1;
+        }
+        var bgArrBefore = [1,2,3,4,5,6];
+        var $jobTagDom = $('.retag').find('.tagli');
+        var bgArray = bgArrBefore.sort(randomsort);
+        $($jobTagDom).each(function (index, value) {
+            $(this).addClass('tg' + bgArray[index]);
+        })
+    }
+	$('.more').on('click',function(){
+	    var prev = $(this).prev();
+	    var child = $(this).children('.showbtn');
+	    if(prev.hasClass('desc')){
+	      prev.removeClass('desc');
+	      child.addClass('topbtn');
+	      child.html('收起信息');
+	    }else{
+	      prev.addClass('desc');
+	      child.removeClass('topbtn');
+	      child.html('展开信息');
+	    }
+	  });
+		// 加入人才库
+		$(".favor").on('click',function(){
+			var url = "{:U('AjaxCompany/resume_favor')}";
+			var rid = "{$info['id']}";
+			if ((isVisitor > 0)) {
+				if(utype != 1){
+		          qsToast({type:2,context: '请登录企业会员'});
+		          return false;
+		        }
+				$.getJSON(url,{rid:rid},function(result){
+					if(result.status==1){
+						qsToast({type:1,context: result.msg});
+						if(result.data=='has'){
+			              $('#j_favor_bottom').html('<img src="../public/images/281.png"><br>收藏');
+			              $('#j_favor').html('收藏');
+			            }else{
+			              $('#j_favor_bottom').html('<img src="../public/images/282.png"><br>已收藏');
+			              $('#j_favor').html('已收藏');
+			            }
+					} else {
+						qsToast({type:2,context: result.msg});
+						return false;
+					}
+				});
+			} else {
+				window.location.href="{:U('members/login')}";
+        		return false;
+			}
+		});
+		// 下载简历
+		$(".downbtn").on('click',function(){
+			var url = "{:U('AjaxCompany/resume_down')}";
+			var rid = "{$info['id']}";
+			if ((isVisitor > 0)) {
+				if(utype != 1){
+		          qsToast({type:2,context: '请登录企业会员'});
+		          return false;
+		        }
+				$.getJSON("{:U('AjaxCompany/resume_down_confirm')}",{rid:rid},function(data){
+					if(data.status==1){
+						var dialog = new QSpopout();
+			            dialog.setContent(data.msg);
+			            if(data.data=='no'){
+			            	dialog.setBtn(1,'确定');
+			            }
+			            else if(data.data=='mix'){
+			            	dialog.setBtn(1,'取消');
+			            }else{
+			            	dialog.getPrimaryBtn().on('click', function () {
+				                $.getJSON(url,{rid:rid},function(result){
+									if(result.status==1){
+										qsToast({type:1,context: result.msg});
+										setTimeout(function(){
+											window.location.reload();
+										},2000);
+									} else {
+										qsToast({type:2,context: result.msg});
+										return false;
+									}
+								});
+				            });
+			            }
+			            dialog.show();
+					}else{
+						qsToast({type:2,context: data.msg});
+					}
+				});
+			} else {
+				window.location.href="{:U('members/login')}";
+        		return false;
+			}
+		});
+		$("#J_label_resume").on('change',function(){
+			var thisObj = $(this);
+			var label = thisObj.val();
+			var label_type = thisObj.attr('label_type');
+			var url = "{:U('AjaxCompany/resume_label')}";
+			var resume_id = "{$info['id']}";
+			var jobs_id = "{$Think.get.jobs_id}";
+			$.getJSON(url,{resume_id:resume_id,label:label,label_type:label_type,jobs_id:jobs_id},function(result){
+				if(result.status == 1){
+					$('.label_img').attr('src',$('.label_img_'+label_type+'_'+label).val());
+					qsToast({type:1,context: result.msg});
+				}else{
+					qsToast({type:2,context: result.msg});
+					return false;
+				}
+			});
+		});
+		$('select').find('option').each(function () {
+			if (eval($(this).data('status'))) {
+				$('select').prev().text($('select').find('option').not(function(){ return !this.selected }).text());
+				return false;
+			} else {
+				$('select').prev().text('请标记');
+			}
+		});
+		$('#J_tel').on('click',function(){
+			if (!isVisitor) {
+				window.location.href="{:U('members/login')}";
+				return false;
+			}
+			if($(this).attr('utype') != 1){
+				qsToast({type:2,context: '请登录企业账号！'});
+				return false;
+			}
+			if($(this).attr('type') == 1){
+				qsToast({type:2,context: '请先下载简历！'});
+				return false;
+			}	
+		});
+		$('#J_im_btn').on('click',function(){
+			if (!isVisitor) {
+				window.location.href="{:U('members/login')}";
+				return false;
+			}
+			var uid = "{$info['uid']}";
+	        if(isVisitor == uid){
+	          qsToast({type:2,context: '不能和自已聊天'});
+	          return false;
+	        }
+			if($(this).attr('utype') != 1){
+				qsToast({type:2,context: '请登录企业账号！'});
+				return false;
+			}
+			if($(this).attr('type') == 1){
+				qsToast({type:2,context: '请先下载简历！'});
+				return false;
+			}
+		});
+		 wx.config({
+    // debug: true,
+    appId: '{$signPackage.appId}',
+    timestamp: '{$signPackage.timestamp}',
+    nonceStr: '{$signPackage.nonceStr}',
+    signature: '{$signPackage.signature}',
+    jsApiList: [
+      // 所有要调用的 API 都要加到这个列表中
+      "onMenuShareTimeline",
+      "onMenuShareAppMessage",
+      "onMenuShareQQ",
+      "onMenuShareWeibo"
+    ]
+  });
+  wx.ready(function () 
+  {
+      var linkUrl = "{:build_mobile_url(array('c'=>'Resume','a'=>'show','params'=>'id='.$info['id']))}";//放链接
+      var title = "【{$info['fullname']}简历】 - {$info['intention_jobs']} - {:C('qscms_site_name')}";
+      var desc = ""; 
+      var imgUrl="{:C('qscms_site_domain')}{:C('qscms_site_dir')}{$info['photosrc']}";//图片链接
+      
+      wx.onMenuShareTimeline({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareAppMessage({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          type: '', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareQQ({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareWeibo({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+  });
+</script>
+</body>
+</html>

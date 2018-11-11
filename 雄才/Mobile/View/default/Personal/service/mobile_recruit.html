@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../../public/css/mui.css">
+		<link rel="stylesheet" href="../../public/css/personal.css">
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav point">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">支付</h1>
+		</header>
+		<div class="mui-content personal-service">
+			<div class="residue-coin">当前剩余才币：<span class="txt-highlight">201</span><span class="mui-pull-right"><a href="">今日签到</a></span></div>
+			<div class="head">
+				<div class="title txt-highlight-blue">选择要置顶的简历</div>
+			</div>
+			<div class="pay-content">
+				<ul class="mui-table-view">
+			        <li class="mui-table-view-cell">
+						<a class="mui-navigate-right">所属行业 <i class="mui-pull-right update normal">我的默认简历名</i></a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a class="mui-navigate-right">所属行业 <i class="mui-pull-right update normal">3天 <span class="txt-highlight">（200才币）</span></i></a>
+					</li>
+				</ul>
+				<ul class="mui-table-view mar-top">
+			        <li class="mui-table-view-cell mui-radio">支付方式
+			        	<div class="label-box">
+							<label class="pay-type "><input class="switch-pay-type" name="radio1" type="radio" checked>才币支付</label>
+							<label class="pay-type last"><input class="switch-pay-type" name="radio1" type="radio">现金支付</label>
+						</div>
+			        </li>
+			        <li class="mui-table-view-cell for-coin">所需才币<span class="pay-price"><span class="highlight">4990</span></span></li>
+			        <li class="mui-table-view-cell for-cash">才币抵扣<span class="pay-price tips">当前共有 201 才币</span></li>
+			        <li class="mui-table-view-cell for-cash">应付金额<span class="pay-price"><span class="highlight">499</span> 元</span></li>
+				</ul>
+				<div class="pay-bysome for-cash">
+					<div class="mui-card">
+						<form class="mui-input-group">
+							<div class="mui-input-row mui-radio">
+								<label class="mui-clearfix">
+									<div class="pay-icon"></div>
+									<div class="pay-bysome-name">
+										<div class="by-title">微信支付</div>
+										<div class="by-remind font12">推荐已在微信中绑定银行卡的用户使用</div>
+									</div>
+								</label>
+								<input name="radio1" type="radio" checked>
+							</div>
+							<div class="mui-input-row mui-radio">
+								<label class="mui-clearfix">
+									<div class="pay-icon"></div>
+									<div class="pay-bysome-name">
+										<div class="by-title">支付宝支付</div>
+										<div class="by-remind font12">推荐已下载支付宝客户端的用户使用</div>
+									</div>
+								</label>
+								<input name="radio1" type="radio">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="mui-content-padded">
+				<button id="getPwdByMobile" class="mui-btn mui-btn-block mui-btn-primary">立即支付</button>
+			</div>
+		</div>
+		<script src="../../public/js/mui.min.js"></script>
+		<script src="../../public/js/zepto.min.js"></script>
+		<script>
+			$('.switch-pay-type').on('click', function(event) {
+				var indexValue = $('.switch-pay-type').index(this);
+				if (indexValue) {
+					$('.for-cash').show();
+					$('.for-coin').hide();
+				} else {
+					$('.for-coin').show();
+					$('.for-cash').hide();
+				}
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/company.css">
+    <qscms:load type="category"/>
+</head>
+<body>
+    <include file="public:header"/>
+    <form id="form1" action="{:U('Company/set_allowance_job_save')}" method="post">
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">职位名称</div>
+        <div class="describe font13 qs-relative">
+            <div class="for-select">{$jobs_info['jobs_name']}</div>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">打赏方式</div>
+        <div class="describe font13 qs-relative">
+            <div class="for-select">投递红包</div>
+            <select id="type_alias" name="type_alias">
+                <option value="apply" selected>投递红包</option>
+                <option value="interview" >面试红包</option>
+                <option value="entry" >入职红包</option>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="split-block"></div>
+    <div class="ptitle border">
+        <div class="th1">打赏设置</div>
+    </div>
+    <div class="list_height plist-txt notarrow des-af-txt">
+        <div class="pic"></div>
+        <div class="tit font14">每个红包金额</div>
+        <div class="describe"><input type="text" id="per_amount" name="per_amount" placeholder="" value="" class="font13"></div>
+        <div class="daf-t">元</div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt notarrow des-af-txt">
+        <div class="pic"></div>
+        <div class="tit font14">红包总数</div>
+        <div class="describe"><input type="text" id="total_num" name="total_num" placeholder="" value="" class="font13"></div>
+        <div class="daf-t">个</div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="gray-bg-remind font12">提示：简历要求太高收到的简历越少，请合理选择！</div>
+    <div class="ptitle border">
+        <div class="th1">简历要求</div>
+        <div class="rtxt link_yellow"><a>符合条件的简历才能领取</a></div>
+    </div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">简历完整度</div>
+        <div class="describe font13 qs-relative">
+            <div class="for-select">请选择完整度</div>
+            <select id="complete_percent" name="complete_percent">
+                <option value="0" selected>不限</option>
+                <option value="35" >35</option>
+                <option value="50" >50</option>
+                <option value="65" >65</option>
+                <option value="80" >80</option>
+                <option value="100" >100</option>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt js-actionParent">
+        <div class="pic"></div>
+        <div class="tit font14">学历要求</div>
+        <div class="describe font13 qs-relative qs-temp-level-alw js-showActionSheet" data-type="education" data-base="QS_education" data-multiple="true" data-num="100" data-link="false">
+            <span class="qs-temp-txt-education" data-otxt="不限">不限</span>
+            <input class="qs-temp-code-education" type="hidden" name="education" value="">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+        <!--BEGIN actionSheet-->
+        <div>
+            <div class="qs-mask" style="display: none"></div>
+            <div class="qs-actionsheet js-actionsheet">
+                <div class="qs-actionsheet-menu">
+                    <div class="con-filter mul">
+                        <div class="f-selected-group f-selected-group-education">
+                            <div class="s-bar">
+                                <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-gray qs-left js-cancelActionSheet">取消</div>
+                                <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet" id="qs-temp-confirm-education">确定</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="s-list qs-hidden"></div>
+                        </div>
+                        <div class="f-box f-box-education"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="list_height plist-txt js-actionParent">
+        <div class="pic"></div>
+        <div class="tit font14">工作经验要求</div>
+        <div class="describe font13 qs-relative qs-temp-level-alw js-showActionSheet" data-type="experience" data-base="QS_experience" data-multiple="true" data-num="100" data-link="false">
+            <span class="qs-temp-txt-experience" data-otxt="不限">不限</span>
+            <input class="qs-temp-code-experience" type="hidden" name="experience" value="">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+        <!--BEGIN actionSheet-->
+        <div>
+            <div class="qs-mask" style="display: none"></div>
+            <div class="qs-actionsheet js-actionsheet">
+                <div class="qs-actionsheet-menu">
+                    <div class="con-filter mul">
+                        <div class="f-selected-group f-selected-group-experience">
+                            <div class="s-bar">
+                                <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-gray qs-left js-cancelActionSheet">取消</div>
+                                <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet" id="qs-temp-confirm-experience">确定</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="s-list qs-hidden"></div>
+                        </div>
+                        <div class="f-box f-box-experience"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="list_height plist-txt js-actionParent">
+        <div class="pic"></div>
+        <div class="tit font14">允许意向职位</div>
+        <div class="describe font13 qs-temp js-showActionSheet" data-type="jobs" data-base="QS_jobs_parent" data-source="QS_jobs" data-multiple="true" data-num="5" data-link="false" data-level="{:C('qscms_category_jobs_level')}">
+           <span class="qs-temp-txt-jobs" data-otxt="请选择意向职位">不限</span>
+            <input class="qs-temp-code-jobs" name="intention_jobs" id="intention_jobs" type="hidden" value="" />
+        </div>
+         <div class="arrow"></div>
+         <div class="clear"></div>
+        <!--BEGIN actionSheet-->
+        <div>
+            <div class="qs-mask" style="display: none"></div>
+            <div class="qs-actionsheet js-actionsheet">
+                <div class="qs-actionsheet-menu">
+                    <div class="con-filter mul">
+                        <div class="f-selected-group f-selected-group-jobs">
+                            <div class="s-bar">
+                                <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-gray qs-left js-cancelActionSheet">取消</div>
+                                <div class="qs-left mul-txt font12">多选，最多 5 项</div>
+                                <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet" id="qs-temp-confirm-jobs">确定</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="s-list qs-hidden"></div>
+                        </div>
+                        <div class="f-box f-box-jobs"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="split-block"></div>
+    <div class="payment-list cash-pay-relation">
+        <div class="payment alipay active" data-type="alipay">
+            <div class="pic alipay"></div>
+            <div class="txt">
+                <div class="payment-name font14">支付宝支付</div>
+                <div class="payment-intro font12 font_gray9">推荐已下载支付宝客户端的用户使用</div>
+            </div>
+            <div class="radio active"></div>
+        </div>
+        <if condition="$is_weixin">
+        <div class="payment wxpay last" data-type="wxpay">
+            <div class="pic wxpay"></div>
+            <div class="txt">
+                <div class="payment-name font14">微信支付</div>
+                <div class="payment-intro font12 font_gray9">推荐已在微信中绑定银行卡的用户使用</div>
+            </div>
+            <div class="radio "></div>
+        </div>
+        </if>
+        <div class="clear"></div>
+    </div>
+    <input type="hidden" name="payment" id="payment" value="alipay">
+    <input type="hidden" name="jobsid" id="jobsid" value="{$jobsid}">
+    </form>
+    <div class="btn-spacing"><div class="qs-btn qs-btn-blue font18" id="submit_pay">开启打赏</div></div>
+    <div class="btn-spacing"><div class="qs-btn qs-btn-gray font18" id="cancel_pay">取消打赏</div></div>
+    <div class="split-block"></div>
+    <include file="public:footer_min" />
+    <script src="../public/js/qsCategory.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".js-showActionSheet").on("click", function(){
+                var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+                var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+                $iosActionsheet.removeClass('qs-actionsheet-toggle');
+                $iosActionsheet.addClass('qs-actionsheet-toggle').trigger('focus');
+                $iosMask.fadeIn(200);
+                $iosMask.on('click', hideActionSheet);
+                    $(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+                    $(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+                    function hideActionSheet() {
+                        $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+                        $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+                    }
+            });
+            $('.cash-pay-relation .payment').click(function(){
+                var type = $(this).data('type');
+                $('#payment').val(type);
+                $('.cash-pay-relation .payment').removeClass('active');
+                $(this).addClass('active');
+            });
+            $('#submit_pay').click(function(){
+                var url = "{:U('Company/set_allowance_job_save')}";
+                var payment_type = $('#payment').val();
+                var per_amount = $.trim($('#per_amount').val());
+                if(per_amount=='' || per_amount==0){
+                    qsToast({type:2,context: '请填写红包金额'});
+                    return false;
+                }
+                var total_num = $.trim($('#total_num').val());
+                if(total_num=='' || total_num==0){
+                    qsToast({type:2,context: '请填写红包数量'});
+                    return false;
+                }
+                $.post(url,$('#form1').serialize(),function(result){
+                    if(result.status==1){
+                        location.href=result.data;
+                    }else{
+                        qsToast({type:2,context: result.msg});
+                        return false;
+                    }
+                },'json');
+            });
+            $('#cancel_pay').click(function(){
+                location.href="{:U('Company/jobs_list')}";
+            });
+        });
+    </script>
+</body>
+</html>

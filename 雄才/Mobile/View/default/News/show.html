@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<qscms:news_show 列表名="info" 资讯id="$_GET['id']" />
+    <include file="public:meta" />
+    <link rel="stylesheet" href="../public/css/news.css">
+</head>
+<body>
+<assign name="page_seo['header_title']" value="$info['title']"/>
+<include file="public:header" />
+<div class="news-show">
+    <h1 class="font18">{$info['title']}</h1>
+    <div class="attribute font13">
+        <qscms:news_property 列表名="property" 分类id="$info['focos']" />
+        <div class="category">分类: {$property['categoryname']}</div>
+        <div class="pic page-views" id="clicknum"></div>
+        <div class="pic time">{:date('Y-m-d',$info['addtime'])}</div>
+        <div class="clear"></div>
+    </div>
+    <div class="content link_blue">{$info['content']}</div>
+</div>
+<div class="list-split-block"></div>
+<include file="public:footer_min" />
+<script type="text/javascript" charset="utf-8" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+    $.getJSON("{:U('AjaxCommon/news_click')}",{id:"{$info['id']}"},function(result){
+        if(result.status==1){
+            $("#clicknum").html(result.data);
+        }
+    });
+    wx.config({
+    // debug: true,
+    appId: '{$signPackage.appId}',
+    timestamp: '{$signPackage.timestamp}',
+    nonceStr: '{$signPackage.nonceStr}',
+    signature: '{$signPackage.signature}',
+    jsApiList: [
+      // 所有要调用的 API 都要加到这个列表中
+      "onMenuShareTimeline",
+      "onMenuShareAppMessage",
+      "onMenuShareQQ",
+      "onMenuShareWeibo"
+    ]
+  });
+  wx.ready(function () 
+  {
+      var linkUrl = "{:build_mobile_url(array('c'=>'News','a'=>'show','params'=>'id='.$info['id']))}";//放链接
+      var title = "{$info['seo_keywords']} - {:C('qscms_site_name')}";
+      var desc = ""; 
+      var imgUrl="{:C('qscms_site_domain')}{$info['img']}";//图片链接
+      
+      wx.onMenuShareTimeline({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          success: function () { 
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareAppMessage({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          type: '', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () { 
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareQQ({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareWeibo({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/store.css">
+</head>
+<body>
+<assign name="page_seo['header_title']" value="$info['title']"/>
+<include file="public:header"/>
+<div class="job-show-top">
+  <div class="job-name">
+      <div class="td-j-name substring font18">{$info['title']}</div>
+      <div class="clear"></div>
+  </div>
+  <div class="wage font14">{$info['rent']}元/月</div>
+  <div class="city font12">{$info['district_cn']}</div>
+  <div class="time font12">{:date('Y-m-d',$info['refreshtime'])}</div>
+</div>
+
+<if condition="$info['tag']">
+    <div class="split-block"></div>
+        <div class="jobsshowtag font14">
+        <div class="tagul">
+            <volist name="info['tag']" id="tag">
+                <div class="tagli substring tg{$key+1}">{$tag}</div>
+            </volist>
+            <div class="clear"></div>
+        </div>
+    </div>
+</if>
+
+<div class="split-block"></div>
+<div class="job-show-base">
+    <div class="base-title list_height">基本信息</div>
+    <div class="info-box">
+        <div class="item substring">店铺名称：{$info['store_name']}</div>
+        <div class="item half substring">物业类型：{$info['category_cn']}</div>
+        <div class="item half substring">使用面积：{$info['area']}㎡</div>
+        <div class="item half substring">转让费：<empty name="info.fee">无<else/>{$info['fee']}元</empty></div>
+        <div class="item half substring">当前经营：<empty name="info.engagein_cn">无<else/>{$info['engagein_cn']}</empty></div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<if condition="$img">
+    <div class="split-block"></div>
+    <div class="comshowimg">
+        <div class="eattitle list_height">店铺图片</div>
+        <div class="scrollbox">
+            <volist name="img" id="vo">
+                <div class="imgbox"><img src="{:attach($vo['img'],'storetransfer')}"></div>
+            </volist>
+        </div>
+        <div class="clear"></div>
+    </div>
+</if>
+
+<div class="split-block"></div>
+<div class="job-show-contact">
+    <div class="contact-title list_height">联系方式</div>
+    <div class="mob">{$info['show_mobile']}（{$info['contact']}）</div>
+    <div class="map link_blue">{$info['address']}<!-- <a class="show-map" href="#map">[地图]</a>--></div>
+    <div class="tip font12">签约前切勿付订金、押金、租金等一切费用！</div>
+</div>
+
+<notempty name="recommend">
+    <div class="split-block"></div>
+    <div class="job-show-rec">
+        <div class="rec-title list_height">推荐信息
+            <div class="right font12 link_gray9"><a href="{:U('Storetransfer/index')}">查看更多></a></div>
+        </div>
+        <volist name="recommend" id="vo">
+            <div class="jobs-list">
+                <div class="jname font15 link_gray6 substring"><a href="{:U('Storetransfer/show',array('id'=>$vo['id']))}">{$vo['title']}</a></div>
+                <div class="cate font12 substring">{$vo['category_cn']}| {$vo['district_cn']}</div>
+                <div class="wage font13">{$vo['rent']}元/月</div>
+                <div class="time font12">{:date('Y-m-d',$vo['refreshtime'])}</div>
+            </div>
+        </volist>
+    </div>
+</notempty>
+<div class="job-show-bottom-so link_blue">没有找到满意的信息? <a href="{:U('Storetransfer/index')}">立即搜索</a></div>
+
+<div class="split-block-foot-nav"></div>
+<div class="job-foot-nav">
+    <div class="btns link_gray6">
+        <div class="share font9 favor rent"><img src="../public/images/297.png"><br>分享</div>
+        <a href="tel:{$info['mobile']}" class="apply rent">拨打电话</a>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="alw-layer"></div>
+<div class="alw-wx-layer"></div>
+<include file="public:footer_min" />
+<script src="../public/js/popWin.js"></script>
+<script src="../public/js/imageScrool.js"></script>
+<script type="text/javascript" charset="utf-8" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+    /* 显示分享 覆盖层 */
+    function share() {
+        $(".alw-wx-layer").show();
+    }
+    function share_() {
+        $(".alw-layer").show();
+    }
+    //分享按钮
+    $('.share').on('click', function () {
+        var agent = navigator.userAgent.toLowerCase();
+        if (agent.indexOf('micromessenger') < 0) {
+            share_();
+        } else {
+            share();
+        }
+    });
+    $(".alw-layer, .alw-wx-layer").on("click", function () {
+        $(this).hide();
+    });
+    (function(){
+        /*
+         注意：$.mggScrollImg返回的scrollImg对象上有
+         next，prev，go三个方法，可以实现外部对滚动索引的控制。
+         如：scrollImg.next();//会切换到下一张图片
+         scrollImg.go(0);//会切换到第一张图片
+         */
+        var scrollImg = $.mggScrollImg('.scrollbox',{
+            loop : true,//循环切换
+            auto : true//自动切换
+        });
+    })();
+    wx.config({
+        // debug: true,
+        appId: '{$signPackage.appId}',
+        timestamp: '{$signPackage.timestamp}',
+        nonceStr: '{$signPackage.nonceStr}',
+        signature: '{$signPackage.signature}',
+        jsApiList: [
+            // 所有要调用的 API 都要加到这个列表中
+            "onMenuShareTimeline",
+            "onMenuShareAppMessage",
+            "onMenuShareQQ",
+            "onMenuShareWeibo"
+        ]
+    });
+    wx.ready(function () {
+        var linkUrl = "{:build_mobile_url(array('c'=>'Storetransfer','a'=>'show','params'=>'id='.$info['id']))}";//放链接
+        var title = "【转让】{$info['district_cn']}{$info['area']}㎡{$info['category_cn']}旺铺正在转租，低至{$info['rent']}元/月";
+        var desc = "{$info['store_name']}，{$info['contact']}，{$info['mobile']}";
+        var imgUrl = "";
+        //图片链接
+        wx.onMenuShareTimeline({
+            title: title, // 分享标题
+            desc: desc, // 分享描述
+            link: linkUrl, // 分享链接
+            imgUrl: imgUrl, // 分享图标
+            success: function () {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+        wx.onMenuShareAppMessage({
+            title: title, // 分享标题
+            desc: desc, // 分享描述
+            link: linkUrl, // 分享链接
+            imgUrl: imgUrl, // 分享图标
+            type: '', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+        wx.onMenuShareQQ({
+            title: title, // 分享标题
+            desc: desc, // 分享描述
+            link: linkUrl, // 分享链接
+            imgUrl: imgUrl, // 分享图标
+            success: function () {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+        wx.onMenuShareWeibo({
+            title: title, // 分享标题
+            desc: desc, // 分享描述
+            link: linkUrl, // 分享链接
+            imgUrl: imgUrl, // 分享图标
+            success: function () {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+    });
+</script>
+</body>
+</html>

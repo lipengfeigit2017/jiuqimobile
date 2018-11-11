@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/members.css">
+	</head>
+	<body>
+		<include file="public:header" />
+        <div class="choose-type-title qs-center font18">请选择登录身份</div>
+        <div class="choose-type-group qs-center">
+            <a href="{:U('members/personal_add',array('utype'=>2,'incode'=>$_GET['incode'],'mobile'=>$_GET['mobile']))}" class="t-cell qs-left">
+                <div class="img-box per"><div class="img"></div></div>
+                <p class="qs-txt-orange font16">个人登录</p>
+            </a>
+            <a href="{:U('members/company_add',array('utype'=>1,'incode'=>$_GET['incode'],'mobile'=>$_GET['mobile']))}" class="t-cell qs-left">
+                <div class="img-box com"><div class="img"></div></div>
+                <p class="qs-txt-blue font16">企业登录</p>
+            </a>
+            <div class="clear"></div>
+        </div>
+        <div class="choose-info qs-center">
+            <div class="qs-txt-blue">本地区优秀人力资源服务机构</div>
+            <div class="font12">客户服务热线：{:C('qscms_bootom_tel')}</div>
+        </div>
+		<include file="public:footer" />
+        <include file="public:footer_min" />
+	</body>
+</html>

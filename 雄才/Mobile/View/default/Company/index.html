@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/company.css">
+</head>
+<body>
+<include file="public:header"/>
+
+<div class="comtop">
+    <div class="leftpic">
+        <div class="pic">
+            <img src="<if condition=" $company_profile['logo']">{:attach($company_profile['logo'],'company_logo')}<else/>{:attach('no_logo_mob.png','resource')}</if>?{:time()}" border="0" onclick="javascript:location.href='{:U('Company/com_info')}'"/>
+        </div>
+    </div>
+    <div class="rcomtxt">
+        <div class="cname font16 substring">{$company_profile.companyname}</div>
+        <div class=" gold font12 link_blue">我的{:C('qscms_points_byname')}: <span>{$points}</span><a
+                href="{:U('CompanyService/gold_task')}">做任务，赚{:C('qscms_points_byname')}</a></div>
+        <if condition="$company_profile['audit'] neq 1">
+            <div class="audit font12 link_gray9">
+                <a href="{:U('Company/com_auth')}">未认证，请立即认证</a>
+            </div>
+        <else/>
+            <div class="audit font12 ok" onclick="javascript:location.href='{:U('Company/com_auth')}'">企业已认证</div>
+        </if>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="combtn">
+    <div class="btns font12">
+        <div class="cli for-event" onclick="javascript:location.href='{:U('Company/jobs_apply',array('stop'=>1))}'">
+            <div class="pic t1">
+                <if condition="$is_apply eq 1">
+                    <div class="redtip"></div>
+                </if>
+            </div>
+            <div class="txt">收到的简历</div>
+        </div>
+        <div class="cli for-event" onclick="javascript:location.href='{:U('Company/jobs_interview',array('stop'=>1))}'">
+            <div class="pic t2"></div>
+            <div class="txt">面试邀请</div>
+        </div>
+        <div class="cli for-event" onclick="javascript:location.href='{:U('Company/resume_down')}'">
+            <div class="pic t3"></div>
+            <div class="txt">已下载简历</div>
+        </div>
+        <div class="cli for-event" onclick="javascript:location.href='{:U('Company/resume_favorites')}'">
+            <div class="pic t4"></div>
+            <div class="txt">收藏的简历</div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+
+<div class="split-block"></div>
+
+<div class="combtnx4">
+    <div class="btns font15">
+        <div class="cli t1" id="J_jobs_add">发布职位</div>
+        <div class="cli t2" onclick="javascript:location.href='{:url_rewrite('QS_resumelist')}'">搜索简历</div>
+        <div id="refresh_jobs" class="cli t3">刷新职位</div>
+        <div class="cli t4" onclick="javascript:location.href='{:U('Company/jobs_list')}'">管理职位</div>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="split-block"></div>
+
+
+<div class="mymeat">
+
+    <div class="eattitle list_height">我的套餐：{$setmeal.setmeal_name}<span>（<eq name="setmeal['endtime']" value="0">无限期<else/>{:date('Y-m-d',$setmeal['endtime'])} 到期</eq>）</span>
+    </div>
+
+    <div class="btns font12">
+        <div class="cli for-event" onclick="javascript:location.href='{:U('CompanyService/gold')}'">
+            <div class="pic t1"></div>
+            <div class="txt">我的积分</div>
+        </div>
+        <div class="cli for-event" onclick="javascript:location.href='{:U('CompanyService/index')}'">
+            <div class="pic t2"></div>
+            <div class="txt">我的套餐</div>
+        </div>
+        <div class="cli for-event" onclick="javascript:location.href='{:U('CompanyService/service')}'">
+            <div class="pic t3"></div>
+            <div class="txt">增值服务</div>
+        </div>
+        <div class="cli for-event" onclick="javascript:location.href='{:U('CompanyService/order_list')}'">
+            <div class="pic t4"></div>
+            <div class="txt">我的订单</div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+
+</div>
+
+
+<div class="split-block"></div>
+
+<if condition="C('apply.Allowance')">
+<div class="list_height plist-img" onclick="javascript:location.href='{:U('Company/allowance')}'">
+    <div class="pic t-alw"></div>
+    <div class="tit font14">我的打赏</div>
+    <div class="describe font12">红包职位申请记录</div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+</if>
+<div class="list_height plist-img" onclick="javascript:location.href='{:U('Company/com')}'">
+    <div class="pic t1"></div>
+    <div class="tit font14">企业管理</div>
+    <div class="describe font12">基本资料、企业认证</div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+<div class="list_height plist-img" onclick="javascript:location.href='{:U('Wzp/com',array('id'=>$company_profile['id']))}'">
+    <div class="pic t2"></div>
+    <div class="tit font14">微信招聘</div>
+    <div class="describe font12">专属H5招聘页</div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+<if condition="C('apply.Jobfair')">
+<div class="list_height plist-img" onclick="javascript:location.href='{:U('Company/jobfair_list')}'">
+    <div class="pic t6"></div>
+    <div class="tit font14">招聘会</div>
+    <div class="describe font12">我的招聘会</div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+</if>
+<div class="list_height plist-img" onclick="javascript:location.href='{:U('Company/pms_list',array('type'=>1))}'">
+    <div class="pic t3"></div>
+    <div class="tit font14">求职者咨询</div>
+    <div class="describe font12">求职者的留言及系统消息</div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+<div class="list_height plist-img" onclick="javascript:location.href='{:U('Company/feedback')}'">
+    <div class="pic t4"></div>
+    <div class="tit font14">
+            意见反馈
+    </div>
+    <div class="describe font12">我们非常看重您的建议</div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+<div class="list_height plist-img last notarrow" onclick="javascript:location.href='tel:<notempty name='consultant.mobile'>{$consultant.mobile}<else/>{$consultant.tel}</notempty>'">
+    <div class="pic t5"></div>
+    <div class="tit font14">专属客服</div>
+        <div class="describe font12 link_blue">
+            <a class="no-bottom-line" href="javascript:void(0);">
+                <notempty name='consultant.mobile'>{$consultant.mobile}<else/>{$consultant.tel}</notempty>
+            </a>
+        </div>
+    <div class="arrow"></div>
+    <div class="clear"></div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="loginout list_height font14 for-event" id="logout">
+    <a>退出登录</a>
+</div>
+<div class="split-block"></div>
+<include file="public:footer_min" />
+
+<script type="text/javascript">
+    $('#logout').on('click', function () {
+        var dialog = new QSpopout();
+        dialog.setContent('确定退出吗？');
+        dialog.show();
+        dialog.getPrimaryBtn().on('click', function () {
+            window.location.href = "{:U('Members/logout')}";
+        });
+    });
+    $('#refresh_jobs').on('click', function () {
+        $.getJSON("{:U('Company/jobs_refresh_all')}", function (result) {
+            if(result.status==1){
+                qsToast({type:1,context: result.msg});
+            }
+            else if(result.status==2){
+                var dialog = new QSpopout('批量刷新职位');
+                dialog.setContent(result.msg);
+                dialog.setBtn(2, ['取消', '单条刷新']);
+                dialog.show();
+                dialog.getPrimaryBtn().on('click', function () {
+                    window.location.href = "{:U('company/jobs_list')}";
+                });
+            }else{
+                qsToast({type:2,context: result.msg});
+                return false;
+            }
+        });
+    });
+    $('#J_jobs_add').on('click',function(){
+        $.getJSON("{:U('Company/check_jobs_num')}",function(result){
+            if(result.status == 1){
+                var dialog = new QSpopout();
+                var free = parseInt("{$setmeal['is_free']}");
+                if(free==1){
+                    dialog.setContent('<div class="dialog_notice">您当前是免费会员，发布中的职位数已达到最大限制，升级VIP会员后可继续发布职位，建议您立即升级VIP会员！</div>');
+                }else{
+                    dialog.setContent('<div class="dialog_notice">当前显示的职位已达到最大限制，建议您立即升级服务套餐或将暂时不招聘的职位设为关闭！</div>');
+                }
+                
+                dialog.show();
+                dialog.setBtn(2, ['取消', '升级套餐']);
+                dialog.getPrimaryBtn().on('click', function () {
+                    window.location.href = "{:U('CompanyService/setmeal_add')}";
+                });
+            }else{
+                window.location.href='{:U("Company/jobs_add")}';
+            }
+        });
+    });
+</script>
+</body>
+</html>

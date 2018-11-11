@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta" />
+    <link rel="stylesheet" href="../public/css/members.css">
+</head>
+<body>
+<include file="public:header" />
+<div class="set-success-tip-box qs-center">
+    <div class="set-success-tip font16">注册邮件发送成功！</div>
+</div>
+<div class="qs-center font13 txt-color-9 mt2">邮件已发送至您的邮箱：{$user.email}</div>
+<div class="qs-center font13 txt-color-9 mt2">注册邮件24小时内有效，请尽快登录激活</div>
+<div class="btn-spacing mt10"><a href="http://mail.{:ltrim(strstr($user['email'],'@'),'@')}" class="qs-btn qs-btn-blue font18">登录邮箱，激活账号</a></div>
+<include file="public:footer" />
+<include file="public:footer_min" />
+</body>
+</html>

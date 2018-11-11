@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+     <include file="public:header" />
+	<div class="my-points-top">
+		<div class="icon"><img src="../public/images/49.png"></div>
+		<div class="text"><span class="font20 my_points_num">{$my_points}</span>{:C('qscms_points_byname')}<br /><a href="{:U('gold_log')}">收支明细></a></div>
+		<div class="btn"><div class="points-add font16" id="J_sign_in"><if condition="$issign">已签到<else/>签到</if></div></div>
+	</div>
+	<div class="ptitle border my-points-explain">
+      <div class="th1">{:C('qscms_points_byname')}说明</div>
+      	<div class="text">
+		  {:C('qscms_points_byname')}是{:C('qscms_site_name')}特有的虚拟货币，拥有{:C('qscms_points_byname')}你可以在购买招聘增值服务消费时进行现金抵扣，或者直接在{:C('qscms_points_byname')}商城兑换礼品
+		</div>
+    </div>
+    <div class="split-block"></div>
+	<div class="list_height plist-img my-points-center-btn" onclick="javascript:location.href='{:U('gold_task')}'">
+	  <div class="pic t1"></div>
+	  <div class="tit font14">做任务免费得{:C('qscms_points_byname')}</div>
+	  <div class="describe"></div>
+	  <div class="arrow"></div>
+	  <div class="clear"></div>
+	</div>
+	<if condition="C('qscms_enable_com_buy_points') eq 1">
+	<div class="list_height plist-img last my-points-center-btn" onclick="javascript:location.href='{:U('gold_add')}'">
+	  <div class="pic t2"></div>
+	  <div class="tit font14">{:C('qscms_points_byname')}充值</div>
+	  <div class="describe"></div>
+	  <div class="arrow"></div>
+	  <div class="clear"></div>
+	</div>
+	</if>
+    <div class="split-block"></div>
+	<div class="ptitle border">
+      <div class="th1">使用{:C('qscms_points_byname')}</div>
+    </div>
+    <div class="list_height plist-img my-points-use">
+	  <div class="pic t1"></div>
+	  <div class="tit font14">
+		<p class="text1">增值服务</p>
+		<p class="text2 font_gray9">购买简历、短信包抵现</p>
+	  </div>
+	  <div class="describe" onclick="javascript:location.href='{:U('service')}'">
+	  	<div class="btn font_blue">去兑换</div>
+	  </div>
+	  <div class="clear"></div>
+	</div>
+	<notempty name="apply['Mall']">
+    <div class="list_height plist-img my-points-use last">
+	  <div class="pic t2"></div>
+	  <div class="tit font14">
+		<p class="text1">{:C('qscms_points_byname')}商城</p>
+		<p class="text2 font_gray9">购买简历、短信包抵现</p>
+	  </div>
+	  <div class="describe" onclick="javascript:location.href='{:U('Mall/index')}'">
+	  	<div class="btn font_blue">去兑换</div>
+	  </div>
+	  <div class="clear"></div>
+	</div>
+	</notempty>
+     <include file="public:footer_min" />
+     <script type="text/javascript">
+     	$('#J_sign_in').click(function(){
+			var f = $(this);
+	    	$.getJSON("{:U('Members/sign_in')}",function(result){
+	    		if(result.status == 1){
+	    			qsToast({type:1,context: '每天签到增加'+result.data+'{:C('qscms_points_byname')}'});
+					f.text('已签到');
+	    			$(".my_points_num").html(parseInt($(".my_points_num").html())+parseInt(result.data));
+	    		}else{
+	    			qsToast({type:2,context: result.msg});
+	    		}
+	    	});
+	    });
+     </script>
+	</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>登录</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="red">
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="js/mui.min.js"></script>
+
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+	</head>
+	<style>
+	.model-1 .checkbox input:checked + label {background: #009ef0;}
+	.model-1 .checkbox input:checked + label:after {background: #009ef0;}
+	input[type=password],input[type=text],textarea
+	{
+	padding: 0px 0px;
+	}
+	</style>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#eye").click(function(){
+				let currentStyle = $("#eye").attr('class');
+				if(currentStyle == "mui-icon mui-icon-eye mui-active"){
+					$("#eye").css("class","mui-icon mui-icon-eye");
+				}else{
+					$("#eye").css('class','mui-icon mui-icon-eye mui-active');
+				}
+			});
+			$("#back").click(function () {
+				window.location = "home.html";
+        	});
+			$("#submit").click(function () {
+				window.location = "person.html";
+        	});
+		});
+		
+	</script>
+	<body style="background-color: #FFFFFF;">
+		<header class="mui-bar mui-bar-nav">
+			<a id="back" class="mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">招聘</h1>
+		</header>
+		
+		<div class="mui-content" style="margin-top: 45px;background-color: #FFFFFF;">	
+			<div class="mui-collapse-content">
+				<font color="red" style="font-weight: bold;font-size: 24;margin-left: 10px;">会员登录</font>
+			</div>
+			<div class="mui-input-row" style="margin-top: 20px; padding: 10px;">
+				<h5><font color="red">用户名*</font></h5>
+				<input type="text" placeholder="用户名" />
+				<h5><font color="red">密码框*</font></h5>
+				<div class="mui-input-row mui-password">
+						<input type="password" class="mui-input-password" data-input-password="3"><span id="eye" class="mui-icon mui-icon-eye mui-active"></span>
+					</div>
+			</div>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell" style="height:40px;">	
+					<div 	class="mui-switch mui-switch-mini mui-active" >
+						<div class="mui-switch-handle"></div>
+					</div>
+					<span>自动登录</span>
+				</li>
+			</ul>
+			<footer style="margin-left: 10px;margin-right: 10px;margin-top: 30px;">
+				<button id="submit" type="button" style="padding: 10px;" class="mui-btn mui-btn-danger mui-btn-block">登录</button>
+			</footer>
+		</div>
+	</body>
+</html>

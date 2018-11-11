@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+     <include file="public:header" />
+     <div class="order-top">
+		<div class="txt">
+			 <span class="font_yellow">【0元享特权】</span>诚聘通会员专属标识、职位优先推荐特权、职位保证金随时退还！
+		</div>
+	</div>
+    <div class="split-block"></div>
+    <div class="ptitle border">
+      <div class="th1">开通诚聘通会员</div>
+    </div>
+    <div class="split-block"></div>
+    <div class="list_height plist-txt notarrow last">
+	  <div class="pic"></div>
+	  <div class="tit font14">诚聘通会员</div>
+	  <div class="describe"><span class="font_yellow">{:C('qscms_famous_company_price')}</span> 元</div>
+		<div class="arrow"></div>
+		<div class="clear"></div>
+	</div>
+    <div class="split-block"></div>
+    <div class="payment-list">
+    	<div class="payment wxpay active">
+			<div class="pic wxpay"></div>
+			<div class="txt ">
+				<div class="payment-name font14">微信支付</div>
+				<div class="payment-intro font12 font_gray9">推荐已在微信中绑定银行卡的用户使用</div>
+			</div>
+			<div class="radio active"></div>
+		</div>
+		<div class="payment alipay last">
+			<div class="pic alipay"></div>
+			<div class="txt ">
+				<div class="payment-name font14">支付宝支付</div>
+				<div class="payment-intro font12 font_gray9">推荐已下载支付宝客户端的用户使用</div>
+			</div>
+			<div class="radio"></div>
+		</div>
+		<div class="clear"></div>
+    </div>
+    <div class="split-block"></div>
+    <div class="famous-explain font12">
+    	开通诚聘通会员保障后，<span class="font_yellow">您可以随时申请全额提现，提现后将去除诚聘通会员的所有附加特权</span>；诚聘通会员开通期间，如果您向求职者收取押金等违规(或非法)行为，并经调查核实后将扣除您一定额度的名企信誉保证金赔付给求职者。
+    </div>
+	<div class="btn-spacing"><div class="qs-btn qs-btn-blue font18" id="submit_pay">提交订单</div></div>
+	<div class="split-block"></div>
+	<!--当前选择的支付方式-->
+	<input type="hidden" name="payment" id="payment" value="wxpay">
+     <include file="public:footer_min" />
+	<script type="text/javascript">
+		//选择支付方式（支付宝？微信？）
+		$('.payment-list .payment').on('click',function(){
+			$('.payment-list .payment').removeClass('active');
+			$('.payment-list .payment .radio').removeClass('active');
+			$(this).addClass('active');
+			$(this).children('.radio').addClass('active');
+			$('#payment').val($(this).hasClass('wxpay')?'wxpay':'alipay');
+		});
+		//提交订单
+		var lock = 0;
+		$('#submit_pay').on('click',function(){
+			if(!lock){
+				lock = 1;
+				var payment = $('#payment').val();
+				var url = "{:U('service_famous')}";
+				$.post(url,{payment:payment},function(result){
+					if(result.status==1){
+						location.href=result.data;
+					}else{
+						qsToast({type:2,context: result.msg});
+						lock = 0;
+						return false;
+					}
+				},'json');
+			}
+		});
+		
+	</script>
+	</body>
+</html>

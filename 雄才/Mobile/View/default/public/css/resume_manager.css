@@ -1,0 +1,239 @@
+/* 个人简历管理*/
+.split-block-title a {
+    position: relative;
+}
+
+.split-block-title a::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: .12rem solid transparent;
+    border-left: .15rem solid #FF6600;
+    border-bottom: .12rem solid transparent;
+    position: absolute;
+    right: -.20rem;
+    top: .05rem;
+}
+
+.resume {
+    background: #ffffff;
+    width: 100%;
+    border-bottom: 1px solid #f0f0f0;
+    border-top: 1px solid #f0f0f0;
+}
+
+.resume .info {
+    padding: .25rem .35rem;
+}
+
+.resume .info .line-one {
+    height: .6rem;
+    line-height: .6rem;
+}
+
+.resume .info .line-one .resume-title {
+    width: 40%;
+    float: left;
+    color: #333333;
+}
+
+.resume .info .line-one .is-default {
+    width: 30%;
+    float: left;
+}
+
+.resume .info .line-one .is-default span {
+    width: 20%;
+    background-color: #ff6600;
+    padding: .02rem .08rem;
+    border: 1px solid #ff6600;
+    border-radius: .08rem;
+    color: #ffffff;
+
+}
+
+.resume .info .line-one .resume-status {
+    float: right;
+}
+
+.resume .info .line-two {
+    height: .5rem;
+    line-height: .5rem;
+}
+
+.resume .info .line-two .privacy {
+    float: left;
+    width: 40%;
+}
+
+.resume .info .line-two .complete {
+    float: left;
+    width: 60%;
+}
+
+.resume .info .line-three {
+    height: .5rem;
+    line-height: .5rem;
+}
+
+.resume .info .line-three .down-browse {
+    float: left;
+    width: 40%;
+}
+
+.resume .info .line-three .refresh-time {
+    float: left;
+    width: 60%;
+}
+
+.resume .handler {
+    background: #f8f9fa;
+    padding: 0 .2rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.resume .handler .item {
+    width: 20%;
+    height: 1.5rem;
+    padding-top: .2rem;
+    float: left;
+}
+
+.resume .handler .item:active {
+    background: #f0f0f0;
+}
+
+.resume .handler .item:active span {
+    color: #ff6600;
+}
+
+.resume .handler .item .pic {
+    width: .6rem;
+    height: .6rem;
+    background-size: .6rem;
+    margin: 0 auto;
+    background-repeat: no-repeat;
+}
+
+.resume .handler .item .pic.refresh {
+    background-image: url(../images/115.png);
+}
+
+.resume .handler .item .pic.update {
+    background-image: url(../images/116.png);
+}
+
+.resume .handler .item .pic.preview {
+    background-image: url(../images/117.png);
+}
+
+.resume .handler .item .pic.generalize {
+    background-image: url(../images/118.png);
+}
+
+.resume .handler .item .pic.more {
+    background-image: url(../images/119.png);
+}
+
+.resume .handler .item span {
+    height: .5rem;
+    line-height: .5rem;
+    color: #666666;
+    text-align: center;
+    display: block;
+    margin-top: .1rem;
+}
+
+.resume .handler .item span.disable {
+    color: #999999;
+}
+
+.resume .handler .item span.last {
+    border: 0px;
+}
+
+/* 面试邀请、谁看过我、已申请的职位共用 */
+.list-item {
+    background: #ffffff;
+    padding-top: .2rem;
+    padding-bottom: .25rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.list-item .content {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.list-item .content .line-one {
+    height: .6rem;
+    line-height: .6rem;
+    position: relative;
+}
+
+.list-item .content .line-one .title {
+    width: 70%;
+    float: left;
+    color: #333333;
+}
+
+.list-item .content .line-one .title.no-read {
+    font-weight: bolder;
+}
+
+.list-item .content .line-one .title .red-tip {
+    position: absolute;
+    width: .22rem;
+    height: .22rem;
+    border: .04rem #FFFFFF solid;
+    border-radius: .15rem;
+    background-color: #FF0000;
+    left: -.28rem;
+    top: .16rem;
+}
+
+.list-item .content .line-one .right {
+    float: right;
+}
+
+.list-item .content .line-one .delete {
+    float: right;
+    border: 1px solid #fd8000;
+    color: #fd8000;
+    width: 1rem;
+    height: .52rem;
+    line-height: .52rem;
+    text-align: center;
+    margin-top: .04rem;
+    border-radius: .08rem;
+}
+
+.list-item .content .line-one .delete:active {
+    background: #fd8000;
+    color: #ffffff;
+}
+
+.list-item .content .line-two {
+    height: .5rem;
+    line-height: .5rem;
+}
+
+.list-item .content .line-two .left {
+    width: 70%;
+    float: left;
+}
+
+.list-item .content .line-two .right {
+    float: right;
+}
+
+.list-item .content .line-three {
+    height: .5rem;
+    line-height: .5rem;
+}
+
+.list-item .content .line-four {
+    color: #999999;
+    line-height: .4rem;
+}

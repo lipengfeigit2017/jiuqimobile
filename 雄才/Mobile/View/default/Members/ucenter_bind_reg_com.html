@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <include file="public:meta" />
+        <link rel="stylesheet" href="../public/css/members.css">
+	</head>
+	<body>
+        <include file="public:header" />
+        <div class="split-block"></div>
+        <div class="bind-top-box qs-center">
+            <img src="<if condition="$user_bind_info['keyavatar_big']">{$user_bind_info.keyavatar_big}<else/>{:attach('no_photo_male.png','resource')}</if>" alt="{$user_bind_info.username}" class="b-img">
+            <div class="b-nickname">{$user_bind_info.username}</div>
+            <div class="font12 txt-color-9">您已登录{$third_name}账号</div>
+        </div>
+        <form action="" method="post" id="registerForm">
+            <div class="split-block"></div>
+            <div class="list-group b-list-group">
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">选择身份</div>
+                    <div class="describe font12">
+                        <input class="p-radio" name="utype" type="radio" value="2" title="个人会员" onclick="window.location='{:U('members/ucenter_bind_reg',array('openid'=>$openid),true,false,true)}'" />&nbsp;&nbsp;个人会员&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input class="p-radio" name="utype" type="radio" value="1" title="企业会员" checked="checked"/>&nbsp;&nbsp;企业会员
+                    </div>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">公司名称</div>
+                    <div class="describe font12"><input type="text" name="companyname" id="companyname" placeholder="请输入公司全称"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">联系人</div>
+                    <div class="describe font12"><input type="text" name="contact" id="contact" placeholder="请输入公司联系人"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">手机号</div>
+                    <div class="describe font12"><input type="text" name="telephone" id="telephone" placeholder="请输入手机号"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt">
+                    <div class="pic"></div>
+                    <div class="tit font14">公司座机</div>
+                    <a id="#describe" data-page="landTel" class="J_tel describe font12 js-slide">请输入</a>
+                    <div class="arrow"></div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="split-block"></div>
+            <div class="list-group">
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">用户名</div>
+                    <div class="describe font12"><input type="text" name="username" id="username" placeholder="请输入用户名" value="{$user_bind_info.username}" readonly="readonly"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">邮箱</div>
+                    <div class="describe font12"><input type="text" name="email" id="email" placeholder="请输入联系邮箱" value="{$user_bind_info.email}" readonly="readonly"></div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <input name="utype" type="hidden" value="1">
+            <input type="hidden" name="reg_type" value="2">
+            <input type="hidden" name="landline_tel" id="landline_tel" value="">
+            <input name="ucenter" type="hidden" value="bind">
+            <input type="hidden" name="openid" value="{$openid}">
+            <div id="pop" style="display:none"></div>
+            <input type="hidden" id="btnCheck">
+            <input type="hidden" id="J_captcha_open" value="{:C('qscms_mobile_captcha_open')}" />
+            <input type="hidden" name="geetest_challenge" class="J_gee_cha" value="">
+            <input type="hidden" name="geetest_validate" class="J_gee_val" value="">
+            <input type="hidden" name="geetest_seccode" class="J_gee_sec" value="">
+            <div class="btn-spacing mt4"><a id="bindRegBtn" href="javascript:;" class="qs-btn qs-btn-blue font18">注册并绑定</a></div>
+        </form>
+        <input type="hidden" id="tel_first" value="">
+        <input type="hidden" id="tel_next" value="">
+        <input type="hidden" id="tel_last" value="">
+        <include file="public:footer" />
+        <include file="public:footer_min" />
+        <script src="https://static.geetest.com/static/tools/gt.js"></script>
+        <script src="../public/js/popWin.js"></script>
+        <script src="../public/js/qsCategory.js"></script>
+	</body>
+    <!--固话-->
+    <script id="telWrap" type="text/html">
+        <div class="headernavfixed">
+            <div class="headernav font18"><div class="title">固定电话<div class="return js-back"></div><div class="rbtn"></div></div></div>
+        </div>
+        <div class="split-block"></div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">区号</div>
+            <div class="describe">
+                <input type="text" id="tpl_tel_first" placeholder="请输入区号" class="font13" value="{$telarray[0]}">
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">电话号</div>
+            <div class="describe">
+                <input type="text" id="tpl_tel_next" placeholder="请输入电话号码" class="font13" value="{$telarray[1]}">
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow last">
+            <div class="pic"></div>
+            <div class="tit font14">分机号</div>
+            <div class="describe">
+                <input type="text" id="tpl_tel_last" placeholder="请输入分机号" class="font13" value="{$telarray[2]}">
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="split-block"></div>
+        <div class="btn-spacing">
+            <div id="telBtn" class="qs-btn qs-btn-blue font18" title="确定">确定</div>
+        </div>
+    </script>
+    <script>
+        // 图片验证码
+        var verifyPhoto = false;
+        // 保存固话
+        $('#saveLandLine').on('click', function() {
+            var landValue1 = $.trim($('#landline_tel_first').val());
+            var landValue2 = $.trim($('#landline_tel_next').val());
+            var landValue3 = $.trim($('#landline_tel_last').val());
+            var landValue = '';
+            if (landValue1.length) {
+                if(!inputRegValiZone(landValue1)){
+                    qsToast({type:2,context: '区号格式错误'});
+                    return false;
+                }
+                landValue += landValue1 + '-';
+            }
+            if (!landValue2.length) {
+                qsToast({type:2,context: '电话不能为空'});
+                return false;
+            }
+            if(!inputRegValiTelNext(landValue2)){
+                qsToast({type:2,context: '电话格式错误'});
+                return false;
+            }
+            landValue +=  landValue2;
+            if (landValue3.length) {
+                if (!validNumber(landValue3)) {
+                    qsToast({type:2,context: '分机号为数字'});
+                    return false;
+                }
+                if (landValue3.length > 4) {
+                    qsToast({type:2,context: '分机号1-4位数字组成'});
+                    return false;
+                }
+                landValue += '-' + landValue3;
+            }
+            if (landValue.length) {
+                $('#landline_tel').val(landValue);
+                $('.landLineText').text(landValue);
+            }
+        });
+
+        // 图片验证码
+        function verifyPhotoDialog() {
+            var verifyCodePop = new QSpopout('请输入下图中的文字或字母');
+            verifyCodePop.setContent([
+                '<div class="dia-captcha-item">',
+                '<img src="' + qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime() + '" class="dia-captcha-img">',
+                '<input type="text" name="captcha-solution" class="dia-captcha-solution font16" maxlength="10">',
+                '</div>'
+            ].join(''));
+            verifyCodePop.setBtn(1);
+            verifyCodePop.show();
+            verifyCodePop.setClose(false);
+            $('.dia-captcha-img').on('click', function() {
+                $(this).attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+            })
+            // 确定按钮事件
+            verifyCodePop.getPrimaryBtn().on('click', function () {
+                var currentPhotoVal = $.trim($('.dia-captcha-solution').val());
+                if (currentPhotoVal.length) {
+                    $.ajax({
+                        url: qscms.root + '?m=Home&c=captcha&a=captchaCode',
+                        cache: false,
+                        async: false,
+                        type: 'post',
+                        dataType: 'json',
+                        data: { postcaptcha: currentPhotoVal },
+                        success: function(result) {
+                            if (result.status) {
+                                verifyCodePop.hide();
+                                doAjax();
+                            } else {
+                                qsToast({type:2,context: '验证码输入错误'});
+                                $('.dia-captcha-img').attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+                            }
+                        }
+                    });
+                } else {
+                    $('.dia-captcha-solution').focus();
+                    qsToast({type:2,context: '请输入文字或字母'});
+                }
+            });
+        }
+
+        var captcha_open = eval($('#J_captcha_open').val());
+
+        // 注册企业会员
+        $('#bindRegBtn').on('click',function(){
+            var comnameValue = $.trim($('input[name="companyname"]').val());
+            var contactValue = $.trim($('input[name="contact"]').val());
+            var telephoneValue = $.trim($('input[name="telephone"]').val());
+            var landlineValue = $.trim($('#landline_tel').val());
+            var usernameValue = $.trim($('input[name="username"]').val());
+            var emailValue = $.trim($('input[name="email"]').val());
+            var emailpassword = $.trim($('input[name="emailpassword"]').val());
+            var emailpasswordVerify = $.trim($('input[name="emailpasswordVerify"]').val());
+            if(!comnameValue){
+                qsToast({type:2,context: '请填写公司名称'});
+                return false;
+            }
+            if(!remoteValid('companyname',comnameValue)){
+                qsToast({type:2,context: '该公司已被注册'});
+                return false;
+            }
+            if(!contactValue){
+                qsToast({type:2,context: '请填写联系人'});
+                return false;
+            }
+            if (telephoneValue) {
+                if(!inputRegValiMobile(telephoneValue)){
+                    qsToast({type:2,context: '手机号格式错误'});
+                    return false;
+                }
+                if(!remoteValid('mobile',telephoneValue)){
+                    qsToast({type:2,context: '该手机号已被注册'});
+                    return false;
+                }
+            }
+            if(!lineMobileAchoice(telephoneValue,landlineValue)){
+                qsToast({type:2,context: '公司座机和手机号至少填写一项'});
+                return false;
+            }
+            if (captcha_open) {
+                doAjax();
+            } else {
+                doAjax();
+            }
+        });
+
+        /**
+         * ajax 提交注册信息
+         */
+        function doAjax() {
+            var url = "{:U('mobile/members/register','',true,false,true)}";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: $('#registerForm').serialize(),
+                success: function (data) {
+                    if(data.status==1){
+                        window.location.href = data.data.url;
+                    }else{
+                        qsToast({type:2,context: data.msg});
+                    }
+                }
+            });
+        }
+
+        /**
+         * 验证用户名等是否重复
+         * @param validType 验证类型
+         * @param validValue 值
+         * @returns {boolean|*}
+         */
+        function remoteValid(validType, validValue){
+            var result = false;
+            $.ajax({
+                url: "{:U('mobile/members/ajax_check','',true,false,true)}",
+                cache: false,
+                async: false,
+                type: 'post',
+                dataType: 'json',
+                data: { type: validType, param: validValue },
+                success: function(json) {
+                    if (json && json.status) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                }
+            });
+            return result;
+        }
+
+        /**
+         * 手机固话至少填写一项
+         * @param mobileValue 手机号
+         * @param landLineValue 固话号
+         * @returns {boolean}
+         */
+        function lineMobileAchoice(mobileValue, landLineValue){
+            var achoice = true;
+            if (mobileValue == '' && landLineValue == '') {
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 验证固话->区号
+         * @param value 区号
+         * @returns {boolean}
+         */
+        function inputRegValiZone(value){
+            var regularZone = /^[0-9]{3}[0-9]?$/;
+            var achoice = true;
+            if (value!= "" && !regularZone.test(value)) {
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 验证固话->电话
+         * @param value 电话
+         * @returns {boolean}
+         */
+        function inputRegValiTelNext(value){
+            var regularZone = /^[0-9]{6,11}$/;
+            var achoice = true;
+            if (value!= "" && !regularZone.test(value)) {
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 验证固话->分机号
+         * @param value 分机号
+         * @returns {boolean}
+         */
+        function validNumber(value) {
+            var regularNumber = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/;
+            var achoice = true;
+            if (value!= "" && !regularNumber.test(value)) {
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 验证手机号
+         * @param value 手机号
+         * @returns {boolean}
+         */
+        function inputRegValiMobile(value){
+            var regularMobile = /^13[0-9]{9}$|14[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/;
+            var achoice = true;
+            if (value!= "" && !regularMobile.test(value)) {
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 验证用户名
+         * @param value 用户名
+         * @returns {boolean}
+         */
+        function inputRegValiUsername(value){
+            var regularUsername = /^(?=[\u4e00-\u9fa5a-zA-Z])(?!\d+)[\u4e00-\u9fa5\w.]{3,18}$/;
+            var achoice = true;
+            if (!regularUsername.test(value)) {
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 验证邮箱
+         * @param value 邮箱
+         * @returns {boolean}
+         */
+        function inputRegValiEmail(value){
+            var regularEmail = /^[_\.0-9a-zA-Z-]+[_0-9a-zA-Z-]@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,3}$/;
+            var achoice = true;
+            if (!regularEmail.test(value)) {
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 验证密码长度
+         * @param value 密码
+         * @returns {boolean}
+         */
+        function inputRegValiPassword(value){
+            achoice = true;
+            if(value.length>16 || value.length<6){
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 验证密码两次输入是否一致
+         * @param password 第一次密码
+         * @param passwordRepeat 第二次密码
+         * @returns {boolean}
+         */
+        function inputRegValiPasswordRepeat(password,passwordRepeat){
+            achoice = true;
+            if(password!=passwordRepeat){
+                achoice = false;
+            }
+            return achoice;
+        }
+        var regularTelFirst = /^[0-9]{3}[0-9]?$/; // 验证区号
+        var regularTelNext = /^[0-9]{6,11}$/; // 验证电话号码
+        var regularTelLast = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/; // 验证分机号码
+        var telWrap = $('#telWrap').html();
+        $(".J_tel").on('click', function() {
+            var $this = $(this),
+                baseTxt = $this.text();
+            popWin.init({
+                from:"right",
+                html:telWrap,
+                handle:function(a){
+                    var telfirstValue = $.trim($('#tel_first').val());
+                    var telnextValue = $.trim($('#tel_next').val());
+                    var tellastValue = $.trim($('#tel_last').val());
+                    if ($('#tel_first').val().length) {
+                        $('#tpl_tel_first').val($('#tel_first').val());
+                    }
+                    if ($('#tel_next').val().length) {
+                        $('#tpl_tel_next').val($('#tel_next').val());
+                    }
+                    if ($('#tel_last').val().length) {
+                        $('#tpl_tel_last').val($('#tel_last').val());
+                    }
+                    $('#telBtn').on('click',function(){
+                        var tpl_tel_first = $('#tpl_tel_first').val();
+                        var tpl_tel_next = $('#tpl_tel_next').val();
+                        var tpl_tel_last = $('#tpl_tel_last').val();
+                        if (tpl_tel_first != "" && !regularTelFirst.test(tpl_tel_first)) {
+                            qsToast({type:2,context: '请填写正确的区号'});
+                            return false;
+                        }
+                        if (tpl_tel_next != "" && !regularTelNext.test(tpl_tel_next)) {
+                            qsToast({type:2,context: '电话号码为6-11位数字'});
+                            return false;
+                        }
+                        if (tpl_tel_last != "" && !regularTelLast.test(tpl_tel_last)) {
+                            qsToast({type:2,context: '分机号码为数字'});
+                            return false;
+                        }
+                        if (tpl_tel_last != "" && !regularTelLast.test(tpl_tel_last) || tpl_tel_last.length > 4) {
+                            qsToast({type:2,context: '分机号码不能超出4位'});
+                            return false;
+                        }
+                        $('#tel_first').val(tpl_tel_first);
+                        $('#tel_next').val(tpl_tel_next);
+                        $('#tel_last').val(tpl_tel_last);
+                        var return_tel = tpl_tel_first?tpl_tel_first+'-'+tpl_tel_next:tpl_tel_next;
+                        return_tel = tpl_tel_last?return_tel+'-'+tpl_tel_last:return_tel;
+                        $('#landline_tel').val(return_tel);
+                        a.close();
+                    });
+                }
+            })
+        });
+    </script>
+</html>

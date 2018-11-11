@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+	</head>
+	<body>
+		<include file="public:header"/>
+		<div class="split-block"></div>
+		<div class="edittag">
+			<div class="tit font12">最多可以选5项
+				<div class="J_more more for-event">换一批</div>
+			</div>
+			<div id="J_tagWrap">
+				<volist name="tag_arr" id="stag" key="k">
+					<div class="J_tagPage <if condition="$k neq 1">qs-hidden</if>">
+						<volist name="stag" id="tag">
+							<div class="tag <if condition="in_array($key,$resume['tag_key'])">select</if>" tid="{$key}" title="{$tag}">{$tag}</div>
+						</volist>
+					</div>
+				</volist>
+			</div>
+			<div class="clear"></div>
+			<div class="split-block"></div>
+			<div id="J_taglist">
+				<volist name="resume['tag_cn']" id="tag">
+					<if condition="!in_array($tag,$tags)">
+						<div class="tag select" title="{$tag}">{$tag}</div>
+					</if>
+				</volist>
+			</div>
+			<div class="clear"></div>
+			<div class="addtagbox">
+				<div class="inputbox">
+					<input id="tagVal" type="text"  placeholder="标签不够？手动输入8字内标签">
+				</div>
+				<div class="btnbox">
+					<div id="J_addtag" class="qs-btn qs-btn-medium qs-btn-green">贴标签</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="tagbtns">
+				<div id="J_saveresume" class="qs-btn qs-btn-blue font18">保存</div>
+			</div>
+		</div>
+		<include file="public:footer_min" />
+		<script type="text/javascript">
+			$('#J_addtag').on('click',function(){
+				var tag = $('#tagVal').val();
+				var isRepeat = false;
+				if(tag == ''){
+					qsToast({type:2,context: '标签不能为空！'});
+					return false;
+				}
+				if (tag.length > 8) {
+					qsToast({type:2,context: '自定义标签不能超过8个字！'});
+					return false;
+				}
+				$('.tag').each(function(index, el) {
+					if (tag == $(this).attr('title')) {
+						isRepeat = true;
+					}
+				})
+				if (isRepeat) {
+					qsToast({type:2,context: '填写的亮点已经存在了哦！'});
+					return false;
+				}
+				$('#J_taglist').append('<div class="tag" title="'+tag+'">'+tag+'</div>');
+				$('#tagVal').val('');
+			});
+			$('#J_tagWrap .tag,#J_taglist .tag').live('click',function(){
+				if($(this).hasClass('select')){
+	        		$(this).removeClass('select');
+	        	}else{
+	        		if($('.tag.select').length >= 5){
+	        			qsToast({type:2,context: '特长标签最多可以选5项！'});
+	        			return false;
+					}
+	        		$(this).addClass('select');
+	        	}
+			});
+			$('#J_saveresume').on('click',function(){
+				var tagListArray = $('.tag.select');
+				var tagvalueArray = new Array();
+				var tagcnvalueArray = new Array();
+				var pid = "{$resume.id}";
+				var news = "{$Think.get.news}";
+				if (tagListArray.length) {
+					$.each(tagListArray, function(index, val) {
+						if($(this).attr('tid')){
+							tagvalueArray.push($(this).attr('tid'));
+						}else{
+							tagcnvalueArray.push($(this).attr('title'));
+						}
+					});
+				} else {
+					qsToast({type:2,context: '请选择特长标签'});
+					return false;
+				}
+
+				$('#J_saveresume').val('保存中...').addClass('qs-btn-border-disabled');
+	            // 提交表单
+	            $.ajax({
+	                url: "{:U('Personal/resume_edit_speciality')}",
+	                type: 'POST',
+	                dataType: 'json',
+	                data: {pid: pid, tag: tagvalueArray, tag_cn:tagcnvalueArray,news:news},
+	                success:function(data){
+	                    if (data.status == 1) {
+	                        window.location.href = data.data.url;
+	                    } else {
+	                        qsToast({type:2,context: data.msg});
+	                        $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    }
+	                },
+	                error:function(result){
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    qsToast({type:2,context: result.msg});
+	                }
+	            });
+			});
+			var n = 0;
+			$('.J_more').on('click',function(){
+				n++;
+				if(n>$('.J_tagPage').length-1){
+					n=0;
+				}
+				$('.J_tagPage').eq(n).removeClass('qs-hidden').siblings().addClass('qs-hidden');
+			});
+		</script>
+	</body>
+</html>

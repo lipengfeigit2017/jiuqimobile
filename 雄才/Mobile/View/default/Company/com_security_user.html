@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<div class="mui-content">
+			<div class="split-block-title">用户名修改后，登录用户名将同步修改哦！</div>
+			<form action="post" id="logingForm">
+				<div class="loging-input-group last">
+					<div class="group-list username">
+						<input id="username" name="username" type="text" class="l-input font14" placeholder="请输入新的用户名" autocomplete="off" value="{$visitor.username}">
+					</div>
+				</div>
+				<div id="pop" style="display:none"></div>
+			</form>
+			<div class="split-block"></div>
+			<div class="btn-spacing"><a id="loginBtn" href="javascript:;" class="qs-btn qs-btn-blue font18">提交</a></div>
+		</div>
+		<include file="public:footer_min" />
+		<script type="text/javascript">
+			/**
+	         * 验证用户名
+	         * @param value 用户名
+	         * @returns {boolean}
+	         */
+	        function inputRegValiUsername(value){
+	            var regularUsername = /^(?=[\u4e00-\u9fa5a-zA-Z])(?!\d+)[\u4e00-\u9fa5\w.]{6,18}$/;
+	            var achoice = true;
+	            if (!regularUsername.test(value)) {
+	                achoice = false;
+	            }
+	            return achoice;
+	        }
+			$('#loginBtn').on('click',function(){
+				var username = $('#username').val();
+				if (username == '') {
+					qsToast({type:2,context: '请输入新的用户名!'});
+					return false;
+				}
+				if (!inputRegValiUsername(username)) {
+	                qsToast({type:2,context: '用户名中英文开头6-18位，无特殊符号'});
+	                return false;
+	            }
+				$.post("{:U('Members/save_username')}",{username:username},function(result){
+					if(result.status == 1){
+						qsToast({type:1,context:result.msg});
+						setTimeout(function(){
+							window.location.href="{:U('Company/com_security')}";
+						},2000);
+					}else{
+						qsToast({type:2,context:result.msg});
+					}
+				},'json');
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,82 @@
+/*登录*/
+a{text-decoration:none;color:#666;}
+.loging-input-group{background:#fff;}
+.loging-input-group .group-list{position:relative;padding:.225rem;height:1.05rem;line-height:1.05rem;background-repeat:no-repeat;padding-left:1.05rem;background-size:.40rem;font-weight:700;background-image:url(../images/43.png);background-position:.35rem .3rem;}
+.loging-input-group .group-list.pwd{background-image:url(../images/44.png);}
+.loging-input-group .group-list.mobile{background-image:url(../images/61.png);background-position:.35rem .35rem;}
+.loging-input-group .group-list.verfy{background-image:url(../images/62.png);background-position:.35rem .35rem;}
+.loging-input-group .group-list.email{background-image:url(../images/85.png);background-position:.35rem .35rem;}
+.loging-input-group .group-list.comname{background-image:url(../images/310.png);background-position:.35rem .35rem;}
+.loging-input-group .group-list.contact{background-image:url(../images/311.png);background-position:.35rem .35rem;}
+.loging-input-group .group-list:before{content:" ";position:absolute;left:0;bottom:-1px;right:0;height:1px;border-top:1px solid #C0BFC4;color:#C0BFC4;-webkit-transform-origin:0 0;transform-origin:0 0;-webkit-transform:scaleY(0.5);transform:scaleY(0.5);}
+.loging-input-group .group-list:last-child:before{display:none;}
+.loging-input-group .group-list .g-close{display:none;position:absolute;top:50%;right:.35rem;width:.46rem;height:.46rem;overflow:hidden;background:url(../images/45.png) .01rem 0 no-repeat;background-size:.45rem;-webkit-transform:translate(0,-50%);transform:translate(0,-50%);}
+.loging-input-group .group-list .g-close.rm{right:2.6rem;}
+.loging-input-group .group-list.has-inp .g-close{display:block;}
+.loging-input-group .group-list.has-inp .g-close.po-right{right:3rem;}
+.loging-input-group .group-list .g-close.rm.po-right{right:3rem;}
+.loging-input-group .group-list.mobile .qs-btn{position:absolute;top:50%;right:.25rem;-webkit-transform:translate(0,-50%);transform:translate(0,-50%);}
+.loging-input-group .group-list.verfy .qs-btn{position:absolute;top:50%;right:.25rem;-webkit-transform:translate(0,-50%);transform:translate(0,-50%);}
+.loging-input-group .l-input{border:0;padding:0;margin:0;display:block;width:70%;height:.6rem;line-height:.6rem;}
+.l-tool-bar{padding:0 .35rem;}
+.l-tool-bar .auto-loging{float:left;color:#666;}
+.l-tool-bar .auto-loging .for-checkbox{padding-left:.45rem;background:url(../images/47.png) 0 .335rem no-repeat;background-size:.38rem;}
+.l-tool-bar .auto-loging .for-checkbox.active{background:url(../images/46.png) 0 .335rem no-repeat;background-size:.38rem;}
+.l-tool-bar .for-pwd{float:right;}
+.coop-title{position:relative;padding:.4rem 0;}
+.coop-title:before{content:" ";width:25%;height:.03rem;position:absolute;top:50%;left:0;background:#e6e6e7;-webkit-transform-origin:0 0;}
+.coop-title:after{content:" ";width:25%;height:.03rem;position:absolute;top:50%;right:0;background:#e6e6e7;-webkit-transform-origin:0 0;}
+.coop-group{margin-top:.2rem;margin-bottom:.45rem;}
+.coop-group .coop-cell{float:left;width:100%;display:inline-block;text-decoration:none;color:#666;}
+.coop-group.g2 .coop-cell{width:50%;}
+.coop-group.g3 .coop-cell{width:33.3333%;}
+.coop-group .coop-cell .img{display:inline-block;width:.50rem;height:.50rem;background-size:.50rem;background-repeat:no-repeat;}
+.coop-group .coop-cell .img.sina{background-image:url(../images/57.png);}
+.coop-group .coop-cell .img.qq{background-image:url(../images/58.png);}
+.coop-group .coop-cell .img.taobao{background-image:url(../images/59.png);}
+
+/* 选择注册类型*/
+.choose-type-title{padding:1.2rem 0;background:#fff;}
+.choose-type-group{padding:0 .45rem;padding-bottom:1.2rem;background:#fff;}
+.choose-type-group .t-cell{width:50%;display:inline-block;}
+.choose-type-group .t-cell .img-box{display:inline-block;width:1.80rem;height:1.80rem;border-radius:50%;text-align:center;}
+.choose-type-group .t-cell .img-box.per{background:#fd8000;}
+.choose-type-group .t-cell .img-box.com{background:#0180cf;}
+.choose-type-group .t-cell .img-box .img{display:inline-block;margin-top:.5rem;width:.80rem;height:.80rem;background-size:.80rem;background-repeat:no-repeat;}
+.choose-type-group .t-cell .img-box.per .img{background-image:url(../images/81.png);}
+.choose-type-group .t-cell .img-box.com .img{background-image:url(../images/82.png);}
+.choose-type-group .t-cell p{margin-top:.2rem;font-weight:600;}
+.choose-info{padding:.5rem 0;background:#fff;line-height:2;border-top:.06rem solid #f0f2f5;}
+
+/* members模块相关 */
+.r-agreement{line-height:.8rem;}
+.btn-spacing{margin-bottom:.8rem;}
+.btn-spacing-nmb{margin-bottom:0;}
+.r-link-box{padding:.4rem;}
+.set-success-tip-box{padding-top:2rem;padding-bottom:.2rem;}
+.set-success-tip{display:inline-block;line-height:.94rem;padding-left:1.2rem;background-image:url(../images/97.png);background-repeat:no-repeat;background-size:.94rem;}
+
+/*第三方账号*/
+.bind-top-box{background:#fff;padding-top:.45rem;padding-bottom:.35rem;}
+.bind-top-box .b-img{display:inline-block;width:1.58rem;height:1.58rem;border-radius:50%;}
+.bind-top-box .b-nickname{color:#333;line-height:1.5;}
+.b-list-group-tip{background:#fff;padding:.2rem .4rem;}
+.b-list-group-tip .txt-color-9,.b-list-group-tip .txt-color-3{line-height:180%;}
+.b-list-group .plist-txt:first-child .tit,.b-list-group .plist-txt:first-child .describe{border-top:1px #F2F2F2 solid;}
+
+/*账号申诉页面textarea处理*/
+.textarea-txt{width:100%;background-color:#FFFFFF;padding:.35rem;}
+.textarea-txt textarea{width:100%;height:3.5rem;margin:0 auto;border:0px;resize:none;}
+
+/* 手机注册已存在提示 */
+.loging-input-group .group-list.had-remind-box{display:none;background-image:none;background:rgba(255,214,0,0.14);padding:0;font-weight:400;}
+.loging-input-group .group-list.had-remind-box-pw{display:none;background-image:none;background:rgba(255,214,0,0.14);padding:0;font-weight:400;}
+.list_height.had-remind-box{display:none;background-image:none;background:rgba(255,214,0,0.14);padding:0;font-weight:400;}
+.txt-o-red{color:#ff2500;}
+
+/* 手机号重复提示 */
+.had-mobile-remind{display: none;}
+.had-mobile-remind .option{height: .8rem; line-height: .8rem;padding-left: .4rem; background:rgba(255,214,0,0.14);}
+.had-mobile-remind .option .pic{margin-top: .2rem; margin-right: .1rem; height: .44rem; width: .44rem; background-image: url(../images/83.png); background-repeat: no-repeat; background-size: .42rem;}
+.had-mobile-remind .option.active .pic{background-image: url(../images/84.png);}
+.had-mobile-remind .option .tit{width: 6.4rem; font-weight: normal; border: 0;}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<div class="mui-content">
+			<if condition="$visitor['email_audit'] eq 0">
+				<div class="split-block-title">邮箱认证后，您可以用邮箱登录和找回密码！</div>
+			<else/>
+				<div class="split-block-title font_blue">当前邮箱已认证，修改邮箱后您的登录邮箱将同步修改</div>
+			</if>
+			<form action="post" id="logingForm">
+				<div class="loging-input-group last">
+					<div class="group-list email">
+						<input id="email" name="email" type="text" class="l-input font14" placeholder="请输入您要绑定的邮箱账号" autocomplete="off" value="{$visitor.email}">
+					</div>
+				</div>
+				<div id="pop" style="display:none"></div>
+			</form>
+			<div class="split-block"></div>
+			<div class="btn-spacing"><a id="loginBtn" href="javascript:;" class="qs-btn qs-btn-blue font18">发送验证邮箱</a></div>
+		</div>
+		<include file="public:footer_min" />
+	    <script id="emailWrap" type="text/html">
+	    	<div class="emailWrap">
+		        <div class="top_txt">验证邮件已发送至 </div>
+		        <div class="email_info_box"></div>
+		        <div class="down_txt">请在24小时内登录邮箱激活验证邮件</div>
+		    </div>
+	    </script>
+		<script type="text/javascript">
+			$('#loginBtn').on('click',function(){
+				var email = $('#email').val();
+				if (email == '') {
+					qsToast({type:2,context: '请输入要绑定的邮箱账号！'});
+					return false;
+				}
+				$.post("{:U('Members/send_email_varify_url')}",{email:email},function(result){
+					if(result.status == 1){
+						var popout = new QSpopout('邮箱验证');
+						popout.setBtn(1);
+						popout.show();
+						var h = $($('#emailWrap').html());
+						h.find('.email_info_box').html(email);
+						popout.setContent(h);
+					}else{
+						qsToast({type:2,context:result.msg});
+					}
+				},'json');
+			});
+		</script>
+	</body>
+</html>

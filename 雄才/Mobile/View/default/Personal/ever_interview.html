@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/personal.css">
+</head>
+<body>
+    <include file="public:header"/>
+    <div class="split-block-title"><span class="txt-o">建议您如实填写，若虚假填写会被加入黑名单，永久失去本平台领取红包的特权！</span></div>
+    <form id="form1">
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">面试官称呼</div>
+        <div class="describe"><input type="text" id="interviewer_name" name="interviewer_name" placeholder="如：张先生/女士" value="" class="font13">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">面试官年龄</div>
+        <div class="describe"><input type="text" id="interviewer_age" name="interviewer_age" placeholder="大约年龄范围：如30-50岁" value="" class="font13">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">是否佩带眼镜</div>
+        <div class="describe font13 qs-relative">
+            <div class="for-select">否</div>
+            <select id="interviewer_glasses" name="interviewer_glasses">
+                <option value="0" selected>否</option>
+                <option value="1">是</option>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">面试时间</div>
+        <div class="describe"><input type="text" id="interview_time" name="interview_time" value="" class="font13">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="per-introduce">
+        <textarea placeholder="请输入其他辅助描述（如面试官形象、面试过程等内容，限200字）" name="other" id="other"></textarea>
+    </div>
+    <div class="btn-spacing">
+        <input type="button" id="btnSave" class="qs-btn qs-btn-blue font18 b-big" value="我已面试">
+    </div>
+    <div class="split-block"></div>
+    <input type="hidden" name="company_uid" value="{$company_uid}">
+    <input type="hidden" name="record_id" value="{$record_id}">
+    </form>
+    <include file="public:footer_min" />
+    <script>
+	    $('#btnSave').on('click',function(){
+            var url = "{:U('Personal/ever_interview')}";
+            $.post(url,$('#form1').serialize(),function(result){
+                if(result.status == 1){
+                    qsToast({type: 1, context: result.msg});
+                    setTimeout(function () {
+                        location.href="{:U('Personal/allowance')}";
+                    }, 2000);
+                } else {
+                    qsToast({type: 2, context: result.msg});
+                }
+            },'json');
+        });
+    </script>
+</body>
+</html>

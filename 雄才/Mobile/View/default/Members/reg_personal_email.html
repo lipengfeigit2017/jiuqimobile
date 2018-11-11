@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/members.css">
+	</head>
+	<body>
+        <include file="public:header" />
+        <if condition="C('qscms_sms_open') eq 1">
+            <div class="qs-top-nav x2 list_height">
+                <div class="n-cell" onclick="javascript:location.href='{:U('Members/register',array('utype'=>2,'regtype'=>'mobile','openid'=>$openid))}'">手机注册<div class="b-line"></div></div>
+                <div class="n-cell active">邮箱注册<div class="b-line"></div></div>
+                <div class="clear"></div>
+            </div>
+        </if>
+        <div class="split-block"></div>
+        <form id="registerForm" method="post">
+            <div class="loging-input-group">
+                <div class="group-list">
+                    <div class="g-close"></div>
+                    <input id="username" name="username" type="text" class="l-input j-l-input font14" placeholder="请输入用户名" autocomplete="off">
+                </div>
+                <div class="group-list email">
+                    <div class="g-close"></div>
+                    <input id="email" name="email" type="text" class="l-input j-l-input font14" placeholder="请输入常用邮箱" autocomplete="off">
+                </div>
+                <div class="group-list pwd">
+                    <div class="g-close"></div>
+                    <input id="emailpassword" name="emailpassword" type="password" class="l-input j-l-input font14" placeholder="请输入账户密码" autocomplete="off">
+                </div>
+                <div class="group-list pwd">
+                    <div class="g-close"></div>
+                    <input id="emailpasswordVerify" name="emailpasswordVerify" type="password" class="l-input j-l-input font14" placeholder="请确认账户密码" autocomplete="off">
+                </div>
+            </div>
+            <div class="split-block"></div>
+            <div class="btn-spacing btn-spacing-nmb"><a id="btnRegPersonal" href="javascript:;" class="qs-btn qs-btn-blue font18">注册个人会员</a></div>
+            <input type="hidden" name="reg_type" value="2" />
+            <input type="hidden" name="utype" value="2">
+            <div id="pop" style="display:none"></div>
+            <input type="hidden" id="btnCheck">
+            <input type="hidden" id="J_captcha_open" value="{:C('qscms_mobile_captcha_open')}" />
+            <input type="hidden" name="geetest_challenge" class="J_gee_cha" value="">
+            <input type="hidden" name="geetest_validate" class="J_gee_val" value="">
+            <input type="hidden" name="geetest_seccode" class="J_gee_sec" value="">
+        </form>
+        <div class="r-link-box qs-center link_blue"><a href="{:U('members/login')}">已有账号，立即登录</a></div>
+		<include file="public:footer" />
+        <include file="public:footer_min" />
+        <script src="https://static.geetest.com/static/tools/gt.js"></script>
+	</body>
+    <script>
+        // 图片验证码
+        var verifyPhoto = false;
+
+        /**
+         * ajax 提交注册信息
+         */
+        function doAjax() {
+            var url = "{:U('members/register')}";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: $('#registerForm').serialize(),
+                success: function (data) {
+                    if(data.status==1){
+                        window.location.href = data.data.url;
+                    }else{
+                        qsToast({type:2,context: data.msg});
+                    }
+                }
+            });
+        }
+
+        // 图片验证码
+        function verifyPhotoDialog() {
+            var verifyCodePop = new QSpopout('请输入下图中的文字或字母');
+            verifyCodePop.setContent([
+                '<div class="dia-captcha-item">',
+                '<img src="' + qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime() + '" class="dia-captcha-img">',
+                '<input type="text" name="captcha-solution" class="dia-captcha-solution font16" maxlength="10">',
+                '</div>'
+            ].join(''));
+            verifyCodePop.setBtn(1);
+            verifyCodePop.show();
+            verifyCodePop.setClose(false);
+            $('.dia-captcha-img').on('click', function() {
+                $(this).attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+            })
+            // 确定按钮事件
+            verifyCodePop.getPrimaryBtn().on('click', function () {
+                var currentPhotoVal = $.trim($('.dia-captcha-solution').val());
+                if (currentPhotoVal.length) {
+                    $.ajax({
+                        url: qscms.root + '?m=Home&c=captcha&a=captchaCode',
+                        cache: false,
+                        async: false,
+                        type: 'post',
+                        dataType: 'json',
+                        data: { postcaptcha: currentPhotoVal },
+                        success: function(result) {
+                            if (result.status) {
+                                verifyCodePop.hide();
+                                doAjax();
+                            } else {
+                                qsToast({type:2,context: '验证码输入错误'});
+                                $('.dia-captcha-img').attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+                            }
+                        }
+                    });
+                } else {
+                    $('.dia-captcha-solution').focus();
+                    qsToast({type:2,context: '请输入文字或字母'});
+                }
+            });
+        }
+
+        var captcha_open = eval($('#J_captcha_open').val());
+
+        /**
+         * 注册验证
+         */
+        $('#btnRegPersonal').on('click', function() {
+            var usernameValue = $.trim($('input[name=username]').val());
+            var emailValue = $.trim($('input[name=email]').val());
+            var emailpasswordValue = $.trim($('input[name=emailpassword]').val());
+            var emailpasswordVerifyValue = $.trim($('input[name=emailpasswordVerify]').val());
+            if (usernameValue == '') {
+                qsToast({type:2,context: '请输入用户名'});
+                return false;
+            }
+            if (!inputRegValiUsername(usernameValue)) {
+                qsToast({type:2,context: '用户名中英文开头3-18位，无特殊符号'});
+                return false;
+            }
+            if(!remoteValid('username',usernameValue)){
+                qsToast({type:2,context: '该用户名已被注册'});
+                return false;
+            }
+            if (emailValue == '') {
+                qsToast({type:2,context: '请输入常用邮箱'});
+                return false;
+            }
+            if(!inputRegValiEmail(emailValue)){
+                qsToast({type:2,context: '邮箱格式错误'});
+                return false;
+            }
+            if(!remoteValid('email',emailValue)){
+                qsToast({type:2,context: '该邮箱已被注册'});
+                return false;
+            }
+            if (emailpasswordValue == '') {
+                qsToast({type:2,context: '请输入密码'});
+                return false;
+            }
+            if(!inputRegValiPassword(emailpasswordValue)){
+                qsToast({type:2,context: '密码长度要求为6-16个字符'});
+                return false;
+            }
+            if (emailpasswordVerifyValue == '') {
+                qsToast({type:2,context: '请确认账户密码'});
+                return false;
+            }
+            if(!inputRegValiPassword(emailpasswordVerifyValue)){
+                qsToast({type:2,context: '密码长度要求为6-16个字符'});
+                return false;
+            }
+            if(!inputRegValiPasswordRepeat(emailpasswordValue,emailpasswordVerifyValue)){
+                qsToast({type:2,context: '两次输入的密码不一致'});
+                return false;
+            }
+            if (captcha_open) {
+                doAjax();
+            } else {
+                doAjax();
+            }
+        })
+
+        /**
+         * 验证用户名
+         * @param value 用户名
+         * @returns {boolean}
+         */
+        function inputRegValiUsername(value){
+            var regularUsername = /^(?=[\u4e00-\u9fa5a-zA-Z])(?!\d+)[\u4e00-\u9fa5\w.]{3,18}$/;
+            var achoice = true;
+            if (!regularUsername.test(value)) {
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 验证邮箱
+         * @param value 邮箱
+         * @returns {boolean}
+         */
+        function inputRegValiEmail(value){
+            var regularEmail = /^[_\.0-9a-zA-Z-]+[_0-9a-zA-Z-]@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,3}$/;
+            var achoice = true;
+            if (!regularEmail.test(value)) {
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 验证用户名等是否重复
+         * @param validType 验证类型
+         * @param validValue 值
+         * @returns {boolean|*}
+         */
+        function remoteValid(validType, validValue){
+            var result = false;
+            $.ajax({
+                url: "{:U('members/ajax_check')}",
+                cache: false,
+                async: false,
+                type: 'post',
+                dataType: 'json',
+                data: { type: validType, param: validValue },
+                success: function(json) {
+                    if (json && json.status) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                }
+            });
+            return result;
+        }
+
+        /**
+         * 验证密码长度
+         * @param value 密码
+         * @returns {boolean}
+         */
+        function inputRegValiPassword(value){
+            achoice = true;
+            if(value.length>16 || value.length<6){
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 验证密码两次输入是否一致
+         * @param password 第一次密码
+         * @param passwordRepeat 第二次密码
+         * @returns {boolean}
+         */
+        function inputRegValiPasswordRepeat(password,passwordRepeat){
+            achoice = true;
+            if(password!=passwordRepeat){
+                achoice = false;
+            }
+            return achoice;
+        }
+
+        /**
+         * 清空所填项
+         */
+        $('.j-l-input').on('keyup',function(){
+          if($(this).val()!=''){
+            $(this).closest('.group-list').addClass('has-inp');
+          }else{
+            $(this).closest('.group-list').removeClass('has-inp');
+          }
+        });
+        $('.g-close').on('click', function() {
+          $(this).next().val('');
+          $(this).closest('.group-list').removeClass('has-inp');
+          $('.had-remind-box').hide();
+        })
+    </script>
+</html>

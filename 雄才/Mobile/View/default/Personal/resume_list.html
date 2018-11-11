@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<include file="public:meta" />
+	<link rel="stylesheet" href="../public/css/personal.css">
+</head>
+<body>
+	<include file="public:header" />
+	<div class="split-block-title link_yellow">
+		您的账号可以创建 <strong>{:C('qscms_resume_max')}</strong> 份简历，已创建 <strong>{$total}</strong> 份。<br>
+		如何让自己的简历<a href="{:U('PersonalService/service_tag')}">脱颖而出</a>
+	</div>
+	<div class="resume js-actionParent">
+		<div class="info">
+			<div class="line-one">
+				<div class="resume-title substring">{$def_resume.title}</div>
+				<div class="is-default font10">
+					<span>默认简历</span>
+				</div>
+				<switch name="def_resume['_audit']">
+					<case value="1">
+						<div class="resume-status font12 font_green">审核通过</div>
+					</case>
+					<case value="2">
+						<div class="resume-status font12 font_yellow">等待审核</div>
+					</case>
+					<case value="3">
+						<div class="resume-status font12 font_red">审核未通过</div>
+					</case>
+				</switch>
+				<div class="clear"></div>
+			</div>
+			<div class="line-two font12">
+				<div class="privacy">公开状态：<if condition="$def_resume['display'] eq 1">公开<else/>隐藏</if></div>
+				<div class="complete">完整度：{$def_resume.complete_percent}%（<if condition="$def_resume['level'] eq 3"><span class="font_green">优</span><elseif condition="$def_resume['level'] eq 1"/><span class="font_red">差</span><else/><span class="font_yellow">良</span></if>）</div>
+				<div class="clear"></div>
+			</div>
+			<div class="line-three font12">
+				<div class="down-browse">下载/浏览：{$def_resume.countdown}/{$def_resume.views}</div>
+				<div class="refresh-time">刷新：<span class="J_rtime">{:fdate($def_resume['refreshtime'])}</span></div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="handler font14">
+			<div class="J_refresh_resume item for-event" pid="{$def_resume.id}">
+				<div class="pic refresh"></div>
+				<span>刷新</span>
+			</div>
+			<div class="item for-event" onClick="javascript:location.href='{:U('personal/resume_edit',array('pid'=>$def_resume['id']))}'">
+				<div class="pic update"></div>
+				<span>修改</span>
+			</div>
+			<div class="item for-event" onClick="javascript:location.href='{:url_rewrite('QS_resumeshow',array('id'=>$def_resume['id']))}'">
+				<div class="pic preview"></div>
+				<span>预览</span>
+			</div>
+			<div class="item js-showActionSheet for-event" data-index="1" data-audit="{$def_resume['_audit']}" data-display="{$def_resume['display']}">
+				<div class="pic generalize"></div>
+				<span>推广</span>
+			</div>
+			<div class="item js-showActionSheet for-event" data-index="0">
+				<div class="pic more"></div>
+				<span class="last">更多</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div>
+            <div class="qs-mask" style="display: none"></div>
+            <div class="qs-actionsheet js-actionsheet">
+                <div class="qs-actionsheet-menu" pid="{$def_resume.id}">
+					<if condition="$def_resume['_audit'] ==1 && $def_resume['display'] ==1">
+						<if condition="$def_resume['entrust']">
+							<div class="J_entrust qs-actionsheet-cell select">取消委托</div>
+						<else/>
+							<div class="J_entrust qs-actionsheet-cell">委托</div>
+						</if>
+					</if>
+                    <div class="J_privacy qs-actionsheet-cell" display_val="{$def_resume['display']}">隐私</div>
+                    <div class="J_delete qs-actionsheet-cell">删除</div>
+                </div>
+                <div class="qs-actionsheet-action">
+                    <div class="qs-actionsheet-cell js-cancelActionSheet">取消</div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="qs-mask-dig" style="display: none"></div>
+            <div class="qs-actionsheet js-actionsheet">
+                <div class="qs-actionsheet-menu">
+                	<eq name="def_resume['stick']" value="0">
+                    <div class="qs-actionsheet-cell" onclick="window.location='{:U('personalService/service_stick',array('resume_id'=>$def_resume['id']))}'">简历置顶</div>
+                    <else />
+                    <div class="qs-actionsheet-cell J_unable" data-msg="<strong>已购买【简历置顶】服务</strong><br /><span class='time'>开始时间：{:date('Y-m-d',$def_resume['stick_info']['addtime'])}<br />结束时间：{:date('Y-m-d',$def_resume['stick_info']['endtime'])}</span>">简历置顶</div>
+                    </eq>
+                    <eq name="def_resume['strong_tag']" value="0">
+					<div class="qs-actionsheet-cell" onclick="window.location='{:U('personalService/service_tag',array('resume_id'=>$def_resume['id']))}'">醒目标签</div>
+                    <else />
+					<div class="qs-actionsheet-cell J_unable" data-msg="<strong>已购买醒目标签【{$def_resume['tag_info']['tag_name']}】</strong><br /><span class='time'>开始时间：{:date('Y-m-d',$def_resume['tag_info']['addtime'])}<br />结束时间：{:date('Y-m-d',$def_resume['tag_info']['endtime'])}</span>">醒目标签</div>
+					</eq>
+                </div>
+                <div class="qs-actionsheet-action">
+                    <div class="qs-actionsheet-cell js-cancelActionSheet">取消</div>
+                </div>
+            </div>
+        </div>
+	</div>
+	<div class="split-block"></div>
+	<volist name="resume_list" id="list">
+		<div class="resume js-actionParent">
+			<div class="info">
+				<div class="line-one">
+					<div class="resume-title substring">{$list['title']}</div>
+					<div class="is-default font10"></div>
+					<switch name="list['_audit']">
+						<case value="1">
+							<div class="resume-status font12 font_green">审核通过</div>
+						</case>
+						<case value="2">
+							<div class="resume-status font12 font_yellow">等待审核</div>
+						</case>
+						<case value="3">
+							<div class="resume-status font12 font_red">审核未通过</div>
+						</case>
+					</switch>
+					<div class="clear"></div>
+				</div>
+				<div class="line-two font12">
+					<div class="privacy">公开状态：<if condition="$list['display'] eq 1">公开<else/>关闭</if></div>
+					<div class="complete">完整度：{$list['complete_percent']}%（<if condition="$list['level'] eq 3"><span class="font_green">优</span><elseif condition="$list['level'] eq 1"/><span class="font_red">差</span><else/><span class="font_yellow">良</span></if>）</div>
+					<div class="clear"></div>
+				</div>
+				<div class="line-three font12">
+					<div class="down-browse">下载/浏览：{$list.countdown}/{$list.views}</div>
+					<div class="refresh-time">刷新：<span class="J_rtime">{:fdate($list['refreshtime'])}</span></div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="handler font14">
+				<div class="J_refresh_resume item for-event" pid="{$list.id}">
+					<div class="pic refresh"></div>
+					<span>刷新</span>
+				</div>
+				<div class="item for-event" onClick="javascript:location.href='{:U('personal/resume_edit',array('pid'=>$list['id']))}'">
+					<div class="pic update"></div>
+					<span>修改</span>
+				</div>
+				<div class="item for-event" onClick="javascript:location.href='{:url_rewrite('QS_resumeshow',array('id'=>$list['id']))}'">
+					<div class="pic preview"></div>
+					<span>预览</span>
+				</div>
+				<div class="item js-showActionSheet for-event" data-index="1"  data-audit="{$list['_audit']}" data-display="{$list['display']}">
+					<div class="pic generalize"></div>
+					<span>推广</span>
+				</div>
+				<div class="item js-showActionSheet for-event" data-index="0">
+					<div class="pic more"></div>
+					<span class="last">更多</span>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div>
+                <div class="qs-mask" style="display: none"></div>
+                <div class="qs-actionsheet js-actionsheet">
+                    <div class="qs-actionsheet-menu" pid="{$list.id}">
+                        <div class="qs-actionsheet-cell set_def" url="{:U('personal/set_default',array('pid'=>$list['id']))}">设为默认</div>
+						<if condition="$list['_audit'] ==1 && $list['display'] ==1">
+							<if condition="$list['entrust']">
+								<div class="J_entrust qs-actionsheet-cell select">取消委托</div>
+							<else/>
+								<div class="J_entrust qs-actionsheet-cell">委托</div>
+							</if>
+						</if>
+                    	<div class="J_privacy qs-actionsheet-cell" display_val="{$list['display']}">隐私</div>
+                        <div class="J_delete qs-actionsheet-cell">删除</div>
+                    </div>
+                    <div class="qs-actionsheet-action">
+                        <div class="qs-actionsheet-cell js-cancelActionSheet">取消</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="qs-mask-dig" style="display: none"></div>
+                <div class="qs-actionsheet js-actionsheet">
+                    <div class="qs-actionsheet-menu">
+                    	<eq name="list['stick']" value="0">
+                        <div class="qs-actionsheet-cell" onclick="window.location='{:U('personalService/service_stick',array('resume_id'=>$list['id']))}'">简历置顶</div>
+                        <else />
+	                    <div class="qs-actionsheet-cell J_unable" data-msg="<strong>已购买【简历置顶】服务</strong><br /><span class='time'>开始时间：{:date('Y-m-d',$list['stick_info']['addtime'])}<br />结束时间：{:date('Y-m-d',$list['stick_info']['endtime'])}</span>">简历置顶</div>
+	                    </eq>
+	                    <eq name="list['strong_tag']" value="0">
+						<div class="qs-actionsheet-cell" onclick="window.location='{:U('personalService/service_tag',array('resume_id'=>$list['id']))}'">醒目标签</div>
+                    	<else />
+						<div class="qs-actionsheet-cell J_unable" data-msg="<strong>已购买醒目标签【{$list['tag_info']['tag_name']}】</strong><br /><span class='time'>开始时间：{:date('Y-m-d',$list['tag_info']['addtime'])}<br />结束时间：{:date('Y-m-d',$list['tag_info']['endtime'])}</span>">醒目标签</div>
+						</eq>
+                    </div>
+                    <div class="qs-actionsheet-action">
+                        <div class="qs-actionsheet-cell js-cancelActionSheet">取消</div>
+                    </div>
+                </div>
+            </div>
+		</div>
+		<div class="split-block"></div>
+	</volist>
+	<div class="btn-spacing">
+		<a id="J_create_resume" class="qs-btn qs-btn-blue font18">
+			创建简历
+		</a>
+	</div>
+	<div class="split-block"></div>
+	<input type="hidden" class="for-entrust" value="3">
+	<input type="hidden" class="for-privacy" value="">
+	<include file="public:footer_min" />
+	<script id="J_entrustWrap" type="text/html">
+		<div class="font13">
+            <label class="for-radio"><input name="entrust" type="radio" value="3" checked="checked">3天&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <label class="for-radio"><input name="entrust" type="radio" value="7">7天&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <label class="for-radio"><input name="entrust" type="radio" value="14">14天&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <label class="for-radio"><input name="entrust" type="radio" value="30">30天</label>
+    </div>
+		<script type="text/javascript">
+			$('.for-radio').on('click', function () {
+				var $radio = $(this).find("input[type=radio]");
+				var tval = $radio.val();
+				$('.for-entrust').val(tval);
+			})
+	</script>
+	</script>
+	<div id="J_privacyWrap" style="display:none;">
+		<div class="font13">
+            <label class="for-radio privacy-radio"><input name="display" type="radio" value="1" checked="checked">公开&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <label class="for-radio privacy-radio"><input name="display" type="radio" value="0">保密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+    	</div>
+		<script type="text/javascript">
+			$('.privacy-radio').on('click', function () {
+				var $radio = $(this).find("input[name=display]");
+				var tval = $radio.val();
+				$('.for-privacy').val(tval);
+			})
+		</script>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function(){
+		$(".js-showActionSheet").on("click", function(){
+			var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+			var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+			var thisIndex = $(this).data('index');
+			if (thisIndex) {
+				var _audit = $(this).data('audit');
+				var display = $(this).data('display');
+				var popout = new QSpopout('简历推广');
+				if(_audit != 1){
+					popout.setContent('审核中或未通过的简历不能推广！');
+					popout.show();
+					return false;
+				}
+				if (display != 1){
+					popout.setContent('该简历已关闭，不能推广！');
+					popout.show();
+					return false;
+				}
+			}
+			$iosActionsheet.removeClass('qs-actionsheet-toggle');
+			$iosActionsheet.eq(thisIndex).addClass('qs-actionsheet-toggle');
+			$iosMask.fadeIn(200);
+			$iosMask.on('click', hideActionSheet);
+			$(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+			$(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+			function hideActionSheet() {
+				$(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+				$(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+			}
+		});
+	});
+	$('.J_refresh_resume').click(function(){
+		var f = $(this),
+			pid = $(this).attr('pid');
+		$.post("{:U('Personal/refresh_resume')}",{pid:pid},function(result){
+			if(result.status == 1){
+				if(result.data){
+					f.closest('.resume').find('.J_rtime').html('刚刚');
+					qsToast({type:1,context: '刷新简历增加'+result.data+'{:C('qscms_points_byname')}'});
+				}else{
+					qsToast({type:1,context: result.msg});
+				}
+			}else{
+				qsToast({type:2,context: result.msg});
+			}
+		},'json');
+	});
+	$(".set_def").click(function(){
+		$(this).closest('.js-actionParent').find('.qs-mask').click();
+		var url = $(this).attr('url');
+		$.getJSON(url,function(result){
+			if(result.status==1){
+				qsToast({type:1,context: result.msg});
+				setTimeout(function () {
+					window.location.reload();
+				}, 2000);
+			}else{
+				qsToast({type:2,context: result.msg});
+			}
+		});
+		return false;
+	});
+	// 委托
+	$('.J_entrust').on('click',function(){
+		$(this).closest('.js-actionParent').find('.qs-mask').click();
+		var f = $(this),
+				pid = $(this).parent().attr('pid');
+		if(!$(this).hasClass('select')){
+			var dialog = new QSpopout('简历委托');
+			dialog.setContent($('#J_entrustWrap').html());
+			dialog.show();
+			dialog.getPrimaryBtn().on('click', function () {
+				var entrust = $('.for-entrust').val();
+				$.post("{:U('Personal/set_entrust')}",{pid:pid,entrust:entrust},function(result){
+					if(result.status == 1){
+						f.addClass('select').html('取消委托');
+						qsToast({type:1,context: result.msg});
+					}else{
+						qsToast({type:2,context: result.msg});
+					}
+				},'json');
+			});
+		}else{
+			var dialog = new QSpopout('简历委托');
+			dialog.setContent('您确定取消该简历委托状态吗？');
+			dialog.show();
+			dialog.getPrimaryBtn().on('click', function () {
+				$.post("{:U('Personal/set_entrust_del')}",{pid:pid},function(result){
+					if(result.status == 1){
+						f.removeClass('select').html('委托');
+						qsToast({type:1,context: result.msg});
+					}else{
+						qsToast({type:2,context: result.msg});
+					}
+				},'json');
+			});
+		}
+	});
+	$('.J_privacy').on('click',function(){
+		$(this).closest('.js-actionParent').find('.qs-mask').click();
+		var f = $(this),
+				pid = $(this).parent().attr('pid');
+		var dialog = new QSpopout('隐私设置');
+		$('.for-privacy').val(f.attr('display_val'));
+		$('#J_privacyWrap input[name="display"][value="'+f.attr('display_val')+'"]').attr('checked',true);
+		dialog.setContent($('#J_privacyWrap').html());
+		dialog.show();
+		dialog.getPrimaryBtn().on('click', function () {
+			var display = $('.for-privacy').val();
+			$.post("{:U('Personal/set_privacy')}",{pid:pid,display:display},function(result){
+				if(result.status == 1){
+					qsToast({type:1,context: result.msg});
+				}else{
+					qsToast({type:2,context: result.msg});
+					return false;
+				}
+			},'json');
+		});
+	});
+	$('.J_delete').on('click',function(){
+		$(this).closest('.js-actionParent').find('.qs-mask').click();
+		var pid = $(this).parent().attr('pid');
+		var dialog = new QSpopout('删除简历');
+		dialog.setContent('您确定要删除该份简历吗？');
+		dialog.show();
+		dialog.getPrimaryBtn().on('click', function () {
+			$.post("{:U('Personal/set_del_resume')}",{id:pid},function(result){
+				if(result.status == 1){
+					qsToast({type:1,context: result.msg});
+					setTimeout(function () {
+						window.location.reload();
+					}, 2000);
+				}else{
+					qsToast({type:2,context: result.msg});
+				}
+			},'json');
+		});
+	});
+	$('#J_create_resume').on('click',function(){
+        $.getJSON("{:U('Personal/resume_add')}",function(result){
+            if(result.status == 1){
+                javascript:location.href="{:U('Personal/resume_add')}";
+            }else{
+                var dialog = new QSpopout();
+                dialog.setContent(result.msg);
+                dialog.show();
+                dialog.setBtn(1);
+            }
+        });
+    });
+    $('.J_unable').on('click',function(){
+    	var msg = $(this).data('msg');
+    	var dialog = new QSpopout();
+	        dialog.setContent(msg);
+	        dialog.setBtn(1);
+	        dialog.show();
+    });
+</script>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+     <include file="public:header" />
+     <div class="order-top points">
+		<div class="txt">
+			 当前剩余{:C('qscms_points_byname')}：<span class="font_yellow">{$my_points}</span>
+		</div>
+	</div>
+    <div class="split-block"></div>
+    <div class="ptitle border">
+      <div class="th1">{:C('qscms_points_byname')}充值</div>
+      <div class="rtxt">（1元={:C('qscms_payment_rate')}{:C('qscms_points_byname')}）</div>
+    </div>
+    <div class="list_height plist-txt last">
+	  <div class="pic"></div>
+	  <div class="tit font14">充值数量</div>
+	  <div class="describe font12"><input id="add_num" type="number" placeholder="请输入要充值的{:C('qscms_points_byname')}数" ></div>
+	  <div class="clear"></div>
+	</div>
+    <div class="split-block"></div>
+     <div class="order-price">
+		<div class="txt">
+			 应付金额：<span class="font_yellow" id="amount">0</span> 元
+		</div>
+	</div>
+    <div class="split-block"></div>
+	<div class="payment-list">
+    	<div class="payment wxpay active">
+			<div class="pic wxpay"></div>
+			<div class="txt">
+				<div class="payment-name font14">微信支付</div>
+				<div class="payment-intro font12 font_gray9">推荐已在微信中绑定银行卡的用户使用</div>
+			</div>
+			<div class="radio active"></div>
+		</div>
+		<div class="payment alipay last">
+			<div class="pic alipay"></div>
+			<div class="txt">
+				<div class="payment-name font14">支付宝支付</div>
+				<div class="payment-intro font12 font_gray9">推荐已下载支付宝客户端的用户使用</div>
+			</div>
+			<div class="radio "></div>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="btn-spacing"><div class="qs-btn qs-btn-blue font18" id="submit_pay">提交订单</div></div>
+	<!--当前选择的支付方式-->
+	<input type="hidden" name="payment" id="payment" value="wxpay">
+     <include file="public:footer_min" />
+	<script type="text/javascript">
+		var rate = parseInt("{$payment_rate}");
+		$('#add_num').on('keyup',function(){
+			var input_val = $(this).val()?parseInt($(this).val()):0;
+			$(this).val(input_val==0?'':input_val);
+			$('#amount').html(parseFloat(input_val/rate));
+		});
+		//选择支付方式（支付宝？微信？）
+		$('.payment-list .payment').on('click',function(){
+			$('.payment-list .payment').removeClass('active');
+			$('.payment-list .payment .radio').removeClass('active');
+			$(this).addClass('active');
+			$(this).children('.radio').addClass('active');
+			$('#payment').val($(this).hasClass('wxpay')?'wxpay':'alipay');
+		});
+		//提交订单
+		var lock = 0;
+		$('#submit_pay').on('click',function(){
+			if(!lock){
+				lock = 1;
+				var payment = $('#payment').val();
+				var add_num = $('#add_num').val();
+				var url = "{:U('gold_add')}";
+				if(!add_num){
+					qsToast({type:2,context: "请输入要充值的{:C('qscms_points_byname')}数"});
+					lock = 0;
+					return false;
+				}
+				if(add_num<parseInt("{$sys_min}")){
+					qsToast({type:2,context: "最小充值{:C('qscms_points_byname')}数为{:C('qscms_com_buy_points_min')}！"});
+					lock = 0;
+					return false;
+				}
+				$.post(url,{payment:payment,add_num:add_num},function(result){
+					if(result.status==1){
+						location.href=result.data;
+					}else{
+						qsToast({type:2,context: result.msg});
+						lock = 0;
+						return false;
+					}
+				},'json');
+			}
+		});
+	</script>
+	</body>
+</html>

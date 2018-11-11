@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+	</head>
+	<body>
+    <include file="public:header" />
+	<div class="filter-group x2 filter-outer">
+     <div id="f-mask"></div>
+     <div class="filter-outer">
+         <div class="filter-list js-filter" data-tag="0"><div class="filter-cell"><div class="filter-cell-txt"><if condition="$type neq 0">{$order_type_choose[$type]}<else />订单类型</if></div></div></div>
+         <div class="filter-list js-filter" data-tag="1"><div class="filter-cell"><div class="filter-cell-txt"><if condition="$is_paid neq 0">{$pay_status_choose[$is_paid]}<else />订单状态</if></div></div></div>
+         <div class="clear"></div>
+     </div>
+     <div class="con-filter">
+         <div class="f-box qs-hidden">
+             <div class="f-box-inner">
+                 <li><a class="f-item <if condition="$Think.get.type eq ''">select</if>" href="{:P(array('type'=>'','is_paid'=>0))}">全部</a></li>
+                 <volist name="order_type_choose" id="vo">
+                 <li><a class="f-item <if condition="$Think.get.type eq $key">select</if>" href="{:P(array('type'=>$key,'is_paid'=>0))}">{$vo}</a></li>
+                 </volist>
+             </div>
+         </div>
+         <div class="f-box qs-hidden">
+             <div class="f-box-inner">
+                 <li><a class="f-item <if condition="$Think.get.is_paid eq '' || $Think.get.is_paid eq '0'">select</if>" href="{:P(array('is_paid'=>0))}">全部</a></li>
+                 <volist name="pay_status_choose" id="vo">
+                 <li><a class="f-item <if condition="$Think.get.is_paid eq $key">select</if>" href="{:P(array('is_paid'=>$key))}">{$vo}</a></li>
+                 </volist>
+             </div>
+         </div>
+     </div>
+ 	</div>
+ 	<div class="split-block"></div>
+	<notempty name="order['list']">
+		<volist name="order['list']" id="vo">
+		<div class="order-item for-event" onclick="javascript:location.href='{:U('order_detail',array('order_id'=>$vo['id']))}'">
+			<div class="item-header font12">
+				<div class="txt oid font_gray9">订单号：{$vo['oid']}</div>
+				<div class="txt status <eq name='vo["is_paid"]' value='1'>font_red</eq>">{$pay_status_choose[$vo['is_paid']]}</div>
+				<div class="clear"></div>
+			</div>
+			<div class="item-content">
+				<div class="pic p{$vo['order_type']}"></div>
+				<div class="txt">
+					<div class="t1">{$order_type[$vo['order_type']]}</div>
+					<div class="t2 font_gray6 font12">{$vo['service_name']}</div>
+				</div>
+				<div class="price font_yellow">￥{$vo['amount']}</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="split-block"></div>
+		</volist>
+ 	<div class="qspage">{$order['page']}</div>
+	<else />
+		<div class="list-empty">
+			抱歉，没有符合条件的订单记录！
+		</div>
+	</notempty>
+    <include file="public:footer_min" />
+    <script type="text/javascript">
+    	$('.js-filter').on('click',function(){
+    		var filter = new QSfilter($(this));
+    	});
+    </script>
+	</body>
+</html>

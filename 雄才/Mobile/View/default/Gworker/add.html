@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/gworker.css">
+    <link rel="stylesheet" href="../public/css/zepto.mdater.css">
+    <qscms:load type="category" search="1"/>
+</head>
+<body>
+    <include file="public:header"/>
+    <div class="split-block-title">您的账号还可以发布 <strong>{$leave_jobs_num}</strong> 条普工！</div>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">招聘岗位<span class="font_red_light">*</span></div>
+        <div class="describe"><input type="text" id="jobs_name" name="jobs_name" placeholder="请输入招聘岗位" value="{$jobs['jobs_name']}" class="font13">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt notarrow">
+        <div class="pic"></div>
+        <div class="tit font14">人数需求</div>
+        <div class="describe"><input type="text" id="amount" placeholder="留空则为若干" value="{$jobs['amount']}" class="font13">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="list_height plist-txt js-actionParent">
+        <div class="pic"></div>
+        <div class="tit font14">工作地区<span class="font_red_light">*</span></div>
+        <div class="describe font13 qs-temp-new-city js-showActionSheet" data-multiple="false" >
+            <span class="qs-temp-txt-city" data-otxt="请选择工作地区">{$jobs['district_cn']|default='请选择工作地区'}</span>
+            <input class="qs-temp-code-city" type="hidden" id="district" value="<if condition="$jobs['district']">{$jobs.district}</if>" keep="<if condition="$jobs['district']">{$jobs.district}</if>">
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+        <!--BEGIN actionSheet-->
+        <div>
+            <div class="qs-mask" style="display: none"></div>
+            <div class="qs-actionsheet js-actionsheet">
+                <div class="qs-actionsheet-menu">
+                    <div class="con-filter">
+                        <div class="f-selected-group f-selected-group-city">
+                            <div class="s-bar">
+                                <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-gray qs-left js-cancelActionSheet">取消</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="s-list qs-hidden"></div>
+                        </div>
+                        <div class="f-box f-box-city"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="list_height plist-txt">
+        <div class="pic"></div>
+        <div class="tit font14">薪资待遇<span class="font_red_light">*</span></div>
+        <div class="describe font13 qs-relative">
+            <volist name="category_wage" id="vo" offset="1" length="1">
+            <div class="for-select">{$vo}</div>
+            </volist>
+            <select id="wage" name="wage">
+                <volist name="category_wage" id="vo">
+                    <option value="{$key}" <if condition="$jobs['wage'] eq $key or ($jobs['wage'] eq 0 and $i eq 1)">selected</if>>{$vo}</option>
+                </volist>
+            </select>
+        </div>
+        <div class="arrow"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="split-block"></div>
+    <!--联系方式-->
+        <eq name="need_mobile_audit" value="1">
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">联系人<span class="font_red_light">*</span></div>
+            <div class="describe">
+                <input type="text" id="contact" name="contact" placeholder="请输入联系人" class="font13" value="{$jobs.contact}">
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">联系手机<span class="font_red_light">*</span></div>
+            <div class="describe">
+                <input type="text" id="mobile" name="mobile" placeholder="请输入联系手机" class="font13" value="{$mobile}">
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">验证码<span class="font_red_light">*</span></div>
+            <div class="verify-code">
+                <input type="text" id="verify_code" name="mobile_vcode" placeholder="请输入验证码" class="font13" value="">
+            </div>
+            <div id="getVerfyCode" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-border-gray font14 btn-get-code">获取验证码</div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <else />
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">联系人<span class="font_red_light">*</span></div>
+            <div class="describe">
+                <input type="text" id="contact" name="contact" placeholder="请输入联系人" class="font13" value="{$contact}">
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="list_height plist-txt notarrow">
+            <div class="pic"></div>
+            <div class="tit font14">联系手机<span class="font_red_light">*</span></div>
+            <div class="describe">
+                <input type="text" id="mobile" name="mobile" placeholder="请输入联系手机" class="font13" value="{$mobile}" disabled>
+            </div>
+            <div class="arrow"></div>
+            <div class="clear"></div>
+        </div>
+        </eq>
+    
+    
+    <div class="btn-spacing">
+        <input type="hidden" id="id" value="{$jobs.id}">
+        <input type="hidden" id="J_captcha_open" value="<if condition="C('qscms_mobile_captcha_open') eq 1 && C('qscms_wap_captcha_config.varify_mobile') eq 1">1<else/>0</if>" />
+        <div id="J_release" class="qs-btn qs-btn-blue font18" data-title="提交申请">提交申请</div>
+    </div>
+    <div id="pop" style="display:none"></div>
+    <input type="hidden" id="btnCheck">
+    <div class="split-block"></div>
+    <include file="public:footer_min" />
+    <script src="../public/js/popWin.js"></script>
+    <script src="../public/js/zepto.mdater.js"></script>
+    <script src="../public/js/qsCategory.js"></script>
+    <script src="../public/js/qsCityUser.js"></script>
+    <script src="https://static.geetest.com/static/tools/gt.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".js-showActionSheet").on("click", function(){
+                var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+                var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+                $iosActionsheet.removeClass('qs-actionsheet-toggle');
+                $iosActionsheet.addClass('qs-actionsheet-toggle');
+                $iosMask.fadeIn(200);
+                $iosMask.on('click', hideActionSheet);
+                $(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+                $(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+                function hideActionSheet() {
+                    $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+                    $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+                }
+            });
+        });
+        // 验证手机号
+        var regularMobile = /^13[0-9]{9}$|14[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/;
+
+        
+        /**
+         * 发送手机验证码
+         */
+        $('#getVerfyCode').on('click', function() {
+            if ($(this).hasClass('qs-btn-border-disabled')) return false;
+            var mobileValue = $.trim($('input[name=mobile]').val());
+            var captcha_open = eval($('#J_captcha_open').val());
+            if (mobileValue == '') {
+                qsToast({type:2,context: '请输入手机号码'});
+                return false;
+            }
+            if (mobileValue != "" && !regularMobile.test(mobileValue)) {
+                qsToast({type:2,context: '手机号码格式不正确'});
+                return false;
+            }
+            if (captcha_open) {
+                $('.geetest_panel').remove();
+                $.ajax({
+                    url: qscms.root+'?m=Mobile&c=Captcha&type=mobile&t=' + (new Date()).getTime(),
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(config) {
+                        initGeetest({
+                            gt: config.gt,
+                            challenge: config.challenge,
+                            offline: !config.success,
+                            new_captcha: config.new_captcha,
+                            product: 'bind'
+                        }, function(captchaObj) {
+                            captchaObj.appendTo("#pop");
+                            captchaObj.onSuccess(function() {
+                                var captChaResult = captchaObj.getValidate();
+                                $('#getVerfyCode').addClass('qs-btn-border-disabled');
+                                $('#getVerfyCode').text('发送中...');
+                                var mobileValue = $.trim($('input[name=mobile]').val());
+                                $.ajax({
+                                    url: "{:U('Gworker/send_sms')}",
+                                    cache: false,
+                                    async: false,
+                                    type: 'post',
+                                    dataType: 'json',
+                                    data: { sms_type: 'login', mobile: mobileValue,geetest_challenge: captChaResult.geetest_challenge,geetest_validate: captChaResult.geetest_validate,geetest_seccode: captChaResult.geetest_seccode},
+                                    success: function(result) {
+                                        $('#pop').hide();
+                                        qsToast({type:2,context: result.msg});
+                                        if (result.status) {
+                                            // 开始倒计时
+                                            var countdown = 180;
+                                            function settime() {
+                                                if (countdown == 0) {
+                                                    $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                                                    $('#getVerfyCode').text('获取验证码');
+                                                    countdown = 180;
+                                                    return;
+                                                } else {
+                                                    $('#getVerfyCode').addClass('qs-btn-border-disabled');
+                                                    $('#getVerfyCode').text('重新发送' + countdown + '秒');
+                                                    countdown--;
+                                                }
+                                                setTimeout(function() {
+                                                    settime()
+                                                },1000)
+                                            }
+                                            settime();
+                                        } else {
+                                            $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                                            $('#getVerfyCode').text('获取验证码');
+                                            $('#pop').hide();
+                                            qsToast({type:2,context: result.msg});
+                                        }
+                                    }
+                                });
+                            })
+                            captchaObj.onReady(function () {
+                                captchaObj.verify();
+                            });
+                            $('#btnCheck').on('click', function () {
+                                captchaObj.verify();
+                            })
+                            window.captchaObj = captchaObj;
+                        });
+                    }
+                });
+            } else {
+                sendVerfy();
+            }
+        })
+        /**
+         * 发送手机验证码
+         */
+        function sendVerfy() {
+            $('#getVerfyCode').addClass('qs-btn-border-disabled');
+            $('#getVerfyCode').text('发送中...');
+            var mobileValue = $.trim($('input[name=mobile]').val());
+            $.ajax({
+                url: "{:U('Gworker/send_sms')}",
+                cache: false,
+                async: false,
+                type: 'post',
+                dataType: 'json',
+                data: { sms_type: 'login', mobile: mobileValue},
+                success: function(result) {
+                    $('#pop').hide();
+                    qsToast({type:2,context: result.msg});
+                    if (result.status) {
+                        // 开始倒计时
+                        var countdown = 180;
+                        function settime() {
+                            if (countdown == 0) {
+                                $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                                $('#getVerfyCode').text('获取验证码');
+                                countdown = 180;
+                                return;
+                            } else {
+                                $('#getVerfyCode').addClass('qs-btn-border-disabled');
+                                $('#getVerfyCode').text('重新发送' + countdown + '秒');
+                                countdown--;
+                            }
+                            setTimeout(function() {
+                                settime()
+                            },1000)
+                        }
+                        settime();
+                    } else {
+                        $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                        $('#getVerfyCode').text('获取验证码');
+                        $('#pop').hide();
+                        qsToast({type:2,context: result.msg});
+                    }
+                }
+            });
+        }
+        // 发布普工
+        $('#J_release').click(function(){
+            var id = $.trim($('#id').val());
+            var jobsNameValue = $.trim($('#jobs_name').val());
+            var amountValue = $.trim($('#amount').val());
+            var district = $.trim($('#district').val());
+            var wageValue = $.trim($('#wage').val());
+            var contactValue = $.trim($('#contact').val());
+            var mobileValue = eval("{$need_mobile_audit}"==1)?$.trim($('#mobile').val()):"{$mobile}";
+            var verifycodeValue = $.trim($('input[name=mobile_vcode]').val());
+            if (jobsNameValue == "") {
+                qsToast({type:2,context: '请填写招聘岗位'});
+                return false;
+            }
+            if (district == "") {
+                qsToast({type:2,context: '请选择工作地区'});
+                return false;
+            }
+            if (wageValue == "") {
+                qsToast({type:2,context: '请选择薪资待遇'});
+                return false;
+            }
+            if (contactValue == "") {
+                qsToast({type:2,context: '请填写联系人'});
+                return false;
+            }
+            if (contactValue != "" && contactValue.length > 10) {
+                qsToast({type:2,context: '联系人1-10个字'});
+                return false;
+            }
+            if (mobileValue != "" && !regularMobile.test(mobileValue)) {
+                qsToast({type:2,context: '手机号格式不正确'});
+                return false;
+            }
+            if (verifycodeValue == '' && eval("{$need_mobile_audit}")==1) {
+                qsToast({type:2,context: '请输入手机验证码'});
+                return false;
+            }
+            $(this).html('正在保存...');
+            $(this).addClass('qs-btn-border-disabled');
+            $.ajax({
+                url: "{:U('Gworker/add')}",
+                type: 'POST',
+                dataType: 'json',
+                data: {id:id,jobs_name: jobsNameValue, amount: amountValue, district: district, wage: wageValue, contact: contactValue, mobile: mobileValue,mobile_vcode:verifycodeValue},
+                success:function(result){
+                    if (result.status == 1) {
+                        qsToast({type:1,context: result.msg});
+                        setTimeout(function () {
+                            location.href = result.data.url;
+                        }, 2000);
+                    } else {
+                        $("#J_release").html($('#J_release').data('title'));
+                        $("#J_release").removeClass('qs-btn-border-disabled');
+                        qsToast({type:2,context: result.msg});
+                    }
+                },
+                error:function(){
+                    $("#J_release").html($('#J_release').data('title'));
+                    $("#J_release").removeClass('qs-btn-border-disabled');
+                    qsToast({type:2,context: result.msg});
+                }
+            });
+        });
+    </script>
+</body>
+</html>

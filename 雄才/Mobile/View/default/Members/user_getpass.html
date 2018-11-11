@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/members.css">
+	</head>
+	<body>
+		<include file="public:header" />
+        <div class="qs-top-nav x2 list_height">
+            <div class="n-cell active">已验证手机找回<div class="b-line"></div></div>
+            <div class="n-cell" onclick="javascript:location.href='{:U('Members/user_getpass',array('type'=>2))}'">已绑定邮箱找回<div class="b-line"></div></div>
+            <div class="clear"></div>
+        </div>
+        <div class="split-block"></div>
+        <form id="getPassByMobileForm" action="{:U('members/user_getpass')}" method="post">
+            <div class="loging-input-group">
+                <div class="group-list mobile">
+                    <input id="mobile" name="mobile" type="text" class="l-input font14" placeholder="请输入手机号码" autocomplete="off">
+                    <a href="javascript:;" id="getVerfyCode" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-border-gray font14">获取验证码</a>
+                </div>
+                <div class="group-list verfy">
+                    <input id="mobile_vcode" name="mobile_vcode" type="text" class="l-input font14" placeholder="请输入手机验证码" autocomplete="off">
+                </div>
+            </div>
+            <div class="l-tool-bar list_height">
+                <div class="for-pwd link_gray6"><a href="{:U('Members/appeal_user')}">账号申诉</a></div>
+                <div class="clear"></div>
+            </div>
+            <input type="hidden" name="token" value="{$token}" />
+            <input type="hidden" name="type" value="1" />
+            <div id="pop" style="display:none"></div>
+            <input type="hidden" id="btnCheck">
+            <input type="hidden" id="J_captcha_open" value="{:C('qscms_mobile_captcha_open')}" />
+        </form>
+        <div class="btn-spacing"><a id="nextBtn" href="javascript:;" class="qs-btn qs-btn-blue font18">下一步</a></div>
+        <include file="public:footer" />
+        <include file="public:footer_min" />
+	</body>
+    <script src="https://static.geetest.com/static/tools/gt.js"></script>
+    <script>
+        // 图片验证码
+        var verifyPhoto = false;
+
+        /**
+         * 发送手机验证码
+         */
+        function sendVerfy() {
+            var mobileValue = $.trim($('input[name=mobile]').val());
+            $.ajax({
+                url: "{:U('Members/reg_send_sms')}",
+                cache: false,
+                async: false,
+                type: 'post',
+                dataType: 'json',
+                data: { sms_type: 'getpass', mobile: mobileValue},
+                success: function(result) {
+                    $('#pop').hide();
+                    qsToast({type:2,context: result.msg});
+                    if (result.status) {
+                        // 开始倒计时
+                        var countdown = 180;
+                        function settime() {
+                            if (countdown == 0) {
+                                $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                                $('#getVerfyCode').text('获取验证码');
+                                countdown = 180;
+                                return;
+                            } else {
+                                $('#getVerfyCode').addClass('qs-btn-border-disabled');
+                                $('#getVerfyCode').text('重新发送' + countdown + '秒');
+                                countdown--;
+                            }
+                            setTimeout(function() {
+                                settime()
+                            },1000)
+                        }
+                        settime();
+                    } else {
+                        $('#pop').hide();
+                        qsToast({type:2,context: result.msg});
+                    }
+                }
+            });
+        }
+
+        // 图片验证码
+        function verifyPhotoDialog() {
+            var verifyCodePop = new QSpopout('请输入下图中的文字或字母');
+            verifyCodePop.setContent([
+                '<div class="dia-captcha-item">',
+                '<img src="' + qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime() + '" class="dia-captcha-img">',
+                '<input type="text" name="captcha-solution" class="dia-captcha-solution font16" maxlength="10">',
+                '</div>'
+            ].join(''));
+            verifyCodePop.setBtn(1);
+            verifyCodePop.show();
+            verifyCodePop.setClose(false);
+            $('.dia-captcha-img').on('click', function() {
+                $(this).attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+            })
+            // 确定按钮事件
+            verifyCodePop.getPrimaryBtn().on('click', function () {
+                var currentPhotoVal = $.trim($('.dia-captcha-solution').val());
+                if (currentPhotoVal.length) {
+                    $.ajax({
+                        url: qscms.root + '?m=Home&c=captcha&a=captchaCode',
+                        cache: false,
+                        async: false,
+                        type: 'post',
+                        dataType: 'json',
+                        data: { postcaptcha: currentPhotoVal },
+                        success: function(result) {
+                            if (result.status) {
+                                verifyCodePop.hide();
+                                sendVerfy();
+                            } else {
+                                qsToast({type:2,context: '验证码输入错误'});
+                                $('.dia-captcha-img').attr('src', qscms.root + '?m=Home&c=captcha&a=captcha&t=' + (new Date()).getTime());
+                            }
+                        }
+                    });
+                } else {
+                    $('.dia-captcha-solution').focus();
+                    qsToast({type:2,context: '请输入文字或字母'});
+                }
+            });
+        }
+
+        var regularMobile = /^13[0-9]{9}$|14[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/;
+        var captcha_open = eval($('#J_captcha_open').val());
+        /**
+         * 发送手机验证码
+         */
+        $('#getVerfyCode').on('click', function() {
+            if ($(this).hasClass('qs-btn-border-disabled')) return false;
+            var mobileValue = $.trim($('input[name=mobile]').val());
+
+            if (mobileValue == '') {
+                qsToast({type:2,context: '请输入手机号码'});
+                return false;
+            }
+            if (mobileValue != "" && !regularMobile.test(mobileValue)) {
+                qsToast({type:2,context: '手机号码格式不正确'});
+                return false;
+            }
+            $.post("{:U('Members/ajax_check')}",{type:'mobile',param:mobileValue},function(result){
+                if(result.status == 1){
+                    qsToast({type:2,context: '手机号码不存在！'});
+                    return false;
+                }else{
+                    if (captcha_open) {
+                        // 后台是否开启验证
+                        if (verifyPhoto) {
+                            // 图片验证码
+                            verifyPhotoDialog();
+                        } else {
+                            $('.geetest_panel').remove();
+                            // 极验
+                            $.ajax({
+                                url: qscms.root+'?m=Mobile&c=Captcha&type=mobile&t=' + (new Date()).getTime(),
+                                type: 'get',
+                                dataType: 'json',
+                                success: function(config) {
+                                    initGeetest({
+                                        gt: config.gt,
+                                        challenge: config.challenge,
+                                        offline: !config.success,
+                                        new_captcha: config.new_captcha,
+                                        product: 'bind'
+                                    }, function(captchaObj) {
+                                        captchaObj.appendTo("#pop");
+                                        captchaObj.onSuccess(function() {
+                                            var captChaResult = captchaObj.getValidate();
+                                            var mobileValue = $.trim($('input[name=mobile]').val());
+                                            $.ajax({
+                                                url: "{:U('Members/reg_send_sms')}",
+                                                cache: false,
+                                                async: false,
+                                                type: 'post',
+                                                dataType: 'json',
+                                                data: { sms_type: 'getpass', mobile: mobileValue,geetest_challenge: captChaResult.geetest_challenge,geetest_validate: captChaResult.geetest_validate,geetest_seccode: captChaResult.geetest_seccode},
+                                                success: function(result) {
+                                                    $('#pop').hide();
+                                                    qsToast({type:2,context: result.msg});
+                                                    if (result.status) {
+                                                        // 开始倒计时
+                                                        var countdown = 180;
+                                                        function settime() {
+                                                            if (countdown == 0) {
+                                                                $('#getVerfyCode').removeClass('qs-btn-border-disabled');
+                                                                $('#getVerfyCode').text('获取验证码');
+                                                                countdown = 180;
+                                                                return;
+                                                            } else {
+                                                                $('#getVerfyCode').addClass('qs-btn-border-disabled');
+                                                                $('#getVerfyCode').text('重新发送' + countdown + '秒');
+                                                                countdown--;
+                                                            }
+                                                            setTimeout(function() {
+                                                                settime()
+                                                            },1000)
+                                                        }
+                                                        settime();
+                                                    } else {
+                                                        $('#pop').hide();
+                                                        qsToast({type:2,context: result.msg});
+                                                    }
+                                                }
+                                            });
+                                        })
+                                        captchaObj.onReady(function () {
+                                            captchaObj.verify();
+                                        });
+                                        $('#btnCheck').on('click', function () {
+                                            captchaObj.verify();
+                                        })
+                                        window.captchaObj = captchaObj
+                                    });
+                                }
+                            });
+                        }
+                    } else {
+                        sendVerfy();
+                    }
+                }
+            },'json');
+        })
+
+        /**
+         * 下一步
+         */
+        $('#nextBtn').on('click', function() {
+            var mobileValue = $.trim($('input[name=mobile]').val());
+            var mobile_vcodeValue = $.trim($('input[name=mobile_vcode]').val());
+            if (mobileValue == '') {
+                qsToast({type:2,context: '请输入手机号码'});
+                return false;
+            }
+            if (mobileValue != "" && !regularMobile.test(mobileValue)) {
+                qsToast({type:2,context: '手机号码格式不正确'});
+                return false;
+            }
+            if (mobile_vcodeValue == '') {
+                qsToast({type:2,context: '请输入手机验证码'});
+                return false;
+            }
+            var url = "{:U('members/user_getpass')}";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: $('#getPassByMobileForm').serialize(),
+                success: function (data) {
+                    if(data.status==1){
+                        window.location.href = data.data.url;
+                    }else{
+                        qsToast({type:2,context: data.msg});
+                    }
+                }
+            });
+        })
+    </script>
+</html>

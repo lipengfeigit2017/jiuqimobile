@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta" />
+    <link rel="stylesheet" href="../public/css/members.css">
+</head>
+<body>
+<include file="public:header" />
+<div class="set-success-tip-box qs-center">
+    <div class="set-success-tip font16">
+    	<if condition="$type eq 1">
+    		账号已经激活,请登录！
+		<else/>
+			注册邮件激活成功！
+    	</if>
+    </div>
+</div>
+<div class="btn-spacing mt10">
+	<a href="{$url}" class="qs-btn qs-btn-blue font18">
+		<if condition="$type eq 1">
+			登录账号
+		<else/>
+			进入会员中心
+		</if>
+	</a>
+</div>
+<include file="public:footer" />
+<include file="public:footer_min" />
+</body>
+</html>

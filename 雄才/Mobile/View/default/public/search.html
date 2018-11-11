@@ -1,0 +1,191 @@
+<div class="qspageso link_gray6">
+  <div class="topbg">
+	  	<div class="c-return"></div>
+		 <input value="{$Think.get.key|urldecode|urldecode}" type="text" class="soimput" id="J_soinput" oninput="onInput(event)" placeholder="请输入关键字"/>
+    	<div class="soselect qs-relative for-event">
+		    <span class="for-type-txt"> <if condition="$search_type eq 'resume' or strtolower(CONTROLLER_NAME) eq 'resume'">搜简历<else />搜职位</if></span>
+		    <input type="hidden" class="for-type-code" id="search_type" name="search_type" value="<notempty name="search_type">{$search_type}<else/><if condition="strtolower(CONTROLLER_NAME) eq 'resume'">resume<else/>jobs_commpany</if></notempty>">
+	    </div>
+	    <div class="so-close js-so-close"></div>
+		<div class="rightbtn-so for-event" id="J_submit">搜索</div>
+	  <div class="choose-s-type-group">
+		  <div class="choose-s-type-cell qs-relative">
+			  <div class="qs-center <if condition="$search_type eq 'jobs'">qs-relative</if>"><div class="choose-s-type-list font14" data-code="jobs_commpany" data-title="职位">职位</div></div>
+			  <div class="qs-center <if condition="$search_type eq 'resume'">qs-relative</if>"><div class="choose-s-type-list sl2 font14" data-code="resume" data-title="简历">简历</div></div>
+		  </div>
+	  </div>
+<div class="search_ajax"><ul id="search_mes"></ul></div>
+  </div>
+  <div class="history"></div>
+  
+  <div class="clearkey  for-event" id="J_cleanhistory" style="display:none;">清空关键字</div>
+
+<input type="hidden" id="searchUrlCode" value="{:C('qscms_key_urlencode')}">
+  <div class="split-block"></div>
+  
+  <div class="sohot font12 link_gray6">
+  <div class="hottitle font14 ">热门职位</div>
+  <qscms:hotword 列表名="hotword_list" 显示数目="12"/>
+		<volist name="hotword_list" id="hotword">
+    <if condition="C('qscms_key_urlencode') eq 1">
+ 		<a href="{:url_rewrite('QS_jobslist',array('key'=>urlencode($hotword['w_word_code'])))}" class="hotword substring for-event">{$hotword.w_word}</a>
+    <else />
+    <a href="{:url_rewrite('QS_jobslist',array('key'=>$hotword['w_word_code']))}" class="hotword substring for-event">{$hotword.w_word}</a>
+    </if>
+  	</volist>
+  <div class="clear"></div>
+  <script src="../public/js/zepto.cookie.min.js"></script>
+	  <script>
+          $('.topbg .c-return').click(function() {
+              $('.qspageso').toggle();
+		  })
+		  $('.js-so-close').on('click', function () {
+			  $(this).closest('.topbg').find('.soimput').val('');
+              $('.search_ajax').hide();
+              $(this).closest('.topbg').removeClass('has-inp');
+		  })
+    get_history($('.history'));
+    function get_history(d){
+      var b = "", hlength = 0;
+      var searchHistoryArr = new Array();
+      if ($.fn.cookie("searchHistory")) {
+        searchHistoryArr = $.fn.cookie("searchHistory").split(",");
+      };
+      if (searchHistoryArr.length == 0) {
+        d.hide();
+        return false
+      }
+      $.each(searchHistoryArr.reverse(), function(index, val) {
+        hlength += 1;
+        val = decodeURI(val);
+        b += '<div class="record"><div class="keyimg history_go" data-self="'+val+'">'+val+'</div><div class="delimg close for-event"></div><div class="clear"></div></div>';
+      });
+      if (hlength > 0) {
+        d.empty().html(b);
+        $("#J_cleanhistory").show();
+        $(".history_go").on("click", function() {
+          searchGo($(this).data("self"));
+        });
+        $(".record .close").on("click", function() {
+          var searchHistoryArr = $.fn.cookie("searchHistory").split(","),
+            val = $(this).prev().data("self"),
+            index = $.inArray(val,searchHistoryArr);
+          if (index >= 0) {
+            searchHistoryArr.splice(index,1);
+          };
+          $.fn.cookie("searchHistory",searchHistoryArr,{ path: '/' });
+          $(this).parent().remove();
+        });
+      } else {
+        d.empty();
+        $("#J_cleanhistory").hide()
+      }
+    }
+    function add_history(key){
+      key = encodeURI(htmlspecialchars(key));
+      if (key.length > 0) {
+        var searchHistoryArr = new Array();
+        if ($.fn.cookie("searchHistory")) {
+          searchHistoryArr = $.fn.cookie("searchHistory").split(",");
+          var isOnly = true;
+          $.each(searchHistoryArr, function(index, val) {
+            if (val == key) {
+              isOnly = false;
+            };
+          });
+          if (isOnly) {
+            if (searchHistoryArr.length >= 5) {
+              searchHistoryArr.splice(0,1);
+            }
+            searchHistoryArr.push(key);
+          };
+        } else {
+          searchHistoryArr.push(key);
+        };
+        $.fn.cookie("searchHistory",searchHistoryArr,{ path: '/' });
+      }
+    }
+    function searchGo(key) {
+      add_history(key);
+      var search_type = $('#search_type').val();
+      if(search_type=='resume'){
+        var url = qscms.root+"?m=Mobile&c=Resume&a=index&key="+encodeURI(encodeURI(htmlspecialchars(key)));
+      }else{
+        var url = qscms.root+"?m=Mobile&c=Jobs&a=index&search_type=jobs_commpany&key="+encodeURI(encodeURI(htmlspecialchars(key)));
+      }
+      window.location.href=url;
+    }
+		  $('.topbg .soselect').on('click', function () {
+			  $('.topbg').toggleClass('for-type');
+		  })
+		  $('.choose-s-type-cell .qs-center').on('click', function () {
+			  var stypeCode = $(this).find('.choose-s-type-list').data('code');
+		  	var stypeTitle = $(this).find('.choose-s-type-list').data('title');
+			  $('.for-type-code').val(stypeCode);
+		  	$('.for-type-txt').text('搜' + stypeTitle);
+			  $('.topbg').toggleClass('for-type');
+		  });
+      $('#J_submit').on('click',function(){
+        if($(this).hasClass('cancel')){
+          searchGo('');
+        }else{
+          searchGo($('#J_soinput').val());
+        }
+      });
+      $("#J_cleanhistory").on("click", function() {
+        $(this).hide();
+        $(".history").hide();
+        $.fn.cookie('searchHistory', null,{ path: '/' });
+      });
+      $('#J_soinput').on('keyup',function(){
+        if($(this).val()!=''){
+          $(this).closest('.topbg').addClass('has-inp');
+        }else{
+          $(this).closest('.topbg').removeClass('has-inp');
+        }
+      });
+      $('.hotword').on('click',function(){
+        add_history($(this).text());
+        window.location.href=$(this).attr('href');
+        return false;
+      });
+      // 关键字搜索关联
+          function onInput(event) {
+              var keyValue = event.target.value;
+              if (!keyValue.length) {
+                  $('.search_ajax').hide();
+                  return false;
+              }
+              $.getJSON("{:U('ajaxCommon/hotword')}",{key:keyValue},function(result){
+                  if (result.status==1) {
+                      var reArr = result.data.list;
+                      if (reArr.length) {
+                          var reHtml = '';
+                          var reUrl = "{:url_rewrite('QS_jobslist',array('key'=>urlencode('ooo')))}";
+                          var reUrl1 = "{:url_rewrite('QS_jobslist',array('key'=>'ooo'))}";
+                          var reUrls = "{:url_rewrite('QS_resumelist',array('key'=>urlencode('ooo')))}";
+                          var reUrl1s = "{:url_rewrite('QS_resumelist',array('key'=>'ooo'))}";
+                          for (var i = 0; i < reArr.length; i++) {
+                              if (eval($('#searchUrlCode').val())) {
+                                  if (eval($('#pageSoType').val())) {
+                                      reHtml += '<li data-key="'+reArr[i].w_word+'"><a href="'+reUrl.replace('ooo',reArr[i].w_word)+'"><span class="search_wd">'+reArr[i].w_word+'</span></a></li>';
+                                  } else {
+                                      reHtml += '<li data-key="'+reArr[i].w_word+'"><a href="'+reUrls.replace('ooo',reArr[i].w_word)+'"><span class="search_wd">'+reArr[i].w_word+'</span></a></li>';
+                                  }
+                              } else {
+                                  if (eval($('#pageSoType').val())) {
+                                      reHtml += '<li data-key="'+reArr[i].w_word+'"><a href="'+reUrl1.replace('ooo',reArr[i].w_word)+'"><span class="search_wd">'+reArr[i].w_word+'</span></a></li>';
+                                  } else {
+                                      reHtml += '<li data-key="'+reArr[i].w_word+'"><a href="'+reUrl1s.replace('ooo',reArr[i].w_word)+'"><span class="search_wd">'+reArr[i].w_word+'</span></a></li>';
+                                  }
+                              }
+                          }
+                          $('#search_mes').html(reHtml);
+                          $('.search_ajax').show();
+                      }
+                  }
+              });
+          }
+	  </script>
+</div>
+</div>

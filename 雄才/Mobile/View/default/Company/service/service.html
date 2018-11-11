@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+     <include file="public:header" />
+     <div class="ptitle border">
+      <div class="th1">选择增值服务</div>
+    </div>
+    <div class="service-list">
+    	<div class="item">
+    		<div class="pic p1"></div>
+    		<div class="txt">
+    			简历包<span class="font_gray9">（VIP <span class="font_yellow">{$return_discount[0]}折</span>）</span>
+    		</div>
+    		<div class="btn" onclick="javascript:location.href='{:U('service_resume')}'">立即购买</div>
+    	</div>
+    	<div class="item">
+    		<div class="pic p2"></div>
+    		<div class="txt">
+    			短信包<span class="font_gray9">（VIP <span class="font_yellow">{$return_discount[1]}折</span>）</span>
+    		</div>
+    		<div class="btn" onclick="javascript:location.href='{:U('service_sms')}'">立即购买</div>
+    	</div>
+    <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="split-block"></div>
+    <div class="ptitle border">
+      <div class="th1">企业其他服务</div>
+    </div>
+    <div class="service-list other">
+    	<div class="item">
+    		<div class="pic p3"></div>
+    		<div class="txt">
+    			职位置顶<span class="font_gray9">（VIP <span class="font_yellow">{$return_discount[2]}折</span>）</span>
+    		</div>
+    		<div class="btn" onclick="javascript:location.href='{:U('service_stick')}'">立即购买</div>
+    	</div>
+    	<div class="item">
+    		<div class="pic p4"></div>
+    		<div class="txt">
+    			职位紧急<span class="font_gray9">（VIP <span class="font_yellow">{$return_discount[3]}折</span>）</span>
+    		</div>
+    		<div class="btn" onclick="javascript:location.href='{:U('service_emergency')}'">立即购买</div>
+    	</div>
+        <div class="item">
+            <div class="pic p7"></div>
+            <div class="txt">
+                智能刷新<span class="font_gray9">（VIP <span class="font_yellow">{$return_discount[5]}折</span>）</span>
+            </div>
+            <div class="btn" onclick="javascript:location.href='{:U('service_refresh')}'">立即购买</div>
+        </div>
+        <if condition="C('apply.Sincerity')">
+    	<div class="item">
+    		<div class="pic p6"></div>
+    		<div class="txt">
+    			信誉名企
+    		</div>
+    		<div class="btn" onclick="javascript:location.href='{:U('service_famous')}'">立即购买</div>
+    	</div>
+        </if>
+    </div>
+     <include file="public:footer_min" />
+	</body>
+</html>

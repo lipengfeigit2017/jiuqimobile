@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta" />
+    <link rel="stylesheet" href="../public/css/jobs.css">
+    <qscms:load type="category" search="1"/>
+    
+</head>
+<body>
+<include file="public:header" />
+<input type="hidden" id="pageSoType" value="1">
+<div class="split-block-title">
+    <div class="sbox js-show-qspageso">
+	    {$Think.get.key|default="请输入职位名/公司名关键字"|urldecode|urldecode}
+	    <script>
+		    // 显示搜索层
+		    $('.js-show-qspageso').on('click', function(){
+			  $('.qspageso').toggle();
+              $('#J_soinput').focus();
+              if($('#J_soinput').val()!=''){
+                $('#J_soinput').val($('#J_soinput').val());
+                $('#J_soinput').closest('.topbg').addClass('has-inp');
+              }
+		    });
+	    </script>
+    </div>
+</div>
+<qscms:classify 列表名="jobs_cate_info" 类型="QS_jobs_info"/>
+<qscms:classify 列表名="wage_list" 类型="QS_wage" 显示数目="100"/>
+<qscms:classify 列表名="experience_list" 类型="QS_experience" 显示数目="100"/>
+<qscms:classify 列表名="nature_list" 类型="QS_jobs_nature" 显示数目="100"/>
+<qscms:classify 列表名="education_list" 类型="QS_education" 显示数目="100"/>
+<qscms:classify 列表名="tag_list" 类型="QS_jobtag" 显示数目="100"/>
+<qscms:classify 列表名="trade_list" 类型="QS_trade" 显示数目="100"/>
+<qscms:classify 列表名="city" 类型="QS_citycategory" 地区分类="$_GET['citycategory']" 显示数目="100"/>
+<div class="filter-group x4 filter-outer">
+    <div id="f-mask"></div>
+    <div class="filter-outer">
+      <div class="filter-list js-filter qs-temp-new-city" data-tag="0" data-type="city"><div class="filter-cell"><div class="filter-cell-txt qs-temp-txt-city"><if condition="$Think.get.citycategory neq ''">{$city['select']['categoryname']|default="地区"}<else/>地区</if></div></div></div>
+      <div class="filter-list js-filter" data-tag="1"><div class="filter-cell"><div class="filter-cell-txt f-normal-txt-wage">{$wage_list[$_GET['wage']]|default="薪资"}</div></div></div>
+      <div class="filter-list js-filter" data-tag="2"><div class="filter-cell"><div class="filter-cell-txt f-normal-txt-exp">{$experience_list[$_GET['experience']]|default="经验"}</div></div></div>
+      <div class="filter-list js-filter" data-tag="3"><div class="filter-cell"><div class="filter-cell-txt j-change-color">更多</div></div></div>
+      <div class="clear"></div>
+      <div class="qs-actionmore"></div>
+	    <form id="searchForm">
+		    <input type="hidden" class="" name="search_type" value="jobs_commpany">
+		    <input type="hidden" class="" name="key" value="{$Think.get.key|urldecode|urldecode}">
+		    <input type="hidden" class="qs-recover-code-job" name="jobcategory" value="{$Think.get.jobcategory}">
+		    <input type="hidden" class="qs-temp-code-city" name="citycategory" value="{$Think.get.citycategory}">
+		    <input type="hidden" class="f-normal-code-wage" name="wage" value="{$Think.get.wage}">
+		    <input type="hidden" class="f-normal-code-exp" name="experience" value="{$Think.get.experience}">
+		    <input type="hidden" class="f-more-l-code-nature" name="nature" value="{$Think.get.nature}">
+		    <input type="hidden" class="f-more-l-code-edu" name="education" value="{$Think.get.education}">
+		    <input type="hidden" class="f-more-l-code-tag" name="jobtag" value="{$Think.get.jobtag}">
+		    <input type="hidden" class="f-more-l-code-trade" name="trade" value="{$Think.get.trade}">
+		    <input type="hidden" class="f-more-l-code-settr" name="settr" value="{$Think.get.settr}">
+		    <input type="hidden" class="f-deliver" name="deliver" value="{$Think.get.deliver}">
+		    <input type="hidden" class="qs-temp-code-range" name="range" value="{$Think.get.range}">
+            <input type="hidden" name="lat" id="lat" value="{$Think.get.lat}">
+            <input type="hidden" name="lng" id="lng" value="{$Think.get.lng}">
+	    </form>
+	    <input type="hidden" class="f-seach-page" value="?m=Mobile&c=Jobs&a=index&">
+    </div>
+    <div class="con-filter">
+        <div class="f-box f-box-city"></div>
+		    <div class="f-box f-box-wage">
+			    <div class="f-box-inner">
+            <volist name="wage_list" id="wage">
+            <li><a class="f-item f-item-normal <if condition="$Think.get.wage eq $key">select</if>" href="javascript:;" data-type="wage" data-code="{$key}" data-title="{$wage}">{$wage}</a></li>
+          </volist>
+			    </div>
+                <div class="f-btn-submit qs-center"><div onclick="window.location='{:P(array('wage'=>''))}';" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange">不限</div></div>
+		    </div>
+		    <div class="f-box f-box-exp">
+			    <div class="f-box-inner">
+            <volist name="experience_list" id="experience">
+            <li><a class="f-item f-item-normal <if condition="$Think.get.experience eq $key">select</if>" href="javascript:;" data-type="exp" data-code="{$key}" data-title="{$experience}">{$experience}</a></li>
+          </volist>
+			    </div>
+                <div class="f-btn-submit qs-center"><div onclick="window.location='{:P(array('experience'=>''))}';" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange">不限</div></div>
+		    </div>
+		    <div class="f-box f-box-more">
+			    <div class="f-box-inner">
+				    <ul class="arrow">
+					    <li class="clicked">过滤已投递<span><span class="clickedbox js-clickedbox"></span></span></li>
+					    <li><a href="javascript:;" data-id="filter-nature" class="js-more-l">工作性质<span class="choice f-more-l-txt-nature">{$nature_list[$_GET['nature']]|default="不限"}</span></a></li>
+					    <li><a href="javascript:;" data-id="filter-edu" class="js-more-l">学历要求<span class="choice f-more-l-txt-edu">{$education_list[$_GET['education']]|default="不限"}</span></a></li>
+					    <li><a href="javascript:;" data-id="filter-tag" class="js-more-l">福利待遇<span class="choice f-more-l-txt-tag">{$tag_list[$_GET['jobtag']]|default="不限"}</span></a></li>
+					    <li><a href="javascript:;" data-id="filter-trade" class="js-more-l">行业<span class="choice f-more-l-txt-trade">{$trade_list[$_GET['trade']]|default="不限"}</span></a></li>
+					    <li><a href="javascript:;" data-id="filter-settr" class="js-more-l">更新时间<span class="choice f-more-l-txt-settr">
+					    	<switch name="_GET['settr']">
+					    		<case value="">不限</case>
+					    		<case value="0">不限</case>
+								<case value="3">3天内</case>
+								<case value="7">7天内</case>
+								<case value="15">15天内</case>
+								<case value="30">30天内</case>
+							</switch>
+					    </span></a></li>
+				    </ul>
+			    </div>
+			    <div class="f-btn-submit qs-center">
+                    <div href="javascript:;" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange" id="f-do-filter"> 确 定 </div>
+                    &nbsp;&nbsp;&nbsp;
+                    <div onclick="window.location='{:url_rewrite('QS_jobslist')}';" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-border-gray"> 清空所选 </div>
+                </div>
+			    <div class="f-btn-back qs-center"><div href="javascript:;" class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange f-more-back-btn"> 返 回 </div></div>
+		    </div>
+	      <div class="f-box f-more-content" id="filter-nature">
+		      <div class="f-box-inner">
+			      <ul>
+				      <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.nature eq 0">select</if>" data-type="nature" data-title="不限" data-code="0">不限</a></li>
+              <volist name="nature_list" id="nature">
+                <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.nature eq $key">select</if>" data-type="nature" data-title="{$nature}" data-code="{$key}">{$nature}</a></li>
+              </volist>
+			      </ul>
+		      </div>
+	      </div>
+		    <div class="f-box f-more-content" id="filter-edu">
+			    <div class="f-box-inner">
+				    <ul>
+              <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.education eq 0">select</if>" data-type="edu" data-title="不限" data-code="0">不限</a></li>
+              <volist name="education_list" id="education">
+                <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.education eq $key">select</if>" data-type="edu" data-title="{$education}" data-code="{$key}">{$education}</a></li>
+              </volist>
+				    </ul>
+			    </div>
+		    </div>
+		    <div class="f-box f-more-content" id="filter-tag">
+			    <div class="f-box-inner">
+				    <ul>
+              <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.jobtag eq 0">select</if>" data-type="tag" data-title="不限" data-code="0">不限</a></li>
+              <volist name="tag_list" id="tag">
+                <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.jobtag eq $key">select</if>" data-type="tag" data-title="{$tag}" data-code="{$key}">{$tag}</a></li>
+              </volist>
+				    </ul>
+			    </div>
+		    </div>
+		    <div class="f-box f-more-content" id="filter-trade">
+			    <div class="f-box-inner">
+				    <ul>
+              <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.trade eq 0">select</if>" data-type="trade" data-title="不限" data-code="0">不限</a></li>
+              <volist name="trade_list" id="trade">
+              <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.trade eq $key">select</if>" data-type="trade" data-title="{$trade}" data-code="{$key}">{$trade}</a></li>
+              </volist>
+				    </ul>
+			    </div>
+		    </div>
+		    <div class="f-box f-more-content" id="filter-settr">
+			    <div class="f-box-inner">
+				    <ul>
+              <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.settr eq 0">select</if>" data-type="settr" data-title="不限" data-code="0">不限</a></li>
+              <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.settr eq 3">select</if>" data-type="settr" data-title="3天内" data-code="3">3天内</a></li>
+              <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.settr eq 7">select</if>" data-type="settr" data-title="7天内" data-code="7">7天内</a></li>
+              <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.settr eq 15">select</if>" data-type="settr" data-title="15天内" data-code="15">15天内</a></li>
+              <li class="selected"><a href="javascript:;" class="f-more-back-a <if condition="$Think.get.settr eq 30">select</if>" data-type="settr" data-title="30天内" data-code="30">30天内</a></li>
+				    </ul>
+			    </div>
+		    </div>
+    </div>
+</div>
+<if condition="$Think.get.jobcategory neq ''">
+	<div class="list-jobcategory-block font13">
+		<div class="l-recover-job-txt">当前在  <span class="l-cetgory">{$jobs_cate_info['spell'][$_GET['jobcategory']]['categoryname']}</span> 分类下</div>
+		<div class="l-recover-close js-clearjob-jobcategory">清空分类</div>
+	</div>
+</if>
+<qscms:jobs_list 列表名="jobslist" 搜索类型="$_GET['search_type']" 搜索内容="$_GET['search_cont']" 显示数目="20" 分页显示="1" 关键字="$_GET['key']" 职位分类="$_GET['jobcategory']" 地区分类="$_GET['citycategory']" 行业="$_GET['trade']" 日期范围="$_GET['settr']" 学历="$_GET['education']" 工作经验="$_GET['experience']" 工资="$_GET['wage']" 职位性质="$_GET['nature']" 标签="$_GET['jobtag']" 公司规模="$_GET['scale']" 营业执照="$_GET['license']" 过滤已投递="$_GET['deliver']" 排序="$_GET['sort']" 合并="$_COOKIE['com_list']" 描述长度="100" 搜索范围="$_GET['range']" 经度="$_GET['lng']" 纬度="$_GET['lat']"/>
+<notempty name="jobslist['list']">
+<volist name="jobslist['list']" id="jobs">
+<div class="job-list-item for-event" onclick="javascript:location.href='{$jobs.jobs_url}'">
+    <div class="info">
+        <div class="line-one">
+            <div class="job-name substring font16">{$jobs.jobs_name}
+            <if condition="$jobs['emergency'] eq 1">
+                <img src="../public/images/231.png"/>
+            </if>
+            </div>
+            <if condition="C('apply.Allowance') && $jobs['allowance_id'] gt 0">
+            <div class="j-n-money">
+                <div class="j-m-l jm<eq name="jobs['allowance_info']['type_alias']" value="apply">2</eq><eq name="jobs['allowance_info']['type_alias']" value="interview">3</eq><eq name="jobs['allowance_info']['type_alias']" value="entry">1</eq>"></div>
+                <div class="j-m-r"><span class="font9">￥</span><span class="font12">{$jobs['allowance_info']['per_amount']}</span></div>
+                <div class="clear"></div>
+            </div>
+            </if>
+            <if condition="$jobs['stick'] eq 1 && (($_GET['search_type'] eq 'jobs' or $_GET['search_type'] eq 'company' or $_GET['jobs_commpany'] eq 'jobs_commpany' or $_GET['key'] eq '') && !$_GET['sort'])">
+            <div class="refresh-time font12 font_red_light">置顶</div>
+            <else />
+            <div class="refresh-time font12">{$jobs['refreshtime_cn']}</div>
+            </if>
+            <div class="clear"></div>
+        </div>
+        <div class="line-two font14">
+            <div class="salary">{$jobs.wage_cn}</div>
+            <div class="category substring">{$jobs.category_cn}</div>
+            <div class="clear"></div>
+        </div>
+        <empty name="jobs['tag_cn']">
+        <div class="line-four font13">
+            {$jobs.education_cn} / {$jobs.experience_cn} / 年龄{$jobs['age_cn']}
+        </div>
+        <else />
+        <div class="line-three fontag">
+            <volist name="jobs['tag_cn']" id="tag" offset="0" length="4">
+            <div class="job-tag">{$tag}</div>
+            </volist>
+            <div class="clear"></div>
+        </div>
+        </empty>
+        <eq name="jobs['allowance_id']" value="0">
+        <div class="apply-btn apply_jobs" data-jid="{$jobs['id']}" onClick="event.cancelBubble = true">申请</div>
+        <else />
+        <div class="apply-btn J_applyForJobAllowance" data-jid="{$jobs['id']}" onClick="event.cancelBubble = true">申请</div>
+        </eq>
+    </div>
+    <div class="company font13">
+        <div class="company-name substring">{$jobs.companyname}</div>
+        <div class="district <if condition="$Think.get.range neq ''">range</if> substring"><if condition="$Think.get.range neq ''">{$jobs.map_range}<else />{$jobs.district_cn}</if></div>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="list-split-block"></div>
+</volist>
+<div class="qspage">{$jobslist['page']}</div>
+<else />
+    <div class="list-split-block"></div>
+    <div class="list-empty link_blue">
+        抱歉，没有找到符合您条件的职位！<br />
+        放宽搜索条件也许有更多合适您的职位哦~
+    </div>
+</notempty>
+<if condition="C('qscms_footer_nav_status') eq 1">
+    <div class="bottom-nav-bar-group">
+        <div class="bottom-nav-bar">
+            <div class="nav-bar-cell qs-left">
+                <a href="{:url_rewrite('QS_index')}" class="bar-cell index">
+                    <div class="b-img"></div>
+                    <div class="b-txt font12">首页</div>
+                </a>
+                <a href="{:url_rewrite('QS_jobslist')}" class="bar-cell job active">
+                    <div class="b-img"></div>
+                    <div class="b-txt font12">求职</div>
+                </a>
+                <div class="clear"></div>
+            </div>
+            <div class="nav-bar-more qs-left for-event">
+                <a href="{:url_rewrite('QS_jobfairlist')}" style="color: #666">
+                    <div class="nav-bar-more-cell js-b-nav-bar1" style="top: 0.1rem"></div>
+                    <div class="b-txt font10"
+                         style="width: 100%;text-align: center; bottom: 0.05rem; position: absolute;">招聘
+                    </div>
+                </a>
+            </div>
+            <div class="nav-bar-cell qs-left">
+                <a href="{:url_rewrite('QS_newslist')}" class="bar-cell resume">
+                    <div class="b-img"></div>
+                    <div class="b-txt font12">资讯</div>
+                </a>
+                <a href="{:url_rewrite('QS_login')}" class="bar-cell mine">
+                    <div class="b-img"></div>
+                    <div class="b-txt font12">我的</div>
+                </a>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="bottom-bar-more-group">
+            <div class="bn-mask js-b-nav-bar-active"></div>
+            <div class="bar-more-cell">
+                <div id="hwslider-bottom" class="hwslider">
+                    <ul>
+                        <li>
+                            <a href="{:url_rewrite('QS_jobslist')}"><dl class="l1"><dt class="job for-event"></dt><dd class="font12">找工作</dd></dl></a>
+                            <a href="{:url_rewrite('QS_resumelist')}"><dl class="l1"><dt class="resume for-event"></dt><dd class="font12">找人才</dd></dl></a>
+                            <a href="{:url_rewrite('QS_login')}"><dl class="l1"><dt class="fabu for-event"></dt><dd class="font12">发布</dd></dl></a>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <a href="{:url_rewrite('QS_newslist')}"><dl class="l1"><dt class="news for-event"></dt><dd class="font12">资讯</dd></dl></a>
+                            <notempty name="apply['Mall']">
+                                <a href="{:url_rewrite('QS_mall_index')}"><dl class="l1"><dt class="shop for-event"></dt><dd class="font12">商城</dd></dl></a>
+                            </notempty>
+                            <notempty name="apply['Jobfair']">
+                                <a href="{:url_rewrite('QS_jobfairlist')}"><dl class="l1"><dt class="zhaoph for-event"></dt><dd class="font12">招聘会</dd></dl></a>
+                            </notempty>
+                            <div class="clear"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bar-more-closecell js-b-nav-bar-active for-event"></div>
+        </div>
+    </div>
+</if>
+
+<div class="alw-yes-meet-dia">
+    <div><div class="alw-close"></div><div class="clear"></div></div>
+    <div class="sp-line-10"></div>
+    <div class="alw-ym-con">
+        <div class="ayc-head txt-red font16">投递红包领取成功</div>
+        <div class="sp-line-80"></div>
+        <div class="ayc-cash-num txt-red font24"><span class="amount">0</span>&nbsp;<span class="font16">元</span></div>
+        <div class="ayc-title font18">投递红包</div>
+        <div class="sp-line-20"></div>
+        <div class="ayc-remind font12">提示：请勿使用虚假简历投递，一经查实即加入黑名单，永久失去本平台领取红包特权！</div>
+        <div class="sp-line-20"></div>
+        <div class="alw-yes-share-btn font12">分享给好友 >></div>
+        <div class="sp-line-20"></div>
+        <div class="alw-txt-line txt-fff font9">红包到账可能有延迟，请在微信中查询</div>
+        <div class="sp-line-15"></div>
+        <div class="alw-txt-line txt-dark-red font9">本活动最终解释权归{:C('qscms_site_name')}所有</div>
+    </div>
+</div>
+<div class="alw-layer"></div>
+<div class="alw-wx-layer"></div>
+<include file="public:footer_min" />
+<script src="../public/js/zepto.cookie.min.js"></script>
+<!--<script src="../public/js/inobounce.js"></script>-->
+<script src="../public/js/QSfilter.js"></script>
+<script src="../public/js/qsCategory.js"></script>
+<script src="../public/js/qsCitySearch.js"></script>
+<script type="text/javascript" charset="utf-8" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak={:C('qscms_map_ak')}"></script>
+</body>
+<script>
+    /* 显示分享 覆盖层 */
+  function share() {
+      $(".alw-wx-layer").show();
+  }
+  function share_() {
+      $(".alw-layer").show();
+  }
+  //分享按钮
+  $('.alw-yes-share-btn').on('click', function() {
+      var agent = navigator.userAgent.toLowerCase();
+      if (agent.indexOf('micromessenger') < 0) {
+          share_();
+      } else {
+          share();
+      }
+  });
+  $(".alw-layer, .alw-wx-layer").on("click", function() {
+      $(this).hide();
+  });
+	// 过滤已投递恢复
+	var recoverDeliver = '{$Think.get.deliver}';
+	if (eval(recoverDeliver)) {
+		$('.js-clickedbox').addClass('clickedchoice');
+	}
+    var recoverNature = '{$Think.get.nature}';
+    var recoverEducation = '{$Think.get.education}';
+    var recoverJobtag = '{$Think.get.jobtag}';
+    var recoverTrade = '{$Think.get.trade}';
+    var recoverSettr = '{$Think.get.settr}';
+    var isChangeColor = false;
+    if (eval(recoverDeliver) > 0 || eval(recoverNature) > 0 || eval(recoverEducation) > 0 || eval(recoverJobtag) > 0 || eval(recoverTrade) > 0 || eval(recoverSettr) > 0) {
+        isChangeColor = true;
+    }
+    if (isChangeColor) {
+        $('.j-change-color').addClass('red-txt');
+    }
+    setTimeout(function() {
+        var noLimitCityHtml = '<div class="f-btn-submit qs-center"><div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-border-orange" id="j-cate-city" style="margin-right:.25rem;">按地区</div><div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange" id="j-cate-range" style="margin-right:.25rem;">附近职位</div><div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange" id="j-no-limit-city">不限</div></div>';
+        $('.f-box-city').append(noLimitCityHtml);
+    }, 100)
+    $('#j-no-limit-city').die().live('click', function() {
+        window.location = "{:P(array('citycategory'=>'','range'=>''))}";
+    })
+    // 职位亮点随机背景色
+    function randomsort(a, b) {  
+        return Math.random()>.5 ? -1 : 1;
+    }
+    var bgArrBefore = [1,2,3,4];
+    $('.job-list-item').each(function () {
+        var $jobTagDom = $(this).find('.job-tag');
+        if ($jobTagDom.length) {
+            var bgArray = bgArrBefore.sort(randomsort);
+            $($jobTagDom).each(function (index, value) {
+                $(this).addClass('tg' + bgArray[index]);
+            })
+        }
+    })
+    
+	// 更多列表左右切换
+	 $('.js-more-l').on('click', function () {
+		 var targetId = $(this).data('id');
+		 $('.f-box-more').toggleClass('qs-actionsheet-toggle-left');
+		 $('#' + targetId).toggleClass('qs-actionsheet-toggle');
+	 })
+	 $('.f-more-back-btn').on('click', function () { // 更多列表切换返回
+		 $('.f-box-more').toggleClass('qs-actionsheet-toggle-left');
+		 $('.f-more-content').removeClass('qs-actionsheet-toggle');
+	 })
+	 $('.f-more-back-a').on('click', function () { // 更多列表项点击
+	 	 var thisType = $(this).data('type');
+		 var thisTitle = $(this).data('title');
+		 var thisCode = $(this).data('code');
+		 $('.f-more-l-code-' + thisType).val(thisCode);
+		 $('.f-more-l-txt-' + thisType).text(thisTitle);
+		 $('.f-box-more').toggleClass('qs-actionsheet-toggle-left');
+		 $('.f-more-content').removeClass('qs-actionsheet-toggle');
+	 })
+		// 除更多和读取缓存之外的下拉列表
+	 $('.f-item-normal').on('click', function () {
+		 var thisType = $(this).data('type');
+		 var thisTitle = $(this).data('title');
+		 var thisCode = $(this).data('code');
+		 $('.f-normal-code-' + thisType).val(thisCode);
+		 $('.f-normal-txt-' + thisType).text(thisTitle);
+		 $('body').removeClass('filter-fixed');
+		 $('.f-box-' + thisType).addClass('qs-hidden');
+		 $('.js-filter').removeClass('active');
+		 $('#f-mask').hide();
+		 goPage();
+	 })
+	 // 过滤已投递
+	 $('.js-clickedbox').on('click', function () {
+		 if ($(this).hasClass('clickedchoice')) {
+		 	 $(this).removeClass('clickedchoice');
+			 $('.f-deliver').val('0');
+		 } else {
+			 $(this).addClass('clickedchoice');
+			 $('.f-deliver').val('1');
+		 }
+	 })
+	// 清空已选分类
+	$('.js-clearjob-jobcategory').on('click', function () {
+		$('.qs-recover-code-job').val('');
+		goPage();
+	})
+	 // 跳转方法
+	 function goPage() {
+		 var toSearchPage = $('.f-seach-page').val();
+		 window.location.href = qscms.root + toSearchPage + $('#searchForm').serialize();
+	 }
+		// 点击筛选
+		$('#f-do-filter').on('click', function () {
+			goPage();
+		});
+    var isVisitor = "{:C('visitor.uid')}";
+    var utype = "{:C('visitor.utype')}";
+    $('.js-filter').on('click', function () {
+      var filter = new QSfilter($(this));
+	    document.getElementById('f-mask').ontouchstart = function(e){ e.preventDefault(); }
+    });
+    // 申请职位点击事件绑定
+    $(".apply_jobs").on('click',function(){
+      var url = "{:U('ajaxPersonal/resume_apply')}";
+      var jid = $(this).data('jid');
+      if ((isVisitor > 0)) {
+        $.getJSON(url,{jid:jid},function(result){
+          if(result.status==1){
+            qsToast({type:1,context: result.msg});
+          } else if(eval(result.dialog)) {
+              var data = result.data;
+              if (data.id){
+                  var $mPop = new QSpopout();
+                  var url = "{:U('Personal/resume_edit',array('pid'=>Placeholder))}";
+                  url = url.replace('Placeholder',data.id);
+                  $mPop.setContent('<div class="link_yellow" style="line-height: 180%;">您的简历完整度只有 <strong>'+data.percent+'%</strong>，该公司要求达到 <strong>{:C("qscms_apply_job_min_percent")}%</strong> 才可以申请，请<a href="'+url+'">继续完善</a>吧</div>');
+                  $mPop.show();
+                  $mPop.getPrimaryBtn().on('click', function () {
+                      window.location.href = url;
+                  });
+              }else{
+                  qsToast({type:2,context: result.msg});
+                  return false;
+              }
+          }else {
+            qsToast({type:2,context: result.msg});
+            return false;
+          }
+        });
+      } else {
+           var regResume = "{:C('qscms_rapid_registration_resume')}";
+          if(regResume == 1){
+            window.location.href = qscms.root + '?m=Mobile&c=AjaxPersonal&a=resume_add_dig&jid=' + jid;
+          }else{
+            window.location.href = "{:url_rewrite('QS_login')}";
+          }
+      }
+    });
+    // 领取红包点击事件绑定
+    $(".J_applyForJobAllowance").on('click',function(){
+      var url = qscms.root+"?m=Mobile&c=AjaxAllowance&a=apply_allowance";
+      var jid = $(this).data('jid');
+      if ((isVisitor > 0)) {
+        if(utype != 2){
+          qsToast({type:2,context: '请登录个人会员'});
+          return false;
+        }
+        $.getJSON(url,{jid:jid},function(data){
+          if(data.status==1){
+            $('body').append(data.data.html);
+          } 
+          else
+            {
+                qsToast({type:2,context: data.msg});
+                if(data.status==2){
+                    setTimeout(function() {
+                        location.href=qscms.root+"?m=Mobile&c=Personal&a=resume_add";
+                    },2000);
+                }
+            }
+        });
+      } else {
+          window.location.href="{:url_rewrite('QS_login')}";
+      }
+    });
+    wx.config({
+    // debug: true,
+    appId: '{$signPackage.appId}',
+    timestamp: '{$signPackage.timestamp}',
+    nonceStr: '{$signPackage.nonceStr}',
+    signature: '{$signPackage.signature}',
+    jsApiList: [
+      // 所有要调用的 API 都要加到这个列表中
+      "onMenuShareTimeline",
+      "onMenuShareAppMessage",
+      "onMenuShareQQ",
+      "onMenuShareWeibo"
+    ]
+  });
+  wx.ready(function () 
+  {
+      var linkUrl = "{:build_mobile_url(array('c'=>'Jobs','a'=>'index'))}";//放链接
+       if({:C('qscms_perfected_resume_allowance_open')} ==1){
+          var title = "在{:C('qscms_site_name')}找工作可以领红包，小伙伴们快来围观！";
+          var desc = "在{:C('qscms_site_name')}不仅可以找到好的工作，还可以领红包赚外快，还等什么，快来领取红包！"; 
+      }else{
+           var title = "找工作就来{:C('qscms_site_name')}，钱多活少离家近，海量职位等你选！";
+           var desc = "在{:C('qscms_site_name')}这里有海量的公司，海量的职位，可以帮你尽快找到一份合适满意的工作！小伙伴们快来围观！"; 
+      }
+      var imgUrl="{:C('qscms_site_domain')}{:C('qscms_site_dir')}<if condition="C('qscms_logo_other')">{:attach(C('qscms_logo_other'),'resource')}<else/>__HOMEPUBLIC__/images/logo_other.png</if>";//图片链接
+      wx.onMenuShareTimeline({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareAppMessage({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          type: '', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareQQ({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareWeibo({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+  });
+    function getLocation()
+    {
+        if (navigator.geolocation)
+        {
+            navigator.geolocation.getCurrentPosition(showPosition, showError,{
+                // 指示浏览器获取高精度的位置，默认为false
+                enableHighAccuracy: true,
+                // 指定获取地理位置的超时时间，默认不限时，单位为毫秒
+                timeout: 5000,
+                // 最长有效期，在重复获取地理位置时，此参数指定多久再次获取位置。
+                maximumAge: 3000
+            });
+        }
+        else
+        {
+            baiduapi_geolocation();
+        }
+    }
+    function showError(error)
+    {
+        switch(error.code)
+        {
+        case error.PERMISSION_DENIED:
+        case error.POSITION_UNAVAILABLE:
+        case error.TIMEOUT:
+        case error.UNKNOWN_ERROR:
+            baiduapi_geolocation();
+            break;
+        }
+    }
+    function showPosition(position)
+    {
+        set_geolocation_cookie(position.coords.latitude,position.coords.longitude,30);
+    }
+    //设置定位cookie
+    function set_geolocation_cookie(lat,lng,min){
+        $("#lat").val(lat);
+        $("#lng").val(lng);
+        var expiresDate= new Date();
+        expiresDate.setTime(expiresDate.getTime() + (min * 60 * 1000));
+        $.fn.cookie('cookie_lat', lat,{path : '{:C("qscms_site_dir")}',expires:expiresDate});
+        $.fn.cookie('cookie_lng', lng,{path : '{:C("qscms_site_dir")}',expires:expiresDate});
+    }
+    //百度地图定位
+    function baiduapi_geolocation(){
+        var geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function(r){
+            if(this.getStatus() == BMAP_STATUS_SUCCESS)
+            {
+                set_geolocation_cookie(r.point.lat,r.point.lng,30);
+            }
+            else 
+            {
+                set_geolocation_cookie("{:C('qscms_map_center_y')}","{:C('qscms_map_center_x')}",5);
+            }        
+        },{enableHighAccuracy: true})
+    }
+    $(document).ready(function(){
+        var cookie_lat = $.fn.cookie('cookie_lat');
+        var cookie_lng = $.fn.cookie('cookie_lng');
+        if(cookie_lat && cookie_lng){
+            $("#lat").val(cookie_lat);
+            $("#lng").val(cookie_lng);
+        }else{
+            getLocation();
+        }
+    });
+</script>
+</html>

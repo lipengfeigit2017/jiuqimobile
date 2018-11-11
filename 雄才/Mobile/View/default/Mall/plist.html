@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/mall.css">
+</head>
+<body>
+<include file="public:header"/>
+<div class="filter-group x2 filter-outer">
+ <div id="f-mask"></div>
+ <div class="filter-outer">
+     <div class="filter-list js-filter" data-tag="0"><div class="filter-cell"><div class="filter-cell-txt"><if condition="$Think.get.cid neq ''">{$choose_category['categoryname']}<else />商品分类</if></div></div></div>
+     <div class="filter-list js-filter" data-tag="1"><div class="filter-cell"><div class="filter-cell-txt"><if condition="$Think.get.points_range neq 0">{$Think.get.points_range}<else />积分范围</if></div></div></div>
+     <div class="clear"></div>
+ </div>
+ <div class="con-filter">
+     <div class="f-box qs-hidden">
+         <div class="f-box-inner">
+             <li><a class="f-item <if condition="$Think.get.cid eq ''">select</if>" href="{:P(array('cid'=>''))}">全部</a></li>
+             <qscms:classify 列表名="category_list" 类型="QS_goods_category"/>
+             <volist name="category_list" id="vo">
+             <li><a class="f-item <if condition="$Think.get.cid eq $vo['id']">select</if>" href="{:P(array('cid'=>$vo['id']))}">{$vo['categoryname']}</a></li>
+             </volist>
+         </div>
+     </div>
+     <div class="f-box qs-hidden">
+         <div class="f-box-inner">
+             <li><a class="f-item <if condition="$Think.get.points_range eq '' || $Think.get.points_range eq '0'">select</if>" href="{:P(array('points_range'=>0))}">全部</a></li>
+             <volist name="points_range_list" id="vo">
+             <li><a class="f-item <if condition="$Think.get.points_range eq $key">select</if>" href="{:P(array('points_range'=>$key))}">{$vo}</a></li>
+             </volist>
+         </div>
+     </div>
+ </div>
+</div>
+
+<div class="split-block"></div>
+<qscms:goods_list 列表名="goods_list" 分页显示="1" 商品大类="$_GET['cid']" 积分范围="$_GET['points_range']" 会员积分="$_GET['user_points']"/>
+<notempty name="goods_list['list']">
+<div class="goods-list">
+    <volist name="goods_list['list']" id="vo">
+    <div class="item for-event <if condition="$key%2 eq 1">last</if>" onclick="javascript:location.href='{$vo.goods_url}'">
+        <div class="pic"><img src="{$vo['goods_img']}"/></div>
+        <div class="name substring">{$vo['goods_title_']}</div>
+        <div class="point">{$vo['goods_points']} {:C('qscms_points_byname')}</div>
+    </div>
+    </volist>
+    <div class="clear"></div>
+</div>
+<div class="split-block"></div>
+<div class="qspage">{$goods_list['page']}</div>
+<else />
+    <div class="list-empty">
+        抱歉，没有找到符合条件的商品！
+    </div>
+</notempty>
+<div class="split-block"></div>
+
+
+
+<include file="public:footer_min" />
+ <script type="text/javascript">
+    $('.js-filter').on('click',function(){
+        var filter = new QSfilter($(this));
+    });
+</script>
+</body>
+</html>

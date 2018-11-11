@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/gworker.css">
+    <qscms:load type="category" search="1"/>
+</head>
+<body>
+<include file="public:header"/>
+<div class="top-banner">
+    <div class="btns">
+        <div class="btn publish J_add">免费发布</div>
+    </div>
+</div>
+<div class="split-block-title">
+    <div class="sbox">
+        <input id="search_key" value="{$Think.get.key|urldecode|urldecode}" type="text" placeholder="请输入普工职位关键字">
+        <div class="btn-so">搜索</div>
+    </div>
+</div>
+<qscms:classify 列表名="city" 类型="QS_citycategory" 地区分类="$_GET['district']" 显示数目="100"/>
+<div class="filter-group x2 filter-outer">
+    <div id="f-mask"></div>
+    <div class="filter-outer">
+        <div class="filter-list js-filter qs-temp-new-city" data-tag="0" data-type="city">
+            <div class="filter-cell">
+                <div class="filter-cell-txt qs-temp-txt-city"><if condition="$Think.get.citycategory neq ''">{$city['select']['categoryname']|default="地区"}<else/>地区</if></div>
+            </div>
+        </div>
+        <div class="filter-list js-filter" data-tag="1">
+            <div class="filter-cell">
+                <div class="filter-cell-txt f-normal-txt-wage">{$category_wage[$_GET['wage']]|default="薪资待遇"}</div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <form id="searchForm">
+            <input type="hidden" class="keyword" name="key" value="{$Think.get.key|urldecode|urldecode}">
+            <input type="hidden" class="qs-temp-code-city" name="district" value="{$Think.get.district}">
+            <input type="hidden" class="f-normal-code-wage" name="wage" value="{$Think.get.wage}">
+        </form>
+        <input type="hidden" class="f-seach-page" value="?m=Mobile&c=Gworker&a=index&">
+    </div>
+    <div class="con-filter">
+        <div class="f-box f-box-city"></div>
+        <div class="f-box f-box-wage">
+            <div class="f-box-inner">
+                <volist name="category_wage" id="vo">
+                    <li><a class="f-item f-item-normal <if condition="$Think.get.wage eq $key">select</if>"
+                        href="javascript:;" data-type="wage" data-code="{$key}" data-title="{$vo}">{$vo}</a></li>
+                </volist>
+            </div>
+            <div class="f-btn-submit qs-center">
+                <div onclick="window.location='{:P(array('wage'=>''))}';"
+                     class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange">不限
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<notempty name="joblist">
+        <volist name="joblist" id="vo">
+        <div class="job-list-item for-event" onclick="javascript:location.href='{:U('Gworker/show',array('id'=>$vo['id']))}'">
+            <div class="info">
+                <div class="line-one">
+                    <div class="job-name substring font16">{$vo['jobs_name']}</div>
+                    <div class="refresh-time font12">{:date('Y-m-d',$vo['refreshtime'])}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="line-two font14">
+                    <div class="salary">{$vo['wage_cn']}</div>
+                    <div class="settlement"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="line-three font13">招聘人数：<eq name="vo['amount']" value="0">若干<else />{$vo['amount']}人</eq></div>
+                <div class="apply-btn apply_jobs" data-pid="{$vo['id']}" onClick="event.cancelBubble = true">报名</div>
+            </div>
+            <div class="category font13">
+                <div class="job-cate substring">{$vo['district_cn']}</div>
+                <div class="district substring"></div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="list-split-block"></div>
+        </volist>
+        <div class="qspage">{$page}</div>
+<else />
+        <div class="list-split-block"></div>
+        <div class="list-empty link_blue">
+            抱歉，没有找到符合您条件的职位！<br/>
+            放宽搜索条件也许有更多合适您的职位哦~
+        </div>
+</notempty>
+<include file="public:footer_min"/>
+<script src="../public/js/QSfilter.js"></script>
+<script src="../public/js/qsCategory.js"></script>
+<script src="../public/js/qsCitySearch.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak={:C('qscms_map_ak')}"></script>
+</body>
+<script>
+    setTimeout(function () {
+        var noLimitCityHtml = '<div class="f-btn-submit qs-center"><div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-border-orange" id="j-cate-city" style="margin-right:.25rem;">按地区</div><!--<div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange" id="j-cate-range" style="margin-right:.25rem;">附近职位</div>--><div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange" id="j-no-limit-city">不限</div></div>';
+        $('.f-box-city').append(noLimitCityHtml);
+    }, 100)
+    $('#j-no-limit-city').die().live('click', function () {
+        window.location = "{:P(array('district'=>''))}";
+    })
+    // 下拉列表
+    $('.f-item-normal').on('click', function () {
+        var thisType = $(this).data('type');
+        var thisTitle = $(this).data('title');
+        var thisCode = $(this).data('code');
+        $('.f-normal-code-' + thisType).val(thisCode);
+        $('.f-normal-txt-' + thisType).text(thisTitle);
+        $('body').removeClass('filter-fixed');
+        $('.f-box-' + thisType).addClass('qs-hidden');
+        $('.js-filter').removeClass('active');
+        $('#f-mask').hide();
+        goPage();
+    });
+    // 跳转方法
+    function goPage() {
+        var toSearchPage = $('.f-seach-page').val();
+        window.location.href = qscms.root + toSearchPage + $('#searchForm').serialize();
+    }
+    // 点击筛选
+    $('#f-do-filter').on('click', function () {
+        goPage();
+    });
+    $('.js-filter').on('click', function () {
+        var filter = new QSfilter($(this));
+        document.getElementById('f-mask').ontouchstart = function (e) {
+            e.preventDefault();
+        }
+    });
+    $('.apply_jobs').on('click',function(){
+        var pid = $(this).data('pid');
+        $.getJSON("{:U('Gworker/check_apply_cache')}",{pid:pid},function(result){
+            if(result.status==1){
+                qsToast({type: 1, context: result.msg});
+            }else{
+                window.location.href = result.data;
+            }
+        });
+    });
+    $('.btn-so').on('click',function(){
+        $('.keyword').val($('#search_key').val());
+        goPage();
+    });
+    $('.J_add').on('click',function(){
+        $.getJSON("{:U('Gworker/check_jobs_num')}",function(result){
+            if(result.status == 0){
+                var popout = new QSpopout('发布职位');
+                popout.setContent(result.msg);
+                popout.show();
+            }else{
+                window.location.href='{:U("Gworker/add")}';
+            }
+        });
+    });
+</script>
+</html>

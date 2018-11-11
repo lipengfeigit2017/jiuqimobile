@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+        <qscms:load type="category" search="1"/>
+	</head>
+	<body>
+		<include file="public:header"/>
+		<div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">目前状态<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	        <span class="for-select"></span>
+	           <select id="current" name="current">
+	                <volist name="current" id="current">
+	                    <option value="{$key}" <if condition="$resume['current'] eq $key">selected</if>>{$current}</option>
+	                </volist>
+	            </select>
+	        </div>
+	         <div class="arrow"></div>
+	         <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">工作性质<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	        <span class="for-select"></span>
+	           <select id="nature" name="nature">
+	                <volist name="jobs_nature" id="nature">
+	                    <option value="{$key}" <if condition="$resume['nature'] eq $key">selected</if>>{$nature}</option>
+	                </volist>
+	            </select>
+	        </div>
+	         <div class="arrow"></div>
+	         <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt js-actionParent">
+	        <div class="pic"></div>
+	        <div class="tit font14">期望行业</div>
+	        <div class="describe font13 qs-temp-level1 js-showActionSheet" data-type="trade" data-base="QS_trade" data-multiple="true" data-num="3" data-link="false">
+		        <span class="qs-temp-txt-trade" data-otxt="请选择">{$resume.trade_cn|default="请选择"}</span>
+	           <input class="qs-temp-code-trade" name="trade" id="trade" type="hidden" value="{$resume.trade}" />
+	        </div>
+	         <div class="arrow"></div>
+	         <div class="clear"></div>
+		    <!--BEGIN actionSheet-->
+		    <div>
+			    <div class="qs-mask" style="display: none"></div>
+			    <div class="qs-actionsheet js-actionsheet">
+				    <div class="qs-actionsheet-menu">
+					    <div class="con-filter mul">
+						    <div class="f-selected-group f-selected-group-trade">
+							    <div class="s-bar">
+								    <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-gray qs-left js-cancelActionSheet">取消</div>
+                                    <div class="qs-left mul-txt font12">多选，最多 3 项</div>
+								    <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet" id="qs-temp-confirm-trade">确定</div>
+								    <div class="clear"></div>
+							    </div>
+							    <div class="s-list qs-hidden"></div>
+						    </div>
+						    <div class="f-box f-box-trade"></div>
+					    </div>
+				    </div>
+			    </div>
+		    </div>
+	    </div>
+		<div class="list_height plist-txt js-actionParent">
+	        <div class="pic"></div>
+	        <div class="tit font14">期望职位<span class="font_red_light">*</span></div>
+	        <div class="describe font13 qs-temp js-showActionSheet" data-type="jobs" data-base="QS_jobs_parent" data-source="QS_jobs" data-multiple="true" data-num="5" data-link="false" data-level="{:C('qscms_category_jobs_level')}">
+			   <span class="qs-temp-txt-jobs" data-otxt="请选择">{$resume.intention_jobs|default="请选择"}</span>
+	           <input class="qs-temp-code-jobs" name="intention_jobs_id" id="intention_jobs_id" type="hidden" value="{$resume.intention_jobs_id}" />
+	        </div>
+	         <div class="arrow"></div>
+	         <div class="clear"></div>
+					<!--BEGIN actionSheet-->
+					<div>
+						<div class="qs-mask" style="display: none"></div>
+						<div class="qs-actionsheet js-actionsheet">
+							<div class="qs-actionsheet-menu">
+								<div class="con-filter mul">
+									<div class="f-selected-group f-selected-group-jobs">
+										<div class="s-bar">
+											<div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-gray qs-left js-cancelActionSheet">取消</div>
+                                            <div class="qs-left mul-txt font12">多选，最多 5 项</div>
+											<div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet" id="qs-temp-confirm-jobs">确定</div>
+											<div class="clear"></div>
+										</div>
+										<div class="s-list qs-hidden"></div>
+									</div>
+									<div class="f-box f-box-jobs"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+	    </div>
+	    <div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">期望薪资<span class="font_red_light">*</span></div>
+			<div class="describe font13">
+			<span class="for-select"></span>
+	            <select id="wage" name="wage">
+	                <volist name="wage" id="wage">
+	                    <option value="{$key}" <if condition="$resume['wage'] eq $key">selected</if>>{$wage}</option>
+	                </volist>
+	            </select>
+			</div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt js-actionParent">
+	        <div class="pic"></div>
+	        <div class="tit font14">工作地区<span class="font_red_light">*</span></div>
+	        <div class="describe font13 qs-temp-new-city js-showActionSheet" data-multiple="true">
+	            <span class="qs-temp-txt-city" data-otxt="请选择">{$resume.district_cn|default="请选择"}</span>
+	            <input class="qs-temp-code-city" name="district" id="district" type="hidden" value="{$resume.district}" keep="{$resume.district}" />
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+			    <!--BEGIN actionSheet-->
+			    <div>
+				    <div class="qs-mask" style="display: none"></div>
+				    <div class="qs-actionsheet js-actionsheet">
+					    <div class="qs-actionsheet-menu">
+						    <div class="con-filter mul">
+							    <div class="f-selected-group f-selected-group-city">
+								    <div class="s-bar">
+									    <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-gray qs-left js-cancelActionSheet">取消</div>
+                                        <div class="qs-left mul-txt font12">多选，最多 3 项</div>
+									    <div class="qs-btn qs-btn-inline qs-btn-small qs-btn-border-orange qs-right js-cancelActionSheet" id="qs-temp-confirm-city">确定</div>
+									    <div class="clear"></div>
+								    </div>
+								    <div class="s-list qs-hidden"></div>
+							    </div>
+							    <div class="f-box f-box-city"></div>
+						    </div>
+					    </div>
+				    </div>
+			    </div>
+	    </div>
+		<div class="btn-spacing">
+			<a id="J_saveresume"  href="javascript:;" class="qs-btn qs-btn-blue font18">保存</a>
+		</div>
+	    <div class="split-block"></div>
+	    <include file="public:footer_min" />
+		<!--<script src="../public/js/inobounce.js"></script>-->
+			<script src="../public/js/qsCategory.js"></script>
+        <script src="../public/js/qsCityUser.js"></script>
+	    <script type="text/javascript">
+		    $(function(){
+			    $(".js-showActionSheet").on("click", function(){
+				    var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+				    var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+				    $iosActionsheet.removeClass('qs-actionsheet-toggle');
+				    $iosActionsheet.addClass('qs-actionsheet-toggle');
+				    $iosMask.fadeIn(200);
+				    $iosMask.on('click', hideActionSheet);
+				    $(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+				    $(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+				    function hideActionSheet() {
+					    $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+					    $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+				    }
+			    });
+		    });
+	        // 验证表单并提交
+	        $('#J_saveresume').die().live('click', function() {
+	            var pid = "{$resume.id}";
+	            var currentValue = $.trim($('#current').val());
+	            var natureValue = $.trim($('#nature').val());
+	            var tradeValue = $.trim($('#trade').val());
+	            var intentionJobsValue = $.trim($('#intention_jobs_id').val());
+	            var districtValue = $.trim($('#district').val());
+	            var wageValue = $.trim($('#wage').val());
+	            var news = "{$Think.get.news}";
+	            if (currentValue == "") {
+                	qsToast({type:2,context: '请选择目前状态'});
+	                return false;
+	            }
+	            if (natureValue == "") {
+	                qsToast({type:2,context: '请选择工作性质'});
+	                return false;
+	            }
+	            if (intentionJobsValue == "") {
+	                qsToast({type:2,context: '请选择期望职位'});
+	                return false;
+	            }
+	            if (districtValue == "") {
+	                qsToast({type:2,context: '请选择工作地区'});
+	                return false;
+	            }
+	            if (wageValue == "") {
+	                qsToast({type:2,context: '请选择期望薪资'});
+	                return false;
+	            }
+	            $('#J_saveresume').val('保存中...').addClass('qs-btn-border-disabled');
+	            // 提交表单
+	            $.ajax({
+	                url: "{:U('Personal/resume_edit_intent')}",
+	                type: 'POST',
+	                dataType: 'json',
+	                data: {pid:pid,current: currentValue, nature: natureValue, trade: tradeValue, intention_jobs_id: intentionJobsValue, district: districtValue, wage: wageValue,news:news},
+	                success:function(data){
+	                    if (data.status == 1) {
+	                    	if(data.data.attach!=''){
+	                    		qsToast({type:2,context: data.data.attach});
+	                    		setTimeout(function () {
+			                        window.location.href = data.data.url;
+			                    }, 2000);
+						    }else{
+						    	window.location.href = data.data.url;
+						    }
+	                    } else {
+	                        qsToast({type:2,context: data.msg});
+	                        $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    }
+	                },
+	                error:function(result){
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    qsToast({type:2,context: result.msg});
+	                }
+	            });
+	        });
+	    </script>
+	</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+		<link rel="stylesheet" href="../public/css/zepto.mdater.css">
+	</head>
+	<body>
+		<include file="public:header"/>
+		<form id="form1">
+		<input name="record_id" id="record_id" type="hidden" value="{$record_id}"/>
+		<input name="fullname" id="fullname" type="hidden" value="{$fullname}"/>
+		<input name="company_name" id="company_name" type="hidden" value="{$company['companyname']}"/>
+		<input name="resume_id" id="resume_id" type="hidden" value="{$resume_id}"/>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">面试职位<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	        	<span class="for-select">{$jobs['jobs_name']}</span>
+	            <input name="jobs_name" id="jobs_name" type="hidden" value="{$jobs['jobs_name']}"/>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">面试日期<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+		        <input id="date" name="date" class="in" type="text" placeholder="请选择" readonly="readonly" />
+	    		  <!--<input id="date" type="hidden" value="">-->
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt js-actionParent">
+	        <div class="pic"></div>
+	        <div class="tit font14">面试时间<span class="font_red_light">*</span></div>
+	        <div class="describe font13 qs-temp-time js-showActionSheet">
+		        <span class="f-aptime-txt">请选择</span>
+		        <input class="f-time-code" id="time" name="time" type="hidden" value="0">
+		        <input class="f-ap-code" id="ap" name="ap" type="hidden" value="1">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+			    <!--BEGIN actionSheet-->
+			    <div>
+				    <div class="qs-mask" style="display:none"></div>
+				    <div class="qs-actionsheet js-actionsheet">
+					    <div class="qs-actionsheet-menu">
+						    <div class="con-filter">
+							    <div class="f-selected-group">
+								    <div class="s-bar">
+									    <div class="s-bar-title qs-left">面试时间</div>
+									    <div class="clear"></div>
+								    </div>
+								    <div class="s-list"></div>
+							    </div>
+							    <div class="f-box">
+								    <div class="f-box-inner">
+									    <li><a class="font12 f-item f-item-ap select" href="javascript:;" data-code="1">上午</a></li>
+									    <li><a class="font12 f-item f-item-ap" href="javascript:;" data-code="2">下午</a></li>
+								    </div>
+								    <div class="f-box-inner">
+									    <div class="f-aptime-group">
+										    <li><a class="font12 f-item f-item-time select" href="javascript:;" data-code="8">8：00</a></li>
+										    <li><a class="font12 f-item f-item-time" href="javascript:;" data-code="9">9：00</a></li>
+										    <li><a class="font12 f-item f-item-time" href="javascript:;" data-code="10">10：00</a></li>
+										    <li><a class="font12 f-item f-item-time" href="javascript:;" data-code="11">11：00</a></li>
+									    </div>
+									    <div class="f-aptime-group qs-hidden">
+										    <li><a class="font12 f-item f-item-time select" href="javascript:;" data-code="2">2：00</a></li>
+										    <li><a class="font12 f-item f-item-time" href="javascript:;" data-code="3">3：00</a></li>
+										    <li><a class="font12 f-item f-item-time" href="javascript:;" data-code="4">4：00</a></li>
+										    <li><a class="font12 f-item f-item-time" href="javascript:;" data-code="5">5：00</a></li>
+									    </div>
+								    </div>
+							    </div>
+						    </div>
+					    </div>
+				    </div>
+			    </div>
+	    </div>
+	    <div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">面试地点<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	    		<input type="text" id="address" name="address" value="{$company.address|default=$company.district_cn}">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="split-block"></div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">联系人<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	    		<input type="text" id="contact" name="contact" value="{$company.contact}">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">联系电话<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	            <input type="text" id="telephone" name="telephone" value="<if condition="$company['telephone']">{$company.telephone}<else/>{$company.landline_tel}</if>">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">备注</div>
+	        <a href="#describe" class="describe font13 notesText">请输入</a>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	   
+	    <div class="split-block"></div>
+		<div class="btn-spacing">
+			<input type="hidden" id="notes" name="notes" value="">
+			<a id="J_saveresume"  href="javascript:;" class="qs-btn qs-btn-blue font18">发送面试邀请</a>
+		</div>
+		</form>
+	    <div class="split-block"></div>
+			<script type="text/html" id="tpl-notes">
+				<div class="headernavfixed">
+					<div class="headernav font18"><div class="title">面试邀请备注<div class="return js-back"></div><div class="rbtn"></div></div></div>
+				</div>
+				<div class="per-introduce">
+					<textarea placeholder="请输入面试邀请备注" name="tpl_notes" id="tpl_notes"></textarea>
+				</div>
+				<div class="per-introduce-tip">
+					<div class="text-num">最多可输入100字</div>
+					<div class="J_empty text-clear">清空</div>
+					<div class="clear"></div>
+				</div>
+				<div class="split-block"></div>
+				<div class="btn-spacing">
+					<div id="notesBtn" class="qs-btn qs-btn-blue font18" title="确定">确定</div>
+				</div>
+			</script>
+	    <include file="public:footer_min" />
+	    <script src="../public/js/popWin.js"></script>
+			<script src="../public/js/zepto.mdater.js"></script>
+	    <script type="text/javascript">
+		    // 日期插件调用
+		    $('.in').mdater({
+			    minDate : new Date(2015, 12, 13)
+		    });
+		    $(function(){
+			    $(".js-showActionSheet").on("click", function(){
+				    var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+				    var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+				    $iosActionsheet.removeClass('qs-actionsheet-toggle');
+				    $iosActionsheet.addClass('qs-actionsheet-toggle');
+				    $iosMask.fadeIn(200);
+				    $iosMask.on('click', hideActionSheet);
+				    $(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+				    $(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+				    function hideActionSheet() {
+					    $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+					    $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+				    }
+			    });
+		    });
+		    // 上午下午选择
+		    $('.f-item-ap').on('click', function () {
+			    $('.f-item-ap').removeClass('select');
+			    $(this).addClass('select');
+			    var thisCode = $(this).data('code');console.log(thisCode);
+			    $('.f-ap-code').val(thisCode);
+			    $('.f-aptime-group').addClass('qs-hidden');
+			    $('.f-aptime-group').eq((thisCode-1)).removeClass('qs-hidden');
+		    })
+		    // 时间选择
+		    $('.f-item-time').on('click', function () {
+			    $('.f-item-time').removeClass('select');
+			    $(this).addClass('select');
+			    var thisCode = $(this).data('code');
+			    $('.f-time-code').val(thisCode);
+			    var timeHtml = '';
+			    $('.f-ap-code').val() == 1 ? timeHtml += '上午' : timeHtml += '下午';
+			    timeHtml += thisCode + '点';
+			    $('.f-aptime-txt').text(timeHtml);
+			    $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+			    $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+		    })
+	    	var describeTemp = $('#tpl-notes').html();
+	        $(".notesText").on('click', function() {
+	            var $this = $(this),
+	                baseTxt = $this.text();
+	            popWin.init({
+	                from:"right",
+	                html:describeTemp,
+	                handle:function(a){
+	                    if ($('#notes').val().length) {
+	                        $('#tpl_notes').val($('#notes').val());
+	                    }
+	                    $('.J_empty').on('click',function(){
+	                        $('#tpl_notes').val('');
+	                    });
+	                    $('#notesBtn').on('click',function(){
+	                        $('#notes').val($('#tpl_notes').val());
+	                        $('.notesText').html($('#tpl_notes').val());
+	                        a.close();
+	                    });
+	                }
+	            })
+	        });
+	        // 验证表单并提交
+	        $('#J_saveresume').on('click', function() {
+	            var resume_id = $.trim($('#resume_id').val());
+	            var jobs_name = $.trim($('#jobs_name').val());
+	            var fullname = $.trim($('#fullname').val());
+	            var record_id = $.trim($('#record_id').val());
+	            var company_name = $.trim($('#company_name').val());
+	            var date = $.trim($('#date').val());
+	            var time = $.trim($('#time').val());
+	            var ap = $.trim($('#ap').val());
+	            var address = $.trim($('#address').val());
+	            var contact = $.trim($('#contact').val());
+	            var telephone = $.trim($('#telephone').val());
+	            var notes = $.trim($('#notes').val());
+	           
+	            if (date == "") {
+	                qsToast({type:2,context: '请选择日期'});
+	                return false;
+	            }
+	            if (time == "" || ap == '') {
+	                qsToast({type:2,context: '请选择时间'});
+	                return false;
+	            }
+	            if (address == "") {
+	                qsToast({type:2,context: '请填写地址'});
+	                return false;
+	            }
+	            if (contact == "") {
+	                qsToast({type:2,context: '请填写联系人'});
+	                return false;
+	            }
+	            if (telephone == "") {
+	                qsToast({type:2,context: '请填写联系电话'});
+	                return false;
+	            }
+	            $('#J_saveresume').val('保存中...').addClass('qs-btn-border-disabled');
+	            // 提交表单
+	            $.ajax({
+	                url: "{:U('Company/allowance_interview_add')}",
+	                type: 'POST',
+	                dataType: 'json',
+	                data: {resume_id:resume_id,jobs_name:jobs_name,fullname: fullname,record_id: record_id,company_name:company_name, date: date,time: time,ap: ap, address: address, contact: contact,telephone:telephone,notes:notes},
+	                success:function(data){
+	                    if (data.status == 1) {
+	                    	var url = "{:U('AjaxAllowance/agree_interview')}";
+	                    	$.getJSON(url,{record_id:record_id},function(result){
+                                if(result.status==1){
+                                    qsToast({type:1,context: data.msg});
+                                    setTimeout(function () {
+                                        window.location.href = "{:U('Company/allowance_detail',array('id'=>$record_id))}";
+                                    }, 2000);
+                                }
+                            });
+	                    } else {
+	                        qsToast({type:2,context: data.msg});
+	                    }
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                },
+	                error:function(result){
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    qsToast({type:2,context: result.msg});
+	                }
+	            });
+	        });
+	    </script>
+	</body>
+</html>

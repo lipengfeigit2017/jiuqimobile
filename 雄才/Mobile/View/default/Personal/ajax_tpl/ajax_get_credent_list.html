@@ -1,0 +1,7 @@
+<volist name="list" id="list">
+	<div class="expmod <if condition="$count eq $i">last</if>" type="credent" pid="{$pid}" sid="{$list['id']}">
+		<div class="expedit" onClick="javascript:location.href='{:U('personal/resume_edit_certificate',array('pid'=>$pid,'id'=>$list['id']))}'"></div>
+		<div class="J_delete expdel"></div>
+		<div class="exptr1">{$list.name}<span>({$list.year}.{$list.month})</span></div>
+	</div>
+</volist>

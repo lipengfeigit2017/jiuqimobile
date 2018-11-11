@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+	</head>
+	<body>
+		<include file="public:header"/>
+	     <div class="order-top points">
+			<div class="txt font12">
+				 开启打赏后不可取消，若打赏不成功，红包返回您的账户！
+			</div>
+		</div>
+		<div class="split-block"></div>
+		<div class="ptitle border">
+	      <div class="th1">打赏设置</div>
+	    </div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">职位名称</div>
+	        <div class="describe font13">
+	        	<span class="for-select">{$info['jobsname']}</span>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">打赏方式</div>
+	        <div class="describe font13">
+	        	<span class="for-select">{$info['type_alias_cn']}</span>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">红包数</div>
+	        <div class="describe font13">
+	        	<span class="for-select">{$info['per_amount']}元 * {$info['total_num']}个</span>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">剩余红包</div>
+	        <div class="describe font13">
+	        	<span class="for-select">{$info['surplus_num']}个</span>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="split-block"></div>
+		<div class="ptitle border">
+	      <div class="th1">简历要求</div>
+	    </div>
+		<div class="split-block"></div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">简历完整度</div>
+	        <div class="describe font13">
+	        	<span class="for-select">{$info['complete_percent']}%及以上</span>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">学历要求</div>
+	        <div class="describe font13">
+	        	<span class="for-select">{$info['education_cn']}</span>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">工作经验要求</div>
+	        <div class="describe font13">
+	        	<span class="for-select">{$info['experience_cn']}</span>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">允许意向</div>
+	        <div class="describe font13">
+	        	<span class="for-select">{$info['intention_jobs_cn']}</span>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">手机号归属地</div>
+	        <div class="describe font13">
+	        	<span class="for-select">{$mobile_address}</span>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <include file="public:footer_min" />
+	</body>
+</html>

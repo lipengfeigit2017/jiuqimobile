@@ -1,0 +1,26 @@
+<volist name="message['list']" id="msg">
+	<if condition="$msg['formuid'] eq $visitor['uid']">
+		<div class="J_imList pmsshow-right">
+			<div class="txt">{$msg.message}
+				<div class="times font10">{:date('m-d h:i',$msg['addtime'])}</div>
+				<div class="arrow"></div>
+			</div>
+			<div class="pic">
+				<img src="{$ronguser.avatars}">
+			</div>
+			<div class="clear"></div>
+		</div>
+	<else/>
+		<div class="J_imList pmsshow-left">
+			<div class="pic">
+				<img src="{$sendUser.avatars}">
+			</div>
+			<div class="txt">{$msg.message}
+				<div class="times font10">{:date('m-d h:i',$msg['addtime'])}</div>
+				<div class="arrow"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</if>
+	<div class="split-block"></div>
+</volist>

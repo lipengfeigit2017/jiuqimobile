@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/company.css">
+</head>
+<body>
+    <include file="public:header"/>
+    <div class="filter-group x4 filter-outer">
+        <div id="f-mask"></div>
+        <div class="filter-outer">
+            <div class="filter-list js-filter" data-tag="0">
+                <div class="filter-cell">
+                    <div class="filter-cell-txt">
+                    <if condition="$jobs_id eq 0">
+                        职位
+                    <else />
+                        {$jobslist[$jobs_id]}
+                    </if>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-list js-filter" data-tag="1">
+                <div class="filter-cell">
+                    <div class="filter-cell-txt">
+                        <eq name="member_turn" value="1">待处理<else />不限</eq>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-list js-filter" data-tag="2">
+                <div class="filter-cell">
+                    <div class="filter-cell-txt">
+                        <if condition="$type eq ''">方式<else />{$type_list[$type]}</if>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-list js-filter" data-tag="3">
+                <div class="filter-cell">
+                    <div class="filter-cell-txt">
+                        <if condition="$status eq ''">状态<else />{$status_list[$status]}</if>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--职位下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item " href="{:P(array('jobs_id'=>0))}">全部</a></li>
+                    <volist name="jobslist" id="vo">
+                    <li><a class="f-item" href="{:P(array('jobs_id'=>$key))}" >{$vo}</a></li>
+                    </volist>
+                </div>
+            </div>
+        </div>
+        <!--待确认下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item" href="{:P(array('member_turn'=>0))}">不限</a></li>
+                    <li><a class="f-item" href="{:P(array('member_turn'=>1))}">待处理</a></li>
+                </div>
+            </div>
+        </div>
+        <!--类型下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item" href="{:P(array('type'=>''))}">全部</a></li>
+                    <volist name="type_list" id="vo">
+                        <li><a class="f-item" href="{:P(array('type'=>$key))}" >{$vo}</a></li>
+                    </volist>
+                </div>
+            </div>
+        </div>
+        <!--状态下拉选择-->
+        <div class="con-filter">
+            <div class="f-box qs-hidden">
+                <div class="f-box-inner">
+                    <li><a class="f-item" href="{:P(array('status'=>''))}">全部</a></li>
+                    <volist name="status_list" id="vo">
+                        <li><a class="f-item" href="{:P(array('status'=>$key))}" >{$vo}</a></li>
+                    </volist>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="split-block"></div>
+    <div class="my-alw-list-group">
+    <notempty name="record['list']">
+        <volist name="record['list']" id="vo">
+        <notempty name="resumelist[$vo['resumeid']]">
+        <div class="my-alw-list">
+            <div class="mal-h" onclick="javascript:location.href='{:U('Company/allowance_detail',array('id'=>$vo['id']))}'">
+                <div class="mal-h-icon <if condition="$vo['apply'] eq 1">mh2<elseif condition="$vo['interview'] eq 1" />mh1<else />mh3</if>"></div>
+                <div class="mal-h-txt link_blue"><a href="{:url_rewrite('QS_resumeshow',array('id'=>$vo['resumeid']))}">{$resumelist[$vo['resumeid']]['fullname']}</a> ({$resumelist[$vo['resumeid']]['age']}岁/{$resumelist[$vo['resumeid']]['sex_cn']}/{$resumelist[$vo['resumeid']]['education_cn']}/{$resumelist[$vo['resumeid']]['experience_cn']})</div>
+                <div class="mal-h-sta txt-<if condition="$vo['status'] eq 0">red<elseif condition="$vo['status'] eq 1 || $vo['status'] eq 2" />o<else />9</if>">{$vo['status_cn']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-39"></div>
+            <div class="mal-line txt-9">职位：{$vo['info']['jobsname']}</div>
+            <div class="sp-h-29"></div>
+            <!--投递红包-->
+            <eq name="vo['apply']" value="1">
+            <div class="mal-line font15">
+                <div class="c-l">红包已发放</div>
+                <div class="c-r txt-o">￥{$vo['info']['per_amount']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-32"></div>
+            <div class="mal-line txt-9">{:date('m-d H:i',$vo['updatetime'])} 简历投递成功</div>
+            </eq>
+            <!--面试红包-->
+            <eq name="vo['interview']" value="1">
+            <if condition="$vo['step'] eq 10">
+            <div class="mal-line font15 c-btn">
+                <div class="c-l">
+                    <div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-blue font14" onclick="javascript:location.href='{:U('Company/allowance_interview_add',array('record_id'=>$vo['id'],'resume_id'=>$vo['resumeid'],'jobsid'=>$vo['jobsid']))}'">同意面试</div>
+                    <div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange font14 refuse_interview" data-id="{$vo['id']}">不同意</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="c-r txt-o">￥{$vo['info']['per_amount']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-32"></div>
+            <div class="mal-line txt-9">{:date('m-d H:i',$vo['updatetime'])} 简历投递成功</div>
+            </if>
+            <if condition="$vo['step'] eq 20">
+            <div class="mal-line font15">
+                <div class="c-l">等待个人确认面试</div>
+                <div class="c-r txt-o">￥{$vo['info']['per_amount']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-32"></div>
+            <div class="mal-line txt-9 link_blue">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 已同意面试 <a href="{:U('Company/allowance_interview_detail',array('record_id'=>$vo['id']))}">[详情]</a></div>
+            </if>
+            <if condition="$vo['step'] eq 30">
+            <div class="mal-line font15">
+                <div class="c-l">已拒绝面试</div>
+                <div class="c-r txt-o">￥{$vo['info']['per_amount']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-32"></div>
+            <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 已拒绝面试</div>
+            </if>
+            <if condition="$vo['step'] eq 40">
+            <div class="mal-line font15 c-btn">
+                <div class="c-l">
+                    <div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-blue font14" onclick="javascript:location.href='{:U('Company/confirm_interview',array('record_id'=>$vo['id']))}'">确认面试</div>
+                    <div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange font14 absent_interview" data-id="{$vo['id']}">缺席</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="c-r txt-o">￥{$vo['info']['per_amount']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-32"></div>
+            <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 个人已确认面试</div>
+            </if>
+            <if condition="$vo['step'] eq 50">
+            <div class="mal-line font15">
+                <div class="c-l">红包已发放</div>
+                <div class="c-r txt-o">￥{$vo['info']['per_amount']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-32"></div>
+            <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 已确认个人面试</div>
+            </if>
+            <if condition="$vo['step'] eq 60">
+            <div class="mal-line font15">
+                <div class="c-l">已判定缺席</div>
+                <div class="c-r txt-o">￥{$vo['info']['per_amount']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-32"></div>
+            <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 已确认个人缺席</div>
+            </if>
+            </eq>
+            <!--入职红包-->
+            <eq name="vo['entry']" value="1">
+            <if condition="$vo['step'] eq 70">
+            <div class="mal-line font15">
+                <div class="c-l">等待个人确认入职</div>
+                <div class="c-r txt-o">￥{$vo['info']['per_amount']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-32"></div>
+            <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 已申请职位</div>
+            </if>
+            <if condition="$vo['step'] eq 71">
+            <div class="mal-line font15 c-btn">
+                <div class="c-l">
+                    <div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-blue font14 confirm_entry" data-id="{$vo['id']}">确认入职</div>
+                    <div class="qs-btn qs-btn-inline qs-btn-medium qs-btn-orange font14 absent_entry" data-id="{$vo['id']}">缺席</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="c-r txt-o">￥{$vo['info']['per_amount']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-32"></div>
+            <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 已申请入职</div>
+            </if>
+            <if condition="$vo['step'] eq 80">
+            <div class="mal-line font15">
+                <div class="c-l">红包已发放</div>
+                <div class="c-r txt-o">￥{$vo['info']['per_amount']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-32"></div>
+            <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 已确认入职</div>
+            </if>
+            <if condition="$vo['step'] eq 90">
+            <div class="mal-line font15">
+                <div class="c-l">已判定缺席</div>
+                <div class="c-r txt-o">￥{$vo['info']['per_amount']}</div>
+                <div class="clear"></div>
+            </div>
+            <div class="sp-h-32"></div>
+            <div class="mal-line txt-9">{:date('m-d H:i',$vo['log'][$vo['step']]['addtime'])} 已确认个人缺席</div>
+            </if>
+            </eq>
+            <div class="sp-h-50"></div>
+        </div>
+        <div class="split-block"></div>
+        </notempty>
+        </volist>
+        <div class="qspage">{$record['page']}</div>
+    <else />
+        <if condition="$hasget">
+            <div class="list-empty">
+                抱歉，没有找到符合您条件的记录！
+            </div>
+            <else />
+            <div class="list-empty link_blue">
+                目前还没有人领取您发布的红包！<br />
+                建议您主动出击 <a href="{:url_rewrite('QS_resumelist')}">搜人才</a>
+            </div>
+        </if>
+    </notempty>
+    </div>
+    <div class="split-block"></div>
+    <include file="public:footer_min" />
+    <script src="../public/js/popWin.js"></script>
+    <script>
+        $('.js-filter').on('click', function() {
+            var filter = new QSfilter($(this));
+        });
+        $('.refuse_interview').on('click',function(){
+            var record_id = $(this).data('id');
+            var url = "{:U('AjaxAllowance/refuse_interview')}";
+            $.getJSON(url,{record_id:record_id},function(result){
+                if(result.status==1){
+                    qsToast({type: 1, context: result.msg});
+                    setTimeout(function () {
+                        location.href="{:U('Company/allowance')}";
+                    }, 2000);
+                }
+            });
+        });
+        $('.absent_interview').on('click',function(){
+            var record_id = $(this).data('id');
+            var url = "{:U('AjaxAllowance/absent_interview')}";
+            $.getJSON(url,{record_id:record_id},function(result){
+                if(result.status==1){
+                    var $mPop = new QSpopout();
+                    $mPop.setContent(result.data);
+                    $mPop.getPrimaryBtn().on('click', function() {
+                        $.post(url,{record_id:record_id},function(re){
+                            qsToast({type: 1, context: re.msg});
+                            if(re.status==1){
+                                setTimeout(function () {
+                                    location.href="{:U('Company/allowance')}";
+                                }, 2000);
+                            }else{
+                                return false;
+                            }
+                        },'json');
+                    });
+                    $mPop.show();
+                }
+            });
+        });
+        $('.confirm_entry').on('click',function(){
+            var record_id = $(this).data('id');
+            var url = "{:U('AjaxAllowance/confirm_entry')}";
+            $.getJSON(url,{record_id:record_id},function(result){
+                if(result.status==1){
+                    qsToast({type: 1, context: result.msg});
+                    setTimeout(function () {
+                        location.href="{:U('Company/allowance')}";
+                    }, 2000);
+                }else{
+                    qsToast({type: 2, context: result.msg});
+                    return false;
+                }
+            });
+        });
+        $('.absent_entry').on('click',function(){
+            var record_id = $(this).data('id');
+            var url = "{:U('AjaxAllowance/absent_entry')}";
+            $.getJSON(url,{record_id:record_id},function(result){
+                if(result.status==1){
+                    var $mPop = new QSpopout();
+                    $mPop.setContent(result.data);
+                    $mPop.getPrimaryBtn().on('click', function() {
+                        $.post(url,{record_id:record_id},function(re){
+                            qsToast({type: 1, context: re.msg});
+                            if(re.status==1){
+                                setTimeout(function () {
+                                    location.href="{:U('Company/allowance')}";
+                                }, 2000);
+                            }else{
+                                return false;
+                            }
+                        },'json');
+                    });
+                    $mPop.show();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

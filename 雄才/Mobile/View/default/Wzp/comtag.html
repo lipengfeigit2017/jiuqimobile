@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<qscms:company_show 列表名="info" 企业id="$_GET['id']"/>
+<title>{$info['companyname']} - {:C('qscms_site_name')}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="format-detection" content="email=no" />
+<meta name="format-detection" content="address=no;">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="author" content="骑士CMS" />
+<meta name="copyright" content="74cms.com" />
+<link type="text/css" href="../public/css/wzp_style.css" rel="stylesheet" />
+<link type="text/css" href="../public/css/wzp_style_left.css" rel="stylesheet" />
+<script type="text/javascript" charset="urf-8" src="../public/js/jq.mobi.min.js"></script>
+<script type="text/javascript" charset="urf-8" src="../public/js/jquery.swipe.js"></script>
+</head>
+<body>
+
+<div class="set_welf_ul" style="margin-top: 15px;padding:0 10px;">
+<qscms:classify 列表名="taglist" 类型="QS_jobtag" 显示数目="14" />
+<volist name="taglist" id="vo">
+  <if condition="in_array($key,$company_tag)">
+      <div class="set_welf_li is_select" data-value="{$key}|{$vo}">{$vo}
+            <div class="welf_ok"></div>
+      </div>
+      <else />
+      <div class="set_welf_li" data-value="{$key}|{$vo}">{$vo}
+            <div class="welf_ok"></div>
+      </div>
+      </if>
+    </volist>
+    <input type="hidden" name="tag" value="{$info.tag}" id="tag">
+</div>
+
+<!-- 左侧划出内容  -->
+<section class="reward_manager_list_con">
+  <a class="manager_set" href="{:U('Wzp/com',array('id'=>$info['id']))}">
+    <h3 class="manager_set_tit">微招聘首页</h3>
+  </a>
+  <a class="manager_set" href="{:U('Wzp/comtpl',array('id'=>$info['id']))}">
+    <h3 class="manager_set_tit">微招聘模板</h3>
+  </a>
+  <a class="manager_set" href="{:U('Wzp/comtag',array('id'=>$info['id']))}">
+    <h3 class="manager_set_tit">企业福利</h3>
+  </a>
+</section>
+<div class="nav_btn_con" style="position: fixed;">
+  <div class="nav_btn">
+    <div class="nav_btn_arrrow"></div>
+  </div>
+</div>
+<div class="reward_manager_list_con_bg"></div>
+
+<script type="text/javascript" charset="urf-8">
+$(function(){
+    var agent = navigator.userAgent.toLowerCase();
+    if(agent.indexOf('micromessenger') < 0){
+          $("#wzp-logo-set").remove();
+      }
+    
+    $(".nav_btn_con").on("touchstart", function(){
+      $(".reward_manager_list_con, .reward_manager_list_con_bg").addClass("on");
+    });
+    
+    $(".reward_manager_list_con_bg").on("touchstart", function(){
+      $(".reward_manager_list_con, .reward_manager_list_con_bg").removeClass("on");
+    });
+    // 选择 标签
+    $(".set_welf_li").on('click', function () {
+      var length = $('.set_welf_li.is_select').length;console.log(length);
+      if(length>=6 && !$(this).hasClass('is_select')){
+        alert('企业福利最多只能选择6项！');return false;
+      }
+      var is_select = $(this).hasClass('is_select');
+      !is_select ? $(this).addClass('is_select'):$(this).removeClass('is_select');
+      var is_select_div =$(".set_welf_ul .is_select");
+      var tag_val="";
+      $(".set_welf_ul .is_select").each(function() {
+        tag_val+=","+ $(this).attr("data-value");
+      });
+      $("#tag").val(tag_val);
+      $.post("{:U('comtag')}",{id:"{$info['id']}",tag:tag_val},function(){},'json');
+    });
+});
+</script>
+</body>
+</html>

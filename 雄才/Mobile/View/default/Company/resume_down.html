@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<include file="public:meta"/>
+	<link rel="stylesheet" href="../public/css/company.css">
+</head>
+<body>
+	<include file="public:header"/>
+	<div class="filter-group x2 filter-outer">
+		<div id="f-mask"></div>
+		<div class="filter-outer">
+			<div class="filter-list js-filter" data-tag="0">
+	            <div class="filter-cell">
+		            <div class="filter-cell-txt">
+	                <if condition="$state eq 0">
+	                    状态标签
+	                <else />
+	                    {$state_arr[$state]}
+	                </if>
+		            </div>
+	            </div>
+	        </div>
+	        <div class="filter-list js-filter" data-tag="1">
+				<if condition="$Think.get.settr eq 0">
+					<div class="filter-cell"><div class="filter-cell-txt">下载时间</div></div>
+				<else />
+					<switch name="Think.get.settr">
+                        <case value="0">
+                        	<div class="filter-cell"><div class="filter-cell-txt">不限</div></div>
+                        </case>
+                        <case value="3">
+                        	<div class="filter-cell"><div class="filter-cell-txt">3天内</div></div>
+                        </case>
+                        <case value="7">
+                        	<div class="filter-cell"><div class="filter-cell-txt">7天内</div></div>
+                        </case>
+                        <case value="15">
+                        	<div class="filter-cell"><div class="filter-cell-txt">15天内</div></div>
+                        </case>
+                        <case value="30">
+                        	<div class="filter-cell"><div class="filter-cell-txt">30天内</div></div>
+                        </case>
+                    </switch>
+				</if>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<!--状态标签下拉选择-->
+	    <div class="con-filter">
+	        <div class="f-box qs-hidden">
+	            <div class="f-box-inner">
+	                <li><a class="f-item <if condition="$Think.get.state eq ''">select</if>" href="{:P(array('state'=>''))}">全部</a></li>
+	                <li><a class="f-item <if condition="$Think.get.state eq '0'">select</if>" href="{:P(array('state'=>0))}">待处理</a></li>
+	                <volist name="state_arr" id="state_arr">
+	                    <li><a class="f-item <if condition="$Think.get.state eq $key">select</if>" href="{:P(array('state'=>$key))}">{$state_arr}</a></li>
+	                </volist>
+	            </div>
+	        </div>
+	    </div>
+	    <!--发送时间下拉选择-->
+		<div class="con-filter">
+			<div class="f-box qs-hidden">
+				<div class="f-box-inner">
+					<li><a class="f-item <if condition="$Think.get.settr eq '' || $Think.get.settr eq '0'">select</if>" href="{:P(array('settr'=>0))}">全部</a></li>
+					<li><a class="f-item <if condition="$Think.get.settr eq 3">select</if>" href="{:P(array('settr'=>3))}">3天内</a></li>
+					<li><a class="f-item <if condition="$Think.get.settr eq 7">select</if>" href="{:P(array('settr'=>7))}">7天内</a></li>
+					<li><a class="f-item <if condition="$Think.get.settr eq 15">select</if>" href="{:P(array('settr'=>15))}">15天内</a></li>
+					<li><a class="f-item <if condition="$Think.get.settr eq 30">select</if>" href="{:P(array('settr'=>30))}">30天内</a></li>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="split-block"></div>
+	<notempty name="down_list['list']">
+		<volist name="down_list['list']" id="list">
+			<if condition="$list['title']">
+				<div class="resume" onclick="window.location='{:url_rewrite('QS_resumeshow',array('id'=>$list['resume_id'],'from_down'=>1))}'">
+					<div class="content">
+						<div class="line-one">
+							<div class="real-name substring">
+								{$list.fullname}
+								<if condition="$list['is_reply'] eq 0">
+                                    <div class="red-tip"></div>
+                                </if>
+                            </div>
+							<div class="reply-status font12 font_green">
+								<switch name="list['is_reply']">
+									<case value="0">
+										<div class="reply-status font12 font_yellow">待处理</div>
+									</case>
+									<case value="1">
+										<div class="reply-status font12 font_green">可面试</div>
+									</case>
+									<case value="2">
+										<div class="reply-status font12 font_red">未接通</div>
+									</case>
+									<case value="3">
+										<div class="reply-status font12 font_yellow">不合适</div>
+									</case>
+								</switch>
+							</div>
+							<div class="clear"></div>
+						</div>
+						<div class="line-two font12">
+							<div class="info">{$list.sex_cn} / {$list.age}岁 / {$list.education_cn} / {$list.experience_cn}</div>
+							<div class="date font12">{:date('Y-m-d',$list['down_addtime'])}</div>
+							<div class="clear"></div>
+						</div>
+						<div class="line-three font12 substring">
+							意向职位：{$list.intention_jobs}
+						</div>
+					</div>
+				</div>
+			<else/>
+				<div class="resume">
+					<div class="content">
+						<div class="line-two font12">
+							<div class="info">该简历不存在或已被删除</div>
+							<div class="date font12">{:date('Y-m-d',$list['down_addtime'])}</div>
+							<div class="clear"></div>
+						</div>
+					</div>
+				</div>
+			</if>
+		</volist>
+		<div class="split-block"></div>
+		<div class="qspage">{$down_list['page']}</div>
+	<else />
+		<if condition="$hasget">
+			<div class="list-empty">
+				抱歉，没有找到符合您条件的简历！
+			</div>
+		<else />
+			<eq name="Think.get.state" value="0">
+				<div class="list-empty">
+					抱歉，没有找到符合您条件的简历！
+				</div>
+			<else />
+				<div class="list-empty link_blue">
+					您还没有下载过简历！<br />
+					建议您主动出击 <a href="{:url_rewrite('QS_resumelist')}">搜人才</a>
+				</div>
+			</eq>
+		</if>
+	</notempty>
+	<include file="public:footer_min" />
+	<script type="text/javascript">
+		$('.js-filter').on('click', function() {
+			var filter = new QSfilter($(this));
+		});
+	</script>
+</body>
+</html>

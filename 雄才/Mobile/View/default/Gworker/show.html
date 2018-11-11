@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/gworker.css">
+</head>
+<body>
+<assign name="page_seo['header_title']" value="$info['jobs_name']"/>
+<include file="public:header"/>
+<div class="job-show-top">
+  <div class="job-name">
+      <div class="td-j-name substring  font18">{$info['jobs_name']}</div>
+      <div class="clear"></div>
+  </div>
+  <div class="wage font14">{$info['wage_cn']}<span><if condition="$info.amount neq 0">招聘{$info.amount}人<else />人数不限</if></span></div>
+  <div class="city font12">{$info['district_cn']}</div>
+  <div class="time font12">{:date('Y-m-d',$info['refreshtime'])}</div>
+</div>
+
+<div class="job-show-attr">
+    <div class="attr-ul font13" style="padding: .15rem .3rem;">
+        <div class="attr-li t1"><if condition="$info.sex eq 0">性别不限<else />{$info.sex_cn}</if></div>
+        <div class="attr-li t2"><if condition="$info.education eq 0">学历不限<else />{$info.education_cn}</if></div>
+        <div class="attr-li t3"><if condition="$info['minage'] && $info['maxage']">{$info['minage']}-{$info['maxage']}<else />年龄不限</if></div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<if condition="$info['tag']">
+    <div class="jobsshowtag font14" style="padding-top: 0">
+        <div class="tagul">
+            <volist name="info['tag']" id="tag">
+                <div class="tagli substring tg{$key+1}">{$tag}</div>
+            </volist>
+            <div class="clear"></div>
+        </div>
+    </div>
+</if>
+<div class="split-block"></div>
+
+<div class="job-show-st">
+    <div class="st-title list_height">职位动态</div>
+    <div class="st-li"><span class="font16">{$info['click']}次</span><br>浏览次数</div>
+    <div class="st-li last"><span class="font16">{$info['apply_num']}人</span><br>报名人数</div>
+    <div class="clear"></div>
+</div>
+<if condition="$info['welfare']">
+<div class="split-block"></div>
+<div class="job-show-des">
+    <div class="des-title list_height">吃住福利</div>
+    <div class="txt">{:nl2br($info['welfare'])}
+    </div>
+</div>
+</if>
+<if condition="$info['intro']">
+<div class="split-block"></div>
+<div class="job-show-des">
+    <div class="des-title list_height">工作简介</div>
+    <div class="txt">{:nl2br($info['intro'])}
+    </div>
+</div>
+</if>
+<if condition="$info['demand']">
+<div class="split-block"></div>
+<div class="job-show-des">
+    <div class="des-title list_height">招聘要求</div>
+    <div class="txt">{:nl2br($info['demand'])}
+    </div>
+</div>
+</if>
+
+<div class="split-block"></div>
+<div class="job-show-rec">
+    <div class="rec-title list_height">推荐职位
+        <div class="right font12 link_gray9"><a href="{:U('Gworker/index')}">查看更多></a></div>
+    </div>
+    <volist name="recommend" id="vo">
+    <div class="jobs-list">
+        <div class="jname font15 link_gray6 substring"><a href="{$job.jobs_url}">{$vo['jobs_name']}</a></div>
+        <div class="cate font12 substring">{$vo['district_cn']}</div>
+        <div class="wage font13">{$vo['wage_cn']}</div>
+        <div class="time font12">{:date('Y-m-d',$vo['refreshtime'])}</div>
+    </div>
+    </volist>
+</div>
+<div class="job-show-bottom-so link_blue">没有找到满意的普工? <a href="{:U('Gworker/index')}">立即搜索</a></div>
+
+<div class="split-block-foot-nav"></div>
+<div class="job-foot-nav">
+    <div class="btns link_gray6">
+        <div class="share font9 favor rent"><img src="../public/images/297.png"><br>分享</div>
+        <a class="apply apply_jobs rent" data-pid="{$info['id']}">立即报名</a>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="alw-layer"></div>
+<div class="alw-wx-layer"></div>
+<include file="public:footer_min" />
+<script src="../public/js/popWin.js"></script>
+<script type="text/javascript" charset="utf-8" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+    /* 显示分享 覆盖层 */
+    function share() {
+        $(".alw-wx-layer").show();
+    }
+    function share_() {
+        $(".alw-layer").show();
+    }
+    //分享按钮
+    $('.share').on('click', function () {
+        var agent = navigator.userAgent.toLowerCase();
+        if (agent.indexOf('micromessenger') < 0) {
+            share_();
+        } else {
+            share();
+        }
+    });
+    $(".alw-layer, .alw-wx-layer").on("click", function () {
+        $(this).hide();
+    });
+    $('.apply_jobs').on('click',function(){
+        var pid = $(this).data('pid');
+        $.getJSON("{:U('Gworker/check_apply_cache')}",{pid:pid},function(result){
+            if(result.status==1){
+                qsToast({type: 1, context: result.msg});
+            }else{
+                window.location.href = result.data;
+            }
+        });
+    });
+    wx.config({
+        // debug: true,
+        appId: '{$signPackage.appId}',
+        timestamp: '{$signPackage.timestamp}',
+        nonceStr: '{$signPackage.nonceStr}',
+        signature: '{$signPackage.signature}',
+        jsApiList: [
+            // 所有要调用的 API 都要加到这个列表中
+            "onMenuShareTimeline",
+            "onMenuShareAppMessage",
+            "onMenuShareQQ",
+            "onMenuShareWeibo"
+        ]
+    });
+    wx.ready(function () {
+        var linkUrl = "{:build_mobile_url(array('c'=>'Gworker','a'=>'show','params'=>'id='.$info['id']))}";//放链接
+        var title = "{$info['jobs_name']}★{$info['district_cn']}★{$info['wage_cn']}";
+        var desc = "{$info['welfare']}{$info['intro']}{$info['demand']}";
+        var imgUrl = "";
+        //图片链接
+        wx.onMenuShareTimeline({
+            title: title, // 分享标题
+            desc: desc, // 分享描述
+            link: linkUrl, // 分享链接
+            imgUrl: imgUrl, // 分享图标
+            success: function () {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+        wx.onMenuShareAppMessage({
+            title: title, // 分享标题
+            desc: desc, // 分享描述
+            link: linkUrl, // 分享链接
+            imgUrl: imgUrl, // 分享图标
+            type: '', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+        wx.onMenuShareQQ({
+            title: title, // 分享标题
+            desc: desc, // 分享描述
+            link: linkUrl, // 分享链接
+            imgUrl: imgUrl, // 分享图标
+            success: function () {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+        wx.onMenuShareWeibo({
+            title: title, // 分享标题
+            desc: desc, // 分享描述
+            link: linkUrl, // 分享链接
+            imgUrl: imgUrl, // 分享图标
+            success: function () {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+    });
+</script>
+</body>
+</html>

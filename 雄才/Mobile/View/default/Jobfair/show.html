@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<qscms:jobfair_show  列表名="info" 招聘会id="$_GET['id']"/>
+    <include file="public:meta"/>
+    <link rel="stylesheet" href="../public/css/jobfair.css">
+</head>
+<body>
+<include file="public:header"/>
+
+<div class="split-block"></div>
+
+<div class="jobfair-info">
+    <div class="title font16 substring">{$info['title']}</div>
+    <div class="pic date">{:date('Y年m月d日',$info['holddate_start'])} - {:date('Y年m月d日',$info['holddate_end'])}</div>
+    <div class="pic contact">{$info['phone']}（{$info['contact']}）</div>
+    <div class="pic district">{$info['address']}</div>
+    <if condition="$info['predetermined_ok'] eq 0">
+    <div class="status"></div>
+    </if>
+</div>
+<div class="statistics font16 link_gray6">
+    <div class="item J_to_comlist" data-num="{$info['booth_count']}" url="{$info.exhibitorsurl}">
+        <span>参会企业</span><br>
+        <span class="font20">{$info['booth_count']}</span>
+    </div>
+    <div class="item">
+        <span>展位数</span><br>
+        <span class="font20">{$info['position_count']}</span>
+    </div>
+    <a class="item last" href="tel:{$info['phone']}">
+        <span>电话咨询</span><br>
+        <span class="call"></span>
+    </a>
+    <div class="clear"></div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="introduce">
+    <div class="title list_height">招聘会介绍</div>
+    <div class="txt desc">{$info['introduction']}</div>
+    <div class="more">
+        <div class="showbtn font12 ">展开信息</div>
+        <!--<div class="showbtn font12 topbtn">收起信息</div> -->
+    </div>
+</div>
+
+<div class="split-block"></div>
+
+<div class="traffic">
+    <div class="title list_height">交通路线</div>
+    <div class="txt desc">
+        举办地址：{$info['address']}
+        <notempty name="info['bus']">
+        <br>
+        乘车路线：{$info['bus']}
+        </notempty>
+    </div>
+    <if condition="$info['map_x'] && $info['map_y'] && $info['map_zoom']">
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak={:C('qscms_map_ak')}"></script>
+    <div class="map" id="container"></div>
+    <script type="text/javascript">
+        var map = new BMap.Map("container");       // 创建地图实例  
+        var point = new BMap.Point({$info['map_x']},{$info['map_y']});  // 创建点坐标   
+        map.centerAndZoom(point, {$info['map_zoom']});
+        var qs_marker = new BMap.Marker(point);        // 创建标注   
+        map.addOverlay(qs_marker);  
+        map.setCenter(point); 
+        map.addControl(new BMap.NavigationControl());//添加鱼骨
+        map.enableScrollWheelZoom();//启用滚轮放大缩小，默认禁用。
+    </script>
+    </if>
+</div>
+<if condition="$info['predetermined_ok'] && $show_booth">
+<div class="split-block-footnav"></div>
+<div class="refootnav">
+    <div class="btns link_gray6">
+      <div class="qs-btn qs-btn-medium qs-btn-blue b-big qs-btn-inline" onclick="javascript:location.href='{:url_rewrite('QS_jobfairreserve',array('id'=>$info['id']))}'">立即参会</div>
+    </div>
+</div>
+</if>
+<include file="public:footer_min" />
+<script type="text/javascript" charset="utf-8" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+    $('.more').on('click',function(){
+        var prev = $(this).prev();
+        var child = $(this).children('.showbtn');
+        if(prev.hasClass('desc')){
+          prev.removeClass('desc');
+          child.addClass('topbtn');
+          child.html('收起信息');
+        }else{
+          prev.addClass('desc');
+          child.removeClass('topbtn');
+          child.html('展开信息');
+        }
+      });
+    $('.J_to_comlist').on('click',function(){
+        var com_num = parseInt($(this).data('num'));
+        if(com_num==0){
+            qsToast({type: 2, context: '当前还没有企业参会'});
+            return false;
+        }else{
+            window.location.href=$(this).attr('url');
+        }
+    });
+    wx.config({
+    // debug: true,
+    appId: '{$signPackage.appId}',
+    timestamp: '{$signPackage.timestamp}',
+    nonceStr: '{$signPackage.nonceStr}',
+    signature: '{$signPackage.signature}',
+    jsApiList: [
+      // 所有要调用的 API 都要加到这个列表中
+      "onMenuShareTimeline",
+      "onMenuShareAppMessage",
+      "onMenuShareQQ",
+      "onMenuShareWeibo"
+    ]
+  });
+  wx.ready(function () 
+  {
+      var linkUrl = "{:build_mobile_url(array('c'=>'Jobfair','a'=>'show','params'=>'id='.$info['id']))}";//放链接
+      var title = "{$info['title']}-{:C('qscms_site_name')} 举办时间：{:date('m月d日',$info['holddate_start'])} - {:date('m月d日',$info['holddate_end'])}  举办地址：{$info['address']}";
+      var desc = "{$info['title']}-{:C('qscms_site_name')} 举办时间：{:date('m月d日',$info['holddate_start'])} - {:date('m月d日',$info['holddate_end'])}  举办地址：{$info['address']}"; 
+      var imgUrl="{:C('qscms_site_domain')}{:C('qscms_site_dir')}{$info['thumb']}";//图片链接
+      
+      wx.onMenuShareTimeline({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareAppMessage({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+          type: '', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareQQ({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+      wx.onMenuShareWeibo({
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: linkUrl, // 分享链接
+          imgUrl: imgUrl, // 分享图标
+                    success: function () { 
+          // 用户确认分享后执行的回调函数
+          },
+          cancel: function () { 
+              // 用户取消分享后执行的回调函数
+          }
+      });
+  });
+</script>
+</body>
+</html>

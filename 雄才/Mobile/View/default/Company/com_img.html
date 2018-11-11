@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+		<link rel="stylesheet" href="../public/css/nprogress.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<div class="split-block-title">
+			据说上传了企业风采的企业都招到了优秀人才哦<br>
+			800KB以内,最多8张,图片格式:jpg、gif、bmp、png
+		</div>
+		<div class="J_imgWrap <empty name='company_img'>qs-hidden</empty>">
+			<div class="split-block"></div>
+			<div class="com_img">
+				<div class="imgul">
+					<div class="imgli-group">
+						<volist name="company_img" id="company_img">
+							<div class="imgli"><img src="{:attach($company_img['img'],'company_img')}"></div>
+						</volist>
+					</div>
+					<div class="J_add_company_img imgadd"><input type="file" id="browseFile" class="browseFile"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<empty name="company_img">
+			<div id="J_imgWrapOrg" class="list_height plist-txt notarrow">
+				<div class="pic"></div>
+				<div class="tit font14">企业风采</div>
+				<div class="describe com_certificate_add_btn font13">
+					<div class="J_add_company_img qs-btn qs-btn-inline qs-btn-medium qs-btn-green mt125">
+						上传图片
+						<input type="file" id="browse" class="browseFile">
+					</div>
+				</div>
+				<div class="arrow"></div>
+				<div class="clear"></div>
+			</div>	
+		</empty>
+		<include file="public:footer_min" />
+		<script src="../public/js/mobileBUGFix.mini.js"></script>
+		<script src="../public/js/LocalResizeIMG.js"></script>
+		<script src="../public/js/nprogress.js"></script>
+		<script>
+			var comid = "{$company_profile['id']}";
+			$('#browseFile,#browse').localResizeIMG({
+				width: 300,
+				quality: 1,
+				success: function (result) {  
+					var submitData={
+						base64_string:result.clearBase64,
+						company_id:comid
+					};
+					if ($('.imgli').length >= 8) {
+						qsToast({context: '最多可上传 8 张'});
+						return false;
+					}
+					NProgress.start();
+					$.ajax({
+						type: "POST",
+						url: "{:U('upload/company_img')}",
+						data: submitData,
+						dataType:"json",
+						success: function(result){
+							NProgress.done();
+							if(result.status == 1){
+								$('.imgli-group').append('<div class="imgli"><img src="'+result.data.path+'"></div>');
+								$('.J_imgWrap').removeClass('qs-hidden');
+								$('#J_imgWrapOrg').remove();
+								qsToast({type:1,context:result.msg});
+							}else{
+								qsToast({type:2,context:result.msg});
+							}
+						}, 
+						complete :function(XMLHttpRequest, textStatus){},
+						error:function(XMLHttpRequest, textStatus, errorThrown){ //上传失败 
+							qsToast({type:2,context: '图片上传失败！'});
+						}
+					}); 
+				}
+			});
+		</script>
+	</body>
+</html>

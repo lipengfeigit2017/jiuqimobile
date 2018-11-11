@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/company.css">
+	</head>
+	<body>
+		<include file="public:header" />
+		<notempty name="resume">
+			<div class="pmslist-img for-event last" onClick="javascript:location.href='{:url_rewrite('QS_resumeshow',array('id'=>$resume['id']))}'">
+				<div class="pic">
+					<img src="{$resume['photo_img']}">
+				</div>
+				<div class="describe font12">
+					<div class="tit font14 substring">{$resume['fullname']}<span class="font12">({$resume['sex_cn']}&nbsp;|&nbsp;{:date('Y') - $resume['birthdate']}岁&nbsp;|&nbsp;{$resume['current_cn']})</span></div>
+					<div class="txt substring">意向职位：{$resume['intention_jobs']}</div>
+				</div>		   
+		       <div class="arrow"></div>
+			   <div class="clear"></div>
+			</div>
+			<div class="pmsshow-btns">
+				<div id="J_resume_favor" class="btns for-event" rid="{$resume['id']}">收藏简历</div>
+				<a class="btns tel for-event" <if condition="!$resume['show_contact']">id="J_tel"<else/>href="tel:{$resume['telephone']}"</if>>拨打电话</a>
+				<div class="clear"></div>
+			</div>
+		</notempty>
+		<div class="split-block"></div>
+		<volist name="message['list']" id="msg">
+			<if condition="$msg['formuid'] eq $visitor['uid']">
+				<div class="J_imList pmsshow-right">
+					<div class="txt">{$msg.message}
+						<div class="times font10">{:date('m-d h:i',$msg['addtime'])}</div>
+						<div class="arrow"></div>
+					</div>
+					<div class="pic">
+						<img src="{$ronguser.avatars}">
+					</div>
+					<div class="clear"></div>
+				</div>
+			<else/>
+				<div class="J_imList pmsshow-left">
+					<div class="pic">
+						<img src="{$sendUser.avatars}">
+					</div>
+					<div class="txt">{$msg.message}
+						<div class="times font10">{:date('m-d h:i',$msg['addtime'])}</div>
+						<div class="arrow"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</if>
+			<div class="split-block"></div>
+		</volist>
+		<div id="send" class="pmsreply">
+			<div class="replybox">
+				<div class="inputbox">
+					<input id="J_val" type="text"  placeholder="请输入内容">
+				</div>
+				<div class="btnbox">
+					<div id="J_btn" class="qs-btn qs-btn-medium qs-btn-blue">发送</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+        <include file="public:footer_min" />
+		<script src="../public/js/qscrollTo.js"></script>
+        <script type="text/javascript">
+        	rongUser = {
+				sendUser:{
+                	id:"{$sendUser['uid']}",
+                	name: "{$sendUser['username']}",
+                    avatars: "{$sendUser['avatars']}"
+                },
+                newTime:"{$message.newTime}"
+			}
+			rongChangeScrollHeight(0);
+        	$('#J_resume_favor').on('click',function(){
+        		var rid = $(this).attr('rid');
+        		$.getJSON("{:U('AjaxCompany/resume_favor')}",{rid:rid},function(result){
+        			if(result.status == 1){
+						qsToast({type:1,context: result.msg});
+					}else{
+						qsToast({type:2,context: result.msg});
+					}
+        		});
+        	});
+		    var p = 2,
+		    	is_exe = !1,
+        		is_load = {$message.is_load|default=0};
+		    $('body').slideUp(function(e){
+		        if(!is_load || is_exe) return !1;
+		        is_exe = !0;
+		        $.getJSON("{:U('Im/get_message')}",{uid:rongUser.sendUser.id,page:p},function(result){
+		            if(result.status == 1){
+		                var h = e[0].scrollHeight;
+		                $('.J_imList').first().before(result.data.html);
+		                e.scrollTop(e[0].scrollHeight-h);
+		                if(result.data.is_load){
+		                    p++;
+		                }else{
+		                   is_load = 0; 
+		                }
+		            }
+		            is_exe = !1;
+		        });
+		    });
+		    $('#J_tel').click(function(){
+		    	qsToast({type:2,context: '请先下载简历！'});
+				return false;
+		    });
+        </script>
+	</body>
+</html>

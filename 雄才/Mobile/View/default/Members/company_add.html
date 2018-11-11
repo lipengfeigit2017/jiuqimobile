@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/members.css">
+	</head>
+	<body>
+        <include file="public:header" />
+        <div class="split-block"></div>
+        <form id="registerForm" method="post">
+            <div class="list-group">
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">公司名称</div>
+                    <div class="describe font12"><input type="text" name="companyname" id="companyname" placeholder="请输入公司全称"></div>
+                    <div class="clear"></div>
+                </div>  
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">联系人</div>
+                    <div class="describe font12"><input type="text" name="contact" id="contact" placeholder="请输入公司联系人"></div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="split-block"></div>
+            <div class="btn-spacing"><a id="btnRegCompany" href="javascript:;" class="qs-btn qs-btn-blue font18">提交</a></div>
+            <input name="utype" type="hidden" value="{$utype}">
+            <input type="hidden" name="reg_type" value="2">
+        </form>
+				<include file="public:footer" />
+        <include file="public:footer_min" />
+        <script src="https://static.geetest.com/static/tools/gt.js"></script>
+        <script src="../public/js/popWin.js"></script>  
+	</body>
+    <script>
+       
+        /**
+         * 注册企业会员
+         */
+        $('#btnRegCompany').on('click',function(){
+            var comnameValue = $.trim($('input[name="companyname"]').val());
+            var contactValue = $.trim($('input[name="contact"]').val());
+            if(!comnameValue){
+                qsToast({type:2,context: '请填写公司名称'});
+                return false;
+            }
+            if(!remoteValid('companyname',comnameValue)){
+                qsToast({type:2,context: '该公司已被注册'});
+                return false;
+            }
+            if(!contactValue){
+                qsToast({type:2,context: '请填写联系人'});
+                return false;
+            }
+            var url = "{:U('members/company_add')}";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: $('#registerForm').serialize(),
+                success: function (data) {
+                    if(data.status==1){
+                        window.location.href = data.data.url;
+                    }else{
+                        qsToast({type:2,context: data.msg});
+                    }
+                }
+            });
+        });
+        /**
+         * 验证用户名等是否重复
+         * @param validType 验证类型
+         * @param validValue 值
+         * @returns {boolean|*}
+         */
+        function remoteValid(validType, validValue){
+            var result = false;
+            $.ajax({
+                url: "{:U('members/ajax_check')}",
+                cache: false,
+                async: false,
+                type: 'post',
+                dataType: 'json',
+                data: { type: validType, param: validValue },
+                success: function(json) {
+                    if (json && json.status) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                }
+            });
+            return result;
+        }
+    </script>
+</html>

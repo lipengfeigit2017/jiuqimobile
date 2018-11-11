@@ -1,0 +1,196 @@
+<!--<div class="bottom-fixed" id="backtop">
+	<a href="javascript:;" class="gotop"></a>
+</div>-->
+<script src="../public/js/fastclick.js"></script>
+<script>
+    window.addEventListener( "load", function() {
+        FastClick.attach(document.body);
+    }, false );
+</script>
+<script src="../public/js/qsToast.js"></script>
+<script src="../public/js/QSpopout.js"></script>
+<script src="../public/js/QSfilter.js"></script>
+<script src="../public/js/zepto.hwSlider.js"></script>
+<script src="../public/js/scrollTo.js"></script>
+<script src="../public/js/RongIMLib-2.2.8.min.js"></script>
+<if condition="$rong_state eq 1">
+<script src="../public/js/rong_main.js"></script>
+</if>
+<script>
+  $('a[href]').click(function(){
+      var f = $(this).attr('href');
+      var reg = /\#(\w+)/;
+      if(reg.test(f)) {
+        if (!$(this).data('nm')) {
+            return !1;
+        }
+      }
+  });
+  $('.js-back').on('click', function () {
+      history.back();
+  });
+  $('.rbtn').on('click', function() {
+	  forCloseNav();
+  })
+  $('.t-mask').on('click', function () {
+	  forCloseNav();
+  })
+  $('.h-navclose').on('click', function () {
+	  forCloseNav();
+  })
+  function forCloseNav() {
+	  if ($('.topnavshow').hasClass('qs-actionsheet-toggle')) {
+		  $('.t-mask').hide();
+		  $('.topnavshow').removeClass('qs-actionsheet-toggle');
+	  } else {
+		  $('.t-mask').show();
+		  $('.topnavshow').addClass('qs-actionsheet-toggle');
+	  }
+  }
+  /**
+   * 监听鼠标
+   */
+  if ('ontouchstart' in window) {
+      $.EVENT_START = 'touchstart';
+      $.EVENT_END = 'touchend';
+  } else {
+      $.EVENT_START = 'mousedown';
+      $.EVENT_END = 'mouseup';
+  }
+  $('.plist-txt, .qs-btn, .for-event').on($.EVENT_START, function() {
+      $(this).addClass('eventactive');
+  })
+  $('.plist-txt, .qs-btn, .for-event').on($.EVENT_END, function() {
+      $(this).removeClass('eventactive');
+  })
+  $('.plist-txt, .qs-btn, .for-event').on('touchcancel', function() {
+      $(this).removeClass('eventactive');
+  })
+  //顶部刷新职位
+  $('#refresh_jobs_all_top').on('click',function(){
+      $.getJSON("{:U('Company/jobs_refresh_all')}",function(result){
+        forCloseNav();
+        if(result.status==1){
+          qsToast({type:1,context: result.msg});
+        }
+        else if(result.status==2){
+          var dialog = new QSpopout('批量刷新职位');
+              dialog.setContent(result.msg);
+              dialog.setBtn(2, ['取消', '单条刷新']);
+              dialog.show();
+              dialog.getPrimaryBtn().on('click', function () {
+                  window.location.href = "{:U('company/jobs_list')}";
+              });
+        }else{
+          qsToast({type:2,context: result.msg});
+          return false;
+        }
+      });
+  });
+  //顶部刷新简历
+  $('#refresh_resume_top').on('click',function(){
+    var pid = $(this).attr('pid');
+      $.post("{:U('Personal/refresh_resume')}",{pid:pid},function(result){
+        forCloseNav();
+      if(result.status == 1){
+        if(result.data){
+          qsToast({type:1,context: '刷新简历增加'+result.data+'{:C('qscms_points_byname')}'});
+        }else{
+          qsToast({type:2,context: result.msg});
+          return false;
+        }
+      }else{
+        qsToast({type:2,context: result.msg});
+        return false;
+      }
+    },'json');
+  });
+  //顶部预览简历
+  $('#preview_resume_top').on('click',function(){
+    $.getJSON("{:U('Personal/resume_preview')}",function(result){
+      if(result.status == 1){
+        window.location.href=result.data;
+      }else{
+        forCloseNav();
+        qsToast({type:2,context:result.msg});
+      }
+    });
+  });
+  $('.logout').on('click', function () {
+        var dialog = new QSpopout();
+        dialog.setContent('确定退出吗？');
+        forCloseNav();
+        dialog.show();
+        dialog.getPrimaryBtn().on('click', function () {
+            window.location.href = "{:U('Members/logout')}";
+        });
+    });
+   //顶部发布职位
+   $('#J_jobs_add_top').on('click',function(){
+    $.getJSON("{:U('Company/check_jobs_num')}",function(result){
+      if(result.status==1){
+        var dialog = new QSpopout();
+        var free = result.data;
+        if(free==1){
+            dialog.setContent('<div class="dialog_notice nospace">您当前是免费会员，发布中的职位数已超过最大限制，升级VIP会员后可继续发布职位，建议您立即升级VIP会员！</div>');
+        }else{
+            dialog.setContent('<div class="dialog_notice nospace">当前显示的职位已超过最大限制，建议您立即升级服务套餐或将暂时不招聘的职位设为关闭！</div>');
+        }
+        forCloseNav();
+        dialog.show();
+        dialog.setBtn(2, ['取消', '升级套餐']);
+        dialog.getPrimaryBtn().on('click', function () {
+            window.location.href = "{:U('CompanyService/setmeal_add')}";
+        });
+      }else{
+        window.location.href="{:U('Company/jobs_add')}";
+      }
+    });
+   });
+	// 处理select
+  $('select').on('change', function () {
+	  $(this).prev().text($(this).find('option').not(function(){ return !this.selected }).text());
+  })
+  $('select').each(function () {
+	  $(this).prev().text($(this).find('option').not(function(){ return !this.selected }).text());
+  })
+	// 底部导航栏
+	$('.js-b-nav-bar').on('click', function () {
+		$(this).closest('.bottom-nav-bar-group').find('.bottom-bar-more-group').fadeIn(200);
+	})
+  $('.js-b-nav-bar-active').on('click', function () {
+	  $(this).closest('.bottom-nav-bar-group').find('.bottom-bar-more-group').fadeOut(200);
+  })
+  $("#hwslider-bottom").hwSlider({
+	  autoPlay: false,
+	  dotShow: true,
+	  touch: true,
+	  arrShow: false
+  });
+
+  /**
+   * 返回顶部
+   */
+  var global = {
+	  h:$(window).height(),
+	  st: $(window).scrollTop(),
+	  backTop:function(){
+		  global.st > (global.h*0.5) ? $("#backtop").show() : $("#backtop").hide();
+	  }
+  }
+  global.backTop();
+  $(window).scroll(function(){
+	  global.h = $(window).height();
+	  global.st = $(window).scrollTop();
+	  global.backTop();
+  });
+  $(window).resize(function(){
+	  global.h = $(window).height();
+	  global.st = $(window).scrollTop();
+	  global.backTop();
+  })
+  $("#backtop").on('click', function () {
+	  $("body").scrollTo({toT: 0});
+  })
+</script>
+<div class="qs-hidden">{:htmlspecialchars_decode(C('qscms_statistics'))}</div>

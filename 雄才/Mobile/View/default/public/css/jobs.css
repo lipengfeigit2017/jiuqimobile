@@ -1,0 +1,241 @@
+/* 前台职位相关 */
+.jobsshowtop{/*height:2.65rem;*/background-color:#FFFFFF;position:relative;padding:.35rem;}
+.jobsshowtop .jobsname{line-height:.5rem;}
+.jobsshowtop .jobsname img{width:.6rem;margin-left:.1rem;}
+.jobsshowtop .jobsname .td-j-name{float:left;}
+.jobsshowtop .jobsname.has-alw .td-j-name{max-width:4rem;}
+.jobsshowtop .jobsname .td-j-img{float:left;padding-left:.2rem;}
+.jobsshowtop .jobsname .j-n-money{float:left;margin-left:.3rem;margin-top:.06rem;}
+.jobsshowtop .jobsname .j-n-money .j-m-l{float:left;width:.31rem;height:.37rem;background-size:.31rem .37rem;background-repeat:no-repeat;}
+.jobsshowtop .jobsname .j-n-money .j-m-l.jm{background-image:url(../images/261.png);}
+.jobsshowtop .jobsname .j-n-money .j-m-r{float:left;height:.37rem;border:1px solid #ff0000;background:#FFF;color:#ff0000;padding:0 .05rem;line-height:1;}
+.jobsshowtop .wage{color:#FF6600;height:.7rem;line-height:.7rem;}
+.jobsshowtop .wage span{color:#999999;padding-left:.3rem;}
+.jobsshowtop .city{color:#666666;}
+.jobsshowtop .time{position:absolute;width:2rem;right:.35rem;bottom:.4rem;text-align:right}
+.jobsshowatt{background-color:#FFFFFF;border-top:1px #F2F2F2 solid;padding-top:.15rem;padding-bottom:.15rem;}
+.jobsshowatt .attul{width:85%;margin:0 auto;}
+.jobsshowatt .attul .attli{float:left;width:33.3333%;height:.7rem;line-height:.7rem;background-size:.35rem;background-image:url(../images/111.png);background-repeat:no-repeat;background-position:0rem center;padding-left:.5rem;}
+.jobsshowatt .attul .attli.t1{background-image:url(../images/109.png);}
+.jobsshowatt .attul .attli.t2{background-image:url(../images/110.png);}
+.jobsshowatt .attul .attli.t3{background-image:url(../images/111.png);}
+.jobsshowatt .attul .attli.t4{background-image:url(../images/112.png);}
+.jobsshowatt .attul .attli.t5{background-image:url(../images/113.png);}
+.jobsshowatt .attul .attli.t6{background-image:url(../images/114.png);}
+.jobsshowtag{background-color:#FFFFFF;padding-top:.3rem}
+.jobsshowtag .tagul{width:90%;margin:0 auto;}
+.jobsshowtag .tagul .tagli{float:left;line-height:1;padding:.15rem .2rem;-webkit-border-radius:.3rem;-moz-border-radius:.3rem;border-radius:.3rem;margin-right:.15rem;margin-bottom:.3rem;}
+.jobsshowtag .tagul .tagli:last-child{margin-right:0;}
+.jobsshowtag .tagul .tagli.tg1{background:#daf2fe;color:#30a2c8;}
+.jobsshowtag .tagul .tagli.tg2{background:#fef5da;color:#ea994e;}
+.jobsshowtag .tagul .tagli.tg3{background:#e4fcdc;color:#76af58;}
+.jobsshowtag .tagul .tagli.tg4{background:#ebebeb;color:#868686;}
+.jobsshowtag .tagul .tagli.tg5{background:#ffe7db;color:#d15b34;}
+.jobsshowtag .tagul .tagli.tg6{background:#e3e5ff;color:#5c6ed4;}
+.jobsshowcom{background-color:#FFFFFF;padding:.3rem .3rem;}
+.jobsshowcom .leftpic{float:left;width:1.5rem;}
+.jobsshowcom .leftpic .imgbox{width:1.32rem;height:1.32rem;border-radius:.1rem;}
+.jobsshowcom .leftpic .imgbox img{width:1.3rem;height:1.3rem;border-radius:.1rem;border:1px #F3F3F3 solid;}
+.jobsshowcom .comtxt{float:left;width:5.4rem;background-image:url(../images/40.png);background-size:.24rem;background-repeat:no-repeat;background-position:right center;}
+.jobsshowcom .comtxt .cname{height:.5rem;width:95%;}
+.jobsshowcom .comtxt .cname img{width:.3rem;}
+.jobsshowcom .comtxt .city{color:#999999;height:.45rem;}
+.jobsshowcom .comtxt .trade{color:#999999}
+.jobsshowadder{background-color:#FFFFFF;padding:.3rem .3rem;border-top:1px #F2F2F2 solid;}
+.jobsshowadder .adder img{width:.3rem;margin-left:.1rem;}
+.jobsshowst{background-color:#FFFFFF;padding-bottom:.3rem}
+.jobsshowst .eattitle{border-bottom:1px  #F2F2F2 solid;padding-left:.7rem;padding-right:.3rem;font-weight:700;position:relative;background-image:url(../images/124.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;}
+.jobsshowst .eattitle .ritle{text-align:right;font-weight:normal;color:#999999;position:absolute;right:.3rem;top:0rem;}
+.jobsshowst .stli{float:left;width:50%;border-right:1px #CCCCCC  dashed;text-align:center;margin-top:.3rem;color:#999999;line-height:180%;}
+.jobsshowst .stli span{color:#0066CC;}
+.jobsshowst .stli.last{border-right:0px;}
+.jobsshowsdes{background-color:#FFFFFF;}
+.jobsshowsdes .eattitle{border-bottom:1px  #F2F2F2 solid;padding-left:.7rem;padding-right:.3rem;font-weight:700;position:relative;background-image:url(../images/125.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;}
+.jobsshowsdes .txt{padding:.2rem .3rem;line-height:165%;color:#999999;word-break:break-all;}
+.jobsshowcon{background-color:#FFFFFF;padding-bottom:.3rem}
+.jobsshowcon .eattitle{border-bottom:1px  #F2F2F2 solid;padding-left:.7rem;padding-right:.3rem;font-weight:700;position:relative;background-image:url(../images/126.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;}
+.jobsshowcon .eattitle .ritle{text-align:right;font-weight:normal;color:#0180cf;position:absolute;right:.3rem;top:0rem;}
+.jobsshowcon .mob{padding-left:.7rem;background-image:url(../images/127.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;margin-top:.3rem;}
+.jobsshowcon .map{padding-left:.7rem;background-image:url(../images/128.png);background-repeat:no-repeat;background-size:.38rem;background-position:.28rem .05rem;margin-top:.3rem;padding-right:.35rem;}
+.jobsshowcon .tip{margin-left:.3rem;margin-right:.3rem;height:.6rem;line-height:.6rem;background-color:#FFFFE9;border:1px #F3EAC3 solid;padding-left:.25rem;margin-top:.3rem;border-radius:.1rem;color:#F26B01;text-align:center}
+.jobsshowrec{background-color:#FFFFFF;padding-bottom:.3rem}
+.jobsshowrec .eattitle{border-bottom:1px  #F2F2F2 solid;padding-left:.7rem;padding-right:.3rem;font-weight:700;position:relative;background-image:url(../images/129.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;}
+.jobsshowrec .eattitle .ritle{text-align:right;font-weight:normal;color:#0180cf;position:absolute;right:.3rem;top:0rem;}
+.jobsshowrec .jobslist{border-bottom:1px  #F2F2F2 solid;padding:.2rem .3rem;position:relative}
+.jobsshowrec .jobslist.last{border-bottom:0px;}
+.jobsshowrec .jobslist .jname{height:.6rem;}
+.jobsshowrec .jobslist .cname{height:.5rem;color:#999999}
+.jobsshowrec .jobslist .wage{color:#FF3300}
+.jobsshowrec .jobslist .time{position:absolute;right:.3rem;bottom:.3rem;}
+.jobssshowbottomso{text-align:center;height:1.2rem;line-height:1.2rem;}
+.split-block-footnav{height:1.5rem;}
+.jobsfootnav{width:7.5rem;margin:0 auto;position:fixed;height:1.3rem;bottom:0px;background-color:#FFFFFF;text-align:center;}
+.jobsfootnav .btns{position:relative;}
+.jobsfootnav .btns .tel{float:left;width:20%;height:1.3rem;background:#11cd6e;color:#FFF;padding-top:.2rem;}
+.jobsfootnav .btns .tel img{width:.55rem;}
+.jobsfootnav .btns .fov{float:left;width:20%;height:1.3rem;padding-top:.2rem;}
+.jobsfootnav .btns .fov img{width:.55rem;}
+.jobsfootnav .btns .fto{float:left;width:40%;height:1.3rem;line-height:1.3rem;color:#FFF;background:#fe552e;}
+.jobsfootnav .btns .im{float:left;width:20%;height:1.3rem;background:#0bb2e9;color:#FFF;padding-top:.2rem;}
+.jobsfootnav .btns .im img{width:.55rem;}
+.jobsfootnav .btns .fto.width60{width:60%;}
+
+/*地图*/
+.com-map{background:#ffffff;padding:.35rem;}
+.com-map .desc{height:1.05rem;line-height:1.05rem;}
+.com-map .map{height:8rem;text-align:center;padding:.05rem;border:1px #E8E8E8 solid;}
+
+/* 企业详细页*/
+.comshowtop{width:100%;}
+.comshowtop .topbg{position:relative;background-color:#3399FF;height:2.2rem;padding-top:1.2rem;}
+.comshowtop .topbg .return{position:absolute;left:0rem;top:0rem;width:1rem;height:1.2rem;background-image:url(../images/22.png);background-repeat:no-repeat;background-size:30%;background-position:center;line-height:100%;}
+.comshowtop .topbg .attention{position:absolute;right:.4rem;top:.4rem;width:1.4rem;height:.55rem;line-height:.55rem;color:#FFFFFF;border:1px #FFFFFF solid;border-radius:.1rem;background-image:url(../images/157.png);background-repeat:no-repeat;background-size:.34rem;background-position:.18rem center;padding-left:.55rem;}
+.comshowtop .topbg .attention.for_cancel{width:1.6rem;background-image:none;padding-left:.18rem;}
+.comshowtop .topbg .logobox{width:2rem;height:2rem;padding:.1rem;background-color:#FFFFFF;margin:0 auto;top:1.5rem;}
+.comshowtop .topbg .logobox img{width:1.8rem;height:1.8rem;}
+.comshowtop .com{background-color:#FFFFFF;padding-top:1.2rem;text-align:center;padding-bottom:.5rem;}
+.comshowtop .com .cname{line-height:.5rem;padding:0 .5rem;}
+.comshowtop .com .cname img{width:.3rem;}
+.comshowtop .com .txt{color:#999999}
+.comshowpor{background-color:#FFFFFF;padding-bottom:.3rem}
+.comshowpor .report{margin-left:.4rem;margin-right:.4rem;height:.6rem;line-height:.6rem;background-color:#f2ffe7;border:1px #47aa05 solid;margin-top:.3rem;border-radius:.1rem;color:#5cca12;text-align:center}
+.comshowpor .eattitle{border-bottom:1px  #F2F2F2 solid;padding-left:.7rem;padding-right:.3rem;font-weight:700;position:relative;background-image:url(../images/158.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;}
+.comshowpor .eattitle .ritle{text-align:right;font-weight:normal;color:#0180cf;position:absolute;right:.3rem;top:0rem;}
+.comshowpor .txt{padding-left:.3rem;padding-right:.3rem;margin-top:.15rem;}
+.comshowpor .txt span{color:#999999;padding-right:.3rem;}
+.comshowpor .eattitle .reply{width:1.2rem;height:.6rem;line-height:.6rem;font-size:.25714285rem;float:right;margin-top:.22rem;}
+.comshowtag{background-color:#FFFFFF;}
+.comshowtag .eattitle{border-bottom:1px  #F2F2F2 solid;padding-left:.7rem;padding-right:.3rem;font-weight:700;position:relative;background-image:url(../images/159.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;}
+.comshowtag .eattitle .ritle{text-align:right;font-weight:normal;color:#0180cf;position:absolute;right:.3rem;top:0rem;}
+.comshowtag .tagul{width:85%;margin:0 auto;padding-top:.3rem;}
+.comshowtag .tagul .tagli{float:left;padding-left:.3rem;padding-right:.3rem;margin-right:.3rem;height:.6rem;line-height:.6rem;color:#FF6600;border:1px #FF6600 solid;border-radius:.15rem;margin-bottom:.3rem;}
+.comshowdes{background-color:#FFFFFF;}
+.comshowdes .eattitle{border-bottom:1px  #F2F2F2 solid;padding-left:.7rem;padding-right:.3rem;font-weight:700;position:relative;background-image:url(../images/125.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;}
+.comshowdes .txt{padding:.2rem .3rem;line-height:165%;color:#999999;word-wrap:break-word;}
+.comshowdes .txt.desc{height:2.3rem;overflow:hidden;}
+.comshowdes .more{width:90%;border-top:1px #F2F2F2 solid;margin:0 auto;height:.6rem;padding-top:.1rem;text-align:center}
+.comshowdes .more .showbtn{width:1.6rem;margin:0 auto;color:#999999;background-image:url(../images/67.png);background-size:.26rem;background-repeat:no-repeat;background-position:right center;}
+.comshowdes .more .showbtn.topbtn{background-image:url(../images/86.png);}
+.comshowimg{background-color:#FFFFFF;overflow:hidden;}
+.comshowimg .eattitle{border-bottom:1px  #F2F2F2 solid;padding-left:.7rem;padding-right:.3rem;font-weight:700;position:relative;background-image:url(../images/160.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;}
+.comshowimg .imgbox{width:7.5rem;height:4.1rem;padding:.3rem 0;float:left;text-align:center;}
+.comshowimg .imgbox img{max-width:7.5rem;max-height:3.5rem;vertical-align:middle;display:inline-block;}
+.comshowcon{background-color:#FFFFFF;padding-bottom:.3rem}
+.comshowcon .eattitle{border-bottom:1px  #F2F2F2 solid;padding-left:.7rem;padding-right:.3rem;font-weight:700;position:relative;background-image:url(../images/161.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;}
+.comshowcon .eattitle .ritle{text-align:right;font-weight:normal;color:#0180cf;position:absolute;right:.3rem;top:0rem;}
+.comshowcon .mob{padding-left:.7rem;background-image:url(../images/127.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;margin-top:.3rem;}
+.comshowcon .tel{padding-left:.7rem;background-image:url(../images/126.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;margin-top:.3rem;}
+.comshowcon .email{padding-left:.7rem;background-image:url(../images/162.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;margin-top:.3rem;}
+.comshowcon .map{padding-left:.7rem;background-image:url(../images/128.png);background-repeat:no-repeat;background-size:.36rem;background-position:.3rem .03rem;margin-top:.3rem;}
+.comshowcon .tip{margin-left:.3rem;margin-right:.3rem;height:.6rem;line-height:.6rem;background-color:#FFFFE9;border:1px #F3EAC3 solid;padding-left:.25rem;margin-top:.3rem;border-radius:.1rem;color:#F26B01;text-align:center}
+.comshowrec{background-color:#FFFFFF;}
+.comshowrec .eattitle{border-bottom:1px  #F2F2F2 solid;padding-left:.7rem;padding-right:.3rem;font-weight:700;position:relative;background-image:url(../images/129.png);background-repeat:no-repeat;background-size:.32rem;background-position:.3rem center;}
+.comshowrec .jobslist{border-bottom:1px  #F2F2F2 solid;padding:.2rem .3rem;position:relative}
+.comshowrec .jobslist.last{border-bottom:0px;}
+.comshowrec .jobslist .jname{height:.6rem;}
+.comshowrec .jobslist .cname{height:.5rem;color:#999999}
+.comshowrec .jobslist .wage{color:#FF3300}
+.comshowrec .jobslist .time{position:absolute;right:.3rem;bottom:.3rem;}
+
+/* 职位列表*/
+.split-block-title{padding:.3rem;}
+.split-block-title .sbox{height:.8rem;line-height:.8rem;background-color:#FFFFFF;border-radius:.1rem;font-size:.3rem;margin:0 auto;background-size:.4rem;background-image:url(../images/04.png);background-repeat:no-repeat;background-position:.3rem center;color:#999999;padding-left:12.5%;border:1px solid rgba(188,187,187,0.4);}
+.list-split-block{width:100%;height:.25rem;background:transparent;}
+.list-split-block.lower{height:.01rem;}
+.job-list-item{background:#ffffff;width:100%;border-top:1px solid #f0f0f0;}
+.job-list-item.eventactive{background-color:#F9F9F9;}
+.job-list-item .info{padding:.15rem 5% .2rem;position:relative;}
+.job-list-item .info .line-one{height:.6rem;line-height:.6rem;}
+.job-list-item .info .line-one .job-name{max-width:70%;float:left;color:#333333;}
+.job-list-item .info .line-one .job-name img{width:.6rem;margin-left:.1rem;}
+.job-list-item .info .line-one .refresh-time{float:right;}
+.job-list-item .info .line-one .j-n-money{float:left;margin-left:.3rem;margin-top:.13rem;}
+.job-list-item .info .line-one .j-n-money .j-m-l{float:left;width:.23rem;height:.34rem;background-size:.23rem .34rem;background-repeat:no-repeat;}
+.job-list-item .info .line-one .j-n-money .j-m-l.jm1{background-image:url(../images/253.png);}
+.job-list-item .info .line-one .j-n-money .j-m-l.jm2{background-image:url(../images/254.png);}
+.job-list-item .info .line-one .j-n-money .j-m-l.jm3{background-image:url(../images/255.png);}
+.job-list-item .info .line-one .j-n-money .j-m-r{float:left;height:.34rem;border:1px solid #ff0000;background:#FFF;color:#ff0000;padding:0 .05rem;line-height:1;}
+.job-list-item .info .line-two{height:.5rem;line-height:.5rem;}
+.job-list-item .info .line-two .salary{float:left;width:30%;color:#ff552e;}
+.job-list-item .info .line-two .category{float:left;width:50%;}
+.job-list-item .info .line-three{height:.58rem;padding-top:.08rem;}
+.job-list-item .info .line-three .job-tag{float:left;line-height:1;padding:.1rem .2rem;-webkit-border-radius:.3rem;-moz-border-radius:.3rem;border-radius:.3rem;margin-right:.15rem;}
+.job-list-item .info .line-three .job-tag:last-child{margin-right:0;}
+.job-list-item .info .line-three .job-tag.tg1{background:#daf2fe;color:#30a2c8;}
+.job-list-item .info .line-three .job-tag.tg2{background:#fef5da;color:#ea994e;}
+.job-list-item .info .line-three .job-tag.tg3{background:#e4fcdc;color:#76af58;}
+.job-list-item .info .line-three .job-tag.tg4{background:#ebebeb;color:#868686;}
+.job-list-item .info .line-four{height:.45rem;line-height:.5rem;}
+.job-list-item .info .apply-btn{color:#ffffff;position:absolute;width:1.1rem;line-height:1;padding:.15rem;text-align:center;background-color:#ff6600;border-radius:.3rem;bottom:.5rem;right:5%;}
+.job-list-item .company{width:90%;padding:.2rem 0;margin:0 auto;border-top:1px solid rgba(202,202,202,0.37);}
+.job-list-item .company .company-name{width:60%;float:left;}
+.job-list-item .company .district{float:right;width:40%;text-align:right;}
+.job-list-item .company .district.range{display:inline-block;width:auto;padding-left:.4rem;background-image:url(../images/128.png);background-repeat:no-repeat;background-size:.36rem;background-position-y:.02rem;}
+
+/* 新添加的职位分类显示样式 */
+.list-jobcategory-block{height:.82rem;line-height:.82rem;padding-left:.43rem;background:#ffffe9;position:relative;color:#666;}
+.list-jobcategory-block:after{content:'';position:absolute;left:0;bottom:-1px;width:100%;height:1px;background:#f3eac3;}
+.list-jobcategory-block .l-recover-job-txt{display:inline-block;}
+.list-jobcategory-block .l-cetgory{color:#ff6600;}
+.list-jobcategory-block .l-recover-close{float:right;margin-right:.43rem;display:inline-block;color:#0099cc;padding-left:.4rem;background-image:url(../images/230.png);background-position:0 center;background-repeat:no-repeat;background-size:.28rem;}
+
+/*领取红包不满足条件*/
+.alw-not-meet-dia{position:fixed;z-index:50000;width:5.60rem;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);overflow:hidden;}
+.alw-not-meet-dia .alw-nm-con{background:#FFF;border-radius:.08rem;padding:.2rem;}
+.alw-nm-con .remind-txt{line-height:160%;padding:0 .2rem;margin-bottom:.2rem;}
+.alw-nm-con .meet-con{width:5.3rem;margin:0 auto;background:#f7f7f7;padding:.2rem;}
+.meet-con .meet-con-line{line-height:1.3;}
+.meet-con-line .mcl-1{float:left;width:1.8rem;}
+.meet-con-line .mcl-2{float:left;width:1.9rem;}
+.meet-con-line .mcl-3{float:left;}
+.meet-con-line .meet-icon{height:.24rem;line-height:.24rem;padding-left:.35rem;margin-top:.05rem;}
+.meet-con-line .meet-icon.i0{background-image:url(../images/256.png);background-repeat:no-repeat;background-size:.24rem;color:#ff3a3a;}
+.meet-con-line .meet-icon.i1{background-image:url(../images/257.png);background-repeat:no-repeat;background-size:.24rem;color:#3eb958;}
+.alw-nm-con .alw-btn{width:5.01rem;text-align:center;border-radius:.1rem;padding:.2rem 0;margin:0 auto;}
+.alw-nm-con .alw-btn.b1{color:#666;background:#cacaca;}
+.alw-nm-con .alw-btn.b2{color:#FFF;background:#0180cf;}
+.alw-not-meet-dia .alw-close{width:.84rem;height:.84rem;background-image:url(../images/258.png);background-repeat:no-repeat;background-size:.84rem;margin:0 auto;}
+.for-alw-dia .alw-not-meet-dia{display:none;}
+
+/* 红包领取成功 */
+.alw-yes-meet-dia{display:none;position:fixed;z-index:50000;width:6.40rem;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);overflow:hidden;}
+.alw-yes-meet-dia .alw-close{float:right;width:.84rem;height:.84rem;background-image:url(../images/258.png);background-repeat:no-repeat;background-size:.84rem;margin:0 auto;}
+.alw-yes-meet-dia .alw-ym-con{width:6.40rem;height:6.70rem;background-image:url(../images/259.png);background-repeat:no-repeat;background-size:6.40rem 6.70rem;}
+.alw-yes-meet-dia .ayc-head{width:6.40rem;padding-top:.35rem;text-align:center;line-height:1;}
+.alw-yes-meet-dia .ayc-cash-num{width:6.40rem;text-align:center;line-height:1;}
+.alw-yes-meet-dia .ayc-title{width:6.40rem;padding-top:1.03rem;text-align:center;line-height:1;color:#7d1524;}
+.alw-yes-meet-dia .ayc-remind{width:4rem;text-align:left;line-height:1.5;color:#7d1524;text-indent:2em;margin:0 auto;}
+.alw-yes-share-btn{width:2.5rem;margin:0 auto;line-height:1;padding:.2rem 0;border-radius:.1rem;background:#f3e155;color:#ff2948;text-align:center;-moz-box-shadow:1px 1px 1px rgb(95,92,92);-webkit-box-shadow:1px 1px 1px rgb(95,92,92);box-shadow:1px 1px 1px rgb(95,92,92);}
+.alw-txt-line{width:6.40rem;text-align:center;line-height:1;}
+.for-alw-dia .alw-yes-meet-dia{display:block;}
+.sp-line-10{width:100%;height:.10rem;}
+.sp-line-15{width:100%;height:.15rem;}
+.sp-line-20{width:100%;height:.20rem;}
+.sp-line-25{width:100%;height:.25rem;}
+.sp-line-30{width:100%;height:.30rem;}
+.sp-line-35{width:100%;height:.35rem;}
+.sp-line-50{width:100%;height:.50rem;}
+.sp-line-80{width:100%;height:.80rem;}
+.sp-line-100{width:100%;height:1rem;}
+
+/*职位详细页红包*/
+.alw-remind-box{background:#fefce8;padding:.35rem;}
+.alw-remind-box .alw-cr-line{line-height:1;}
+.alw-remind-box .alw-cr-line .acl{width:50%;float:left;}
+.alw-remind-box .alw-r-line{line-height:1.5;}
+
+/*分享*/
+.alw-layer{display:none;top:0;z-index:50000;width:100%;height:100%;background:url(../images/wzp_img/wzp_layer.png) center no-repeat;background-color:rgba(0,0,0,.8);background-size:320px auto;position:fixed;}
+.alw-wx-layer{display:none;top:0;z-index:50000;display:none;height:100%;background:url(../images/wzp_img/wx_layer.png) center top no-repeat;background-color:rgba(0,0,0,.8);background-size:contain;position:fixed;}
+
+/*实地认证*/
+.report-head{background-color: #FFFFFF;text-align: center; padding: .5rem 0;position: relative;color: #333333;}
+.report-head .h1{font-weight: 700;}
+.report-head .com-name{color: #66be8c; line-height: 230%;}
+.report-head .badge{width: 1.8rem; height: 1.8rem; position: absolute; right: .8rem; top: .5rem;}
+.report-tit{width: 100%; height: 1.05rem; background-color: #FFFFFF; padding-top: .3rem; border-bottom: 1px solid #F2F2F2;}
+.report-tit .th1{border-left: .1rem #0066CC solid;color: #0066CC;padding-left: .3rem;height: .45rem;line-height: .45rem;}
+.report-item{width:100%;background-color:#FFFFFF;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;-khtml-user-select:none;user-select:none; border-bottom: 1px solid #F2F2F2;padding:0 .4rem;}
+.report-item .key{float:left;width:1.45rem; padding:.22rem 0; line-height:.6rem;color: #999999;}
+.report-item .value{float:left;width:5.2rem;padding:.22rem 0; line-height:.6rem;text-align:left;color:#333333;}
+.report-evaluation{background-color: #FFFFFF; padding:.2rem .4rem;line-height:.6rem; color: #333333;}

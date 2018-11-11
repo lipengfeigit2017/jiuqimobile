@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/personal.css">
+		<link rel="stylesheet" href="../public/css/zepto.mdater.css">
+	</head>
+	<body>
+		<include file="public:header"/>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">面试人<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	            <input type="text" id="resume_name" readonly="true" value="{$apply.fullname}">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">面试职位<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	        	<span class="for-select"></span>
+	            <select id="jobs_id" name="jobs_id">
+	                <volist name="jobs" id="list">
+	                    <option value="{$list.id}">{$list.jobs_name}</option>
+	                </volist>
+	            </select>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">面试日期<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+		        <input id="date" class="in" type="text" placeholder="请选择" readonly="readonly" />
+	    		  <!--<input id="date" type="hidden" value="">-->
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt js-actionParent">
+	        <div class="pic"></div>
+	        <div class="tit font14">面试时间<span class="font_red_light">*</span></div>
+	        <div class="describe font13 qs-temp-time js-showActionSheet">
+		        <span class="f-aptime-txt">请选择</span>
+		        <input class="f-time-code" id="time" type="hidden">
+		        <input class="f-ap-code" id="ap" type="hidden" value="1">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+			    <!--BEGIN actionSheet-->
+			    <div>
+				    <div class="qs-mask" style="display:none"></div>
+				    <div class="qs-actionsheet js-actionsheet">
+					    <div class="qs-actionsheet-menu">
+						    <div class="con-filter">
+							    <div class="f-selected-group">
+								    <div class="s-bar">
+									    <div class="s-bar-title qs-left">面试时间</div>
+									    <div class="clear"></div>
+								    </div>
+								    <div class="s-list"></div>
+							    </div>
+							    <div class="f-box">
+								    <div class="f-box-inner">
+									    <li><a class="font12 f-item f-item-ap select" href="javascript:;" data-code="1">上午</a></li>
+									    <li><a class="font12 f-item f-item-ap" href="javascript:;" data-code="2">下午</a></li>
+								    </div>
+								    <div class="f-box-inner">
+									    <div class="f-aptime-group">
+										    <li><a class="font12 f-item f-item-time select" href="javascript:;" data-code="8">8：00</a></li>
+										    <li><a class="font12 f-item f-item-time" href="javascript:;" data-code="9">9：00</a></li>
+										    <li><a class="font12 f-item f-item-time" href="javascript:;" data-code="10">10：00</a></li>
+										    <li><a class="font12 f-item f-item-time" href="javascript:;" data-code="11">11：00</a></li>
+									    </div>
+									    <div class="f-aptime-group qs-hidden">
+										    <li><a class="font12 f-item f-item-time select" href="javascript:;" data-code="2">2：00</a></li>
+										    <li><a class="font12 f-item f-item-time" href="javascript:;" data-code="3">3：00</a></li>
+										    <li><a class="font12 f-item f-item-time" href="javascript:;" data-code="4">4：00</a></li>
+										    <li><a class="font12 f-item f-item-time" href="javascript:;" data-code="5">5：00</a></li>
+									    </div>
+								    </div>
+							    </div>
+						    </div>
+					    </div>
+				    </div>
+			    </div>
+	    </div>
+	    <div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">面试地点<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	    		<input type="text" id="address" value="{$apply.address|default=$apply.district_cn}">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="split-block"></div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">联系人<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	    		<input type="text" id="contact" value="{$apply.contact}">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+		<div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">联系电话<span class="font_red_light">*</span></div>
+	        <div class="describe font13">
+	            <input type="text" id="telephone" value="<if condition="$apply['telephone']">{$apply.telephone}<else/>{$apply.landline_tel}</if>">
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt">
+	        <div class="pic"></div>
+	        <div class="tit font14">备注</div>
+	        <a href="#describe" class="describe font13 notesText">请输入</a>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="list_height plist-txt notarrow">
+	        <div class="pic"></div>
+	        <div class="tit font14">同时短信通知</div>
+	        <div class="describe font13">
+		        <div class="d-switch js-d-switch <if condition="$visitor['sms_num']">active</if>"></div>
+	        	<input type="hidden" id="sms_notice" <if condition="$visitor['sms_num']">value="1"<else />value="0"</if>>
+	        </div>
+	        <div class="arrow"></div>
+	        <div class="clear"></div>
+	    </div>
+	    <div class="split-block"></div>
+		<div class="btn-spacing">
+			<input type="hidden" id="notes" value="">
+			<a id="J_saveresume"  href="javascript:;" class="qs-btn qs-btn-blue font18">发送面试邀请</a>
+		</div>
+	    <div class="split-block"></div>
+			<script type="text/html" id="tpl-notes">
+				<div class="headernavfixed">
+					<div class="headernav font18"><div class="title">面试邀请备注<div class="return js-back"></div><div class="rbtn"></div></div></div>
+				</div>
+				<div class="per-introduce">
+					<textarea placeholder="请输入面试邀请备注" name="tpl_notes" id="tpl_notes"></textarea>
+				</div>
+				<div class="per-introduce-tip">
+					<div class="text-num">最多可输入100字</div>
+					<div class="J_empty text-clear">清空</div>
+					<div class="clear"></div>
+				</div>
+				<div class="split-block"></div>
+				<div class="btn-spacing">
+					<div id="notesBtn" class="qs-btn qs-btn-blue font18" title="确定">确定</div>
+				</div>
+			</script>
+	    <include file="public:footer_min" />
+	    <script src="../public/js/popWin.js"></script>
+			<script src="../public/js/zepto.mdater.js"></script>
+	    <script type="text/javascript">
+		    // 开关
+		    var sms_num = "{$visitor['sms_num']}";
+		    $('.js-d-switch').on('click', function () {
+		    	if(sms_num == 0){
+	        		var popout = new QSpopout('操作提示');
+                    popout.setContent('您的短信条数已用完，请先购买短信');
+                    popout.setBtn(1);
+                    popout.show();
+                    return !1;
+	        	}
+		    	if ($(this).hasClass('active')) {
+		    		$('#sms_notice').val('0');
+				    $(this).removeClass('active');
+			    } else {
+				    $('#sms_notice').val('1');
+				    $(this).addClass('active');
+			    }
+		    })
+		    // 日期插件调用
+		    $('.in').mdater({
+			    minDate : new Date(2015, 12, 13)
+		    });
+		    $(function(){
+			    $(".js-showActionSheet").on("click", function(){
+				    var $iosActionsheet = $(this).closest('.js-actionParent').find('.js-actionsheet');
+				    var $iosMask = $(this).closest('.js-actionParent').find('.qs-mask');
+				    $iosActionsheet.removeClass('qs-actionsheet-toggle');
+				    $iosActionsheet.addClass('qs-actionsheet-toggle');
+				    $iosMask.fadeIn(200);
+				    $iosMask.on('click', hideActionSheet);
+				    $(this).closest('.js-actionParent').find('.js-cancelActionSheet').on('click', hideActionSheet);
+				    $(this).closest('.js-actionParent').find('.qs-actionsheet-cell').on('click', hideActionSheet);
+				    function hideActionSheet() {
+					    $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+					    $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+				    }
+			    });
+		    });
+		    // 上午下午选择
+		    $('.f-item-ap').on('click', function () {
+			    $('.f-item-ap').removeClass('select');
+			    $(this).addClass('select');
+			    var thisCode = $(this).data('code');console.log(thisCode);
+			    $('.f-ap-code').val(thisCode);
+			    $('.f-aptime-group').addClass('qs-hidden');
+			    $('.f-aptime-group').eq((thisCode-1)).removeClass('qs-hidden');
+		    })
+		    // 时间选择
+		    $('.f-item-time').on('click', function () {
+			    $('.f-item-time').removeClass('select');
+			    $(this).addClass('select');
+			    var thisCode = $(this).data('code');
+			    $('.f-time-code').val(thisCode);
+			    var timeHtml = '';
+			    $('.f-ap-code').val() == 1 ? timeHtml += '上午' : timeHtml += '下午';
+			    timeHtml += thisCode + '点';
+			    $('.f-aptime-txt').text(timeHtml);
+			    $(this).closest('.js-actionParent').find('.js-actionsheet').removeClass('qs-actionsheet-toggle');
+			    $(this).closest('.js-actionParent').find('.qs-mask').fadeOut(200);
+		    })
+	    	var describeTemp = $('#tpl-notes').html();
+	        $(".notesText").on('click', function() {
+	            var $this = $(this),
+	                baseTxt = $this.text();
+	            popWin.init({
+	                from:"right",
+	                html:describeTemp,
+	                handle:function(a){
+	                    if ($('#notes').val().length) {
+	                        $('#tpl_notes').val($('#notes').val());
+	                    }
+	                    $('.J_empty').on('click',function(){
+	                        $('#tpl_notes').val('');
+	                    });
+	                    $('#notesBtn').on('click',function(){
+	                        $('#notes').val($('#tpl_notes').val());
+	                        $('.notesText').html($('#tpl_notes').val());
+	                        a.close();
+	                    });
+	                }
+	            })
+	        });
+	        // 验证表单并提交
+	        var regularMobile = /^13[0-9]{9}$|14[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/; // 验证手机号正则
+	        var regularEmail = /^[_\.0-9a-zA-Z-]+[_0-9a-zA-Z-]@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,3}$/; // 
+	        var regularHeight = /^1[2-9][0-9]$|^2[0-2][0-9]$|^230$/; // 验证身高正则
+	        $('#J_saveresume').die().live('click', function() {
+	            var resume_id = "{$Think.get.id}";
+	            var resume_name = $.trim($('#resume_name').val());
+	            var jobs_id = $.trim($('#jobs_id').val());
+	            var date = $.trim($('#date').val());
+	            var time = $.trim($('#time').val());
+	            var ap = $.trim($('#ap').val());
+	            var address = $.trim($('#address').val());
+	            var contact = $.trim($('#contact').val());
+	            var telephone = $.trim($('#telephone').val());
+	            var notes = $.trim($('#notes').val());
+	            var sms_notice = $('#sms_notice').val();
+	            if (jobs_id == "") {
+	                qsToast({type:2,context: '请选择职位'});
+	                return false;
+	            }
+	            if (date == "") {
+	                qsToast({type:2,context: '请选择日期'});
+	                return false;
+	            }
+	            if (time == "" || ap == '') {
+	                qsToast({type:2,context: '请选择时间'});
+	                return false;
+	            }
+	            if (address == "") {
+	                qsToast({type:2,context: '请填写地址'});
+	                return false;
+	            }
+	            if (contact == "") {
+	                qsToast({type:2,context: '请填写联系人'});
+	                return false;
+	            }
+	            if (telephone == "") {
+	                qsToast({type:2,context: '请填写联系电话'});
+	                return false;
+	            }
+	            $('#J_saveresume').val('保存中...').addClass('qs-btn-border-disabled');
+	            // 提交表单
+	            $.ajax({
+	                url: "{:U('AjaxCompany/jobs_interview_add')}",
+	                type: 'POST',
+	                dataType: 'json',
+	                data: {resume_id:resume_id,resume_name: resume_name,jobs_id: jobs_id, date: date,time: time,ap: ap, address: address, contact: contact,telephone:telephone,notes:notes,sms_notice:sms_notice},
+	                success:function(data){
+	                    if (data.status == 1) {
+	                        qsToast({type:1,context: data.msg});
+	                        setInterval(function(){
+	                        	window.location.href = "{:url_rewrite('QS_resumeshow',array('id'=>$_GET['id']))}";
+	                        },2000);
+	                    } else {
+	                        qsToast({type:2,context: data.msg});
+	                    }
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                },
+	                error:function(result){
+	                    $('#J_saveresume').val('保存').removeClass('qs-btn-border-disabled');
+	                    qsToast({type:2,context: result.msg});
+	                }
+	            });
+	        });
+	    </script>
+	</body>
+</html>

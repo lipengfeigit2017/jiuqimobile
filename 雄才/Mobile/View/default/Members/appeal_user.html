@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<include file="public:meta" />
+		<link rel="stylesheet" href="../public/css/members.css">
+	</head>
+	<body>
+		<include file="public:header" />
+        <form action="post" id="appealForm">
+            <div class="split-block"></div>
+            <div class="list-group">
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">真实姓名</div>
+                    <div class="describe font12"><input type="text" name="realname" id="realname" placeholder="请输入真实姓名"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow">
+                    <div class="pic"></div>
+                    <div class="tit font14">手机号码</div>
+                    <div class="describe font12"><input type="text" name="mobile" id="mobile" placeholder="请输入正在使用的电话"></div>
+                    <div class="clear"></div>
+                </div>
+                <div class="list_height plist-txt notarrow last">
+                    <div class="pic"></div>
+                    <div class="tit font14">电子邮箱</div>
+                    <div class="describe font12"><input type="text" name="email" id="email" placeholder="请输入您的常用邮箱"></div>
+                    <div class="clear"></div>
+                </div>
+                <input type="hidden" name="token" value="{$token}" />
+            </div>
+            <div class="split-block"></div>
+            <div class="textarea-txt">
+                <textarea id="description" name="description" placeholder="请输入其他辅助申诉内容，比如最近一次登录时间等。" rows="7"></textarea>
+            </div>
+        </form>
+        <div id="appeal_wrap" class="btn-spacing mt4"><a id="submitBtn" href="javascript:;" class="qs-btn qs-btn-blue font18">提交申诉</a></div>
+        <!--申诉提交成功-->
+        <div class="qs-hidden appeal_ok">
+            <div class="set-success-tip-box qs-center">
+                <div class="set-success-tip font16">申诉提交成功！</div>
+            </div>
+            <div class="qs-center font13 txt-color-9 mt2">申诉资料审核成功后，客服人员将及时联系您</div>
+            <div class="qs-center font13 txt-color-9 mt2">客户服务热线：{:C('qscms_bootom_tel')}</div>
+            <div class="btn-spacing mt10"><a href="{:U('members/login')}" class="qs-btn qs-btn-blue font18">立即登录</a></div>
+        </div>
+        <include file="public:footer" />
+        <include file="public:footer_min" />
+	</body>
+    <script>
+        var regularMobile = /^13[0-9]{9}$|14[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$|17[0-9]{9}$/;
+        var regularEmail = /^[_\.0-9a-zA-Z-]+[_0-9a-zA-Z-]@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,3}$/;
+        /**
+         * 提交验证
+         */
+        $('#submitBtn').on('click', function () {
+            var realnameValue = $.trim($('input[name=realname]').val());
+            var mobileValue = $.trim($('input[name=mobile]').val());
+            var emailValue = $.trim($('input[name=email]').val());
+            var descriptionValue = $.trim($('textarea[name=description]').val());
+            if (realnameValue == '') {
+                qsToast({type:2,context: '请输入您的真实姓名'});
+                return false;
+            }
+            if (mobileValue == '') {
+                qsToast({type:2,context: '请输入手机号码'});
+                return false;
+            }
+            if (mobileValue != "" && !regularMobile.test(mobileValue)) {
+                qsToast({type:2,context: '手机号码格式不正确'});
+                return false;
+            }
+            if (emailValue == '') {
+                qsToast({type:2,context: '请输入您的常用邮箱'});
+                return false;
+            }
+            if(emailValue != "" && !regularEmail.test(emailValue)){
+                qsToast({type:2,context: '邮箱格式错误'});
+                return false;
+            }
+            if (descriptionValue == '') {
+                qsToast({type:2,context: '请输入账号申诉描述'});
+                return false;
+            }
+            var url = "{:U('members/appeal_user')}";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: $('#appealForm').serialize(),
+                success: function (data) {
+                    if(data.status==1){
+                        $("#appealForm").remove();
+                        $("#appeal_wrap").remove();
+                        $(".appeal_ok").show();
+                    }else{
+                        qsToast({type:2,context: data.msg});
+                        return false;
+                    }
+                }
+            });
+        })
+    </script>
+</html>

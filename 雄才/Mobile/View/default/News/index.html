@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<qscms:news_category 列表名="info" 资讯小类="$_GET['id']" />
+    <include file="public:meta" />
+    <link rel="stylesheet" href="../public/css/news.css">
+</head>
+<body>
+<include file="public:header" />
+<div class="news-top-menu-bar">
+	<div class="top-menu">
+		<div class="top-menu-list">
+			<a data-url="" href="{:url_rewrite('QS_newslist')}" class="t-btn <if condition="$Think.get.id eq ''">active font16</if>">热点推荐</a>
+			<qscms:news_category 列表名="category" 显示数目="7" 资讯大类="1" />
+			<volist name="category" id="vo">
+				<a data-url="" href="{:url_rewrite('QS_newslist',array('id'=>$vo['id']))}" class="t-btn <if condition="$Think.get.id eq $vo['id']">active font16</if>">{$vo['title_']}</a>
+			</volist>
+		</div>
+	</div>
+</div>
+<div class="split-block"></div>
+<qscms:news_list 列表名="list" 关键字="$_GET['key']" 分页显示="1" 资讯小类="$_GET['id']" 排序="addtime:desc" 填补字符="…" 摘要长度="200"/>
+<notempty name="list['list']">
+<volist name="list['list']" id="vo">
+<div class="news-list-item for-event" onclick="window.location='{$vo.url}'">
+    <div class="news-info">
+        <div class="thumbnail">
+            <img src="{$vo['img']}?{:time()}" border="0" />
+        </div>
+        <div class="info">
+            <div class="line-one substring">{$vo['title']}</div>
+            <div class="line-two font12 substring">
+                <div class="pic time">{:date('Y-m-d',$vo['addtime'])}</div>
+                <div class="pic page-views">{$vo['click']}</div>
+            </div>
+            <div class="line-three font12">{$vo['briefly']}</div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="list-split-block"></div>
+</volist>
+<div class="qspage">{$list['page']}</div>
+<else />
+    <div class="list-empty link_blue">
+        抱歉，暂时没有找到相关资讯！
+    </div>
+</notempty>
+<if condition="C('qscms_footer_nav_status') eq 1">
+    <div class="bottom-nav-bar-group">
+        <div class="bottom-nav-bar">
+            <div class="nav-bar-cell qs-left">
+                <a href="{:url_rewrite('QS_index')}" class="bar-cell index">
+                    <div class="b-img"></div>
+                    <div class="b-txt font12">首页</div>
+                </a>
+                <a href="{:url_rewrite('QS_jobslist')}" class="bar-cell job">
+                    <div class="b-img"></div>
+                    <div class="b-txt font12">求职</div>
+                </a>
+                <div class="clear"></div>
+            </div>
+            <div class="nav-bar-more qs-left for-event">
+                <a href="{:url_rewrite('QS_jobfairlist')}" style="color: #666">
+                    <div class="nav-bar-more-cell js-b-nav-bar1" style="top: 0.1rem"></div>
+                    <div class="b-txt font10"
+                         style="width: 100%;text-align: center; bottom: 0.05rem; position: absolute;">招聘
+                    </div>
+                </a>
+            </div>
+            <div class="nav-bar-cell qs-left">
+                <a href="{:url_rewrite('QS_newslist')}" class="bar-cell resume">
+                    <div class="b-img"></div>
+                    <div class="b-txt font12">资讯</div>
+                </a>
+                <a href="{:url_rewrite('QS_login')}" class="bar-cell mine">
+                    <div class="b-img"></div>
+                    <div class="b-txt font12">我的</div>
+                </a>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="bottom-bar-more-group">
+            <div class="bn-mask js-b-nav-bar-active"></div>
+            <div class="bar-more-cell">
+                <div id="hwslider-bottom" class="hwslider">
+                    <ul>
+                        <li>
+                            <a href="{:url_rewrite('QS_jobslist')}"><dl class="l1"><dt class="job for-event"></dt><dd class="font12">找工作</dd></dl></a>
+                            <a href="{:url_rewrite('QS_resumelist')}"><dl class="l1"><dt class="resume for-event"></dt><dd class="font12">找人才</dd></dl></a>
+                            <a href="{:url_rewrite('QS_login')}"><dl class="l1"><dt class="fabu for-event"></dt><dd class="font12">发布</dd></dl></a>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <a href="{:url_rewrite('QS_newslist')}"><dl class="l1"><dt class="news for-event"></dt><dd class="font12">资讯</dd></dl></a>
+                            <notempty name="apply['Mall']">
+                                <a href="{:url_rewrite('QS_mall_index')}"><dl class="l1"><dt class="shop for-event"></dt><dd class="font12">商城</dd></dl></a>
+                            </notempty>
+                            <notempty name="apply['Jobfair']">
+                                <a href="{:url_rewrite('QS_jobfairlist')}"><dl class="l1"><dt class="zhaoph for-event"></dt><dd class="font12">招聘会</dd></dl></a>
+                            </notempty>
+                            <div class="clear"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bar-more-closecell js-b-nav-bar-active for-event"></div>
+        </div>
+    </div>
+</if>
+<include file="public:footer_min" />
+</body>
+</html>
